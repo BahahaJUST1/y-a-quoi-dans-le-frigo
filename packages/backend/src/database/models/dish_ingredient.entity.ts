@@ -4,7 +4,7 @@ import { Ingredient } from './ingredient.entity';
 import { Unit } from './unit.entity';
 import { User } from './user.entity';
 
-@Entity()
+@Entity({ tableName: "dishes_ingredients" })
 export class DishIngredient {
   @PrimaryKey()
   id!: number;

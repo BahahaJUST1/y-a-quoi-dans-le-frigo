@@ -1,7 +1,7 @@
 import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 
-@Entity()
-export class IngredientCategory {
+@Entity({ tableName: "units" })
+export class Unit {
   @PrimaryKey()
   id!: number;
 

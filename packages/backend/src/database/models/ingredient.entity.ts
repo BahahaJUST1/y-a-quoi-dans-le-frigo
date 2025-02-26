@@ -2,7 +2,7 @@ import { Entity, PrimaryKey, Property, ManyToOne } from '@mikro-orm/core';
 import { IngredientCategory } from './ingredient_category.entity';
 import { User } from './user.entity';
 
-@Entity()
+@Entity({ tableName: "ingredients" })
 export class Ingredient {
   @PrimaryKey()
   id!: number;

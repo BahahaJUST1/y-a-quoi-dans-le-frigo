@@ -4,7 +4,7 @@
   "author": "JUST1",
   "license": "ISC",
   "scripts": {
-    "backend": "cd ./src/backend && npm run start",
-    "frontend": "cd ./src/frontend && npm start"
+    "backend": "cd ./packages/backend && npm run start",
+    "frontend": "cd ./packages/frontend && npm start"
   }
 }

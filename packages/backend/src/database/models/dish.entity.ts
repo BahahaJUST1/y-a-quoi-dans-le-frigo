@@ -2,7 +2,7 @@ import { Entity, PrimaryKey, Property, ManyToOne, OneToMany, Collection } from '
 import { User } from './user.entity';
 import { DishIngredient } from './dish_ingredient.entity';
 
-@Entity()
+@Entity({ tableName: "dishes" })
 export class Dish {
   @PrimaryKey()
   id!: number;
