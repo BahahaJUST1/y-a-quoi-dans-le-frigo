@@ -2,5 +2,9 @@
   "name": "y-a-quoi-dans-le-frigo",
   "version": "1.0.0",
   "author": "JUST1",
-  "license": "ISC"
+  "license": "ISC",
+  "scripts": {
+    "backend": "cd ./src/backend && npm run start",
+    "frontend": "cd ./src/frontend && npm start"
+  }
 }
