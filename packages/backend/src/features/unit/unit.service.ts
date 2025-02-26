@@ -8,7 +8,7 @@ export class UnitService {
 
   async findAll(): Promise<Unit[]> {
     try {
-      return await this.em.findAll(Unit, {});
+      return await this.em.findAll(Unit, { where: { deletedAt: { $eq: null } } });
     }
     catch (e) {
       throw e;

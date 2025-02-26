@@ -8,7 +8,7 @@ export class IngredientCategoryService {
 
   async findAll(): Promise<IngredientCategory[]> {
     try {
-      return await this.em.findAll(IngredientCategory, {});
+      return await this.em.findAll(IngredientCategory, { where: { deletedAt: { $eq: null } } });
     }
     catch (e) {
       throw e;

@@ -9,12 +9,20 @@ import { IngredientModule } from './features/ingredient/ingredient.module';
 import { IngredientCategoryModule } from './features/ingredient_category/ingredient_category.module';
 import { UnitModule } from './features/unit/unit.module';
 import { UserModule } from './features/user/user.module';
+import * as Joi from 'joi';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       load: [configuration],
       isGlobal: true,
+      validationSchema: Joi.object({
+        DB_NAME: Joi.string().required(),
+        DB_USER: Joi.string().required(),
+        DB_PASS: Joi.string().required(),
+        DB_HOST: Joi.string().required(),
+        DB_PORT: Joi.number().required(),
+      })
     }),
     MikroOrmModule.forRootAsync({
       useClass: MikroOrmConfigService
