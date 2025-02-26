@@ -1,5 +1,5 @@
 import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
-import { UserRoleEnum } from '../../../utils/enums/user_role.enum';
+import { UserRoleEnum } from '../../utils/enums/user_role.enum';
 
 @Entity({ tableName: "users" })
 export class User {
