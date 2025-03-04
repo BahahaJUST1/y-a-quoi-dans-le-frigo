@@ -26,11 +26,21 @@ export class IngredientService {
 
   async findAllByCategories(categoryIdsList: number[]): Promise<Ingredient[] | null> {
     if (!categoryIdsList.length) {
-      throw new Error("Error, no categories provided !");
+      throw new Error("No categories provided !");
     }
 
     return await this.em.find(Ingredient, {
       category: { $in: categoryIdsList },
     });
+  }
+
+  async likeOrUnlikeDish(id: number): Promise<void> {
+    const ingredient: Ingredient | null = await this.findOne(id);
+    if (!ingredient) {
+      throw Error(`No ingredient found in database with id ${id} !`);
+    }
+
+    ingredient.favourite = !ingredient.favourite;
+    await this.em.flush();
   }
 }

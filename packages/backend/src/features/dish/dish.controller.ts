@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Put } from '@nestjs/common';
 import { DishService } from './dish.service';
 import { Dish } from '../../database/models/dish.entity';
 
@@ -29,5 +29,10 @@ export class DishController {
   @Get("/:id")
   async findOne(@Param('id') id: number): Promise<Dish | null> {
     return await this.dishService.findOne(id);
+  }
+
+  @Put("/like/:id")
+  async likeOrUnlikeDish(@Param('id') id: number): Promise<void> {
+    await this.dishService.likeOrUnlikeDish(id);
   }
 }

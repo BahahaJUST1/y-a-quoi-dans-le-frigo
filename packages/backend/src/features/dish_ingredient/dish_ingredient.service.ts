@@ -18,7 +18,7 @@ export class DishIngredientService {
 
   async findAllWithIngredients(ingredientIdsList: number[]): Promise<RawDishIngredientType[]> {
     if (!ingredientIdsList.length) {
-      throw new Error("Error, no ingredients provided !");
+      throw new Error("No ingredients provided !");
     }
 
     try {

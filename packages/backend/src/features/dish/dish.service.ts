@@ -74,4 +74,14 @@ export class DishService {
       throw e;
     }
   }
+
+  async likeOrUnlikeDish(id: number): Promise<void> {
+    const dish: Dish | null = await this.findOne(id);
+    if (!dish) {
+      throw Error(`Error, no dish found in database with id ${id} !`);
+    }
+
+    dish.favourite = !dish.favourite;
+    await this.em.flush();
+  }
 }
