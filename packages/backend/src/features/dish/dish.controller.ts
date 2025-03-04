@@ -21,6 +21,11 @@ export class DishController {
     return await this.dishService.findAllWithIngredients(body.ingredientIdsList);
   }
 
+  @Get("/time/:time")
+  async findAllByCookingTime(@Param('time') time: number): Promise<Dish[] | null> {
+    return await this.dishService.findAllByCookingTime(time);
+  }
+
   @Get("/:id")
   async findOne(@Param('id') id: number): Promise<Dish | null> {
     return await this.dishService.findOne(id);

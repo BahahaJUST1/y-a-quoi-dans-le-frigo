@@ -14,4 +14,23 @@ export class IngredientService {
       throw e;
     }
   }
+
+  async findOne(id: number): Promise<Ingredient | null> {
+    try {
+      return await this.em.findOne(Ingredient, { id });
+    }
+    catch (e) {
+      throw e;
+    }
+  }
+
+  async findAllByCategories(categoryIdsList: number[]): Promise<Ingredient[] | null> {
+    if (!categoryIdsList.length) {
+      throw new Error("Error, no categories provided !");
+    }
+
+    return await this.em.find(Ingredient, {
+      category: { $in: categoryIdsList },
+    });
+  }
 }

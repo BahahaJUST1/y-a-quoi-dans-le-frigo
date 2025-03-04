@@ -63,4 +63,15 @@ export class DishService {
       throw e;
     }
   }
+
+  async findAllByCookingTime(time: number): Promise<Dish[] | null> {
+    try {
+      return await this.em.find(Dish, {
+        preparationTime: { $lte: time },
+      });
+    }
+    catch (e) {
+      throw e;
+    }
+  }
 }
