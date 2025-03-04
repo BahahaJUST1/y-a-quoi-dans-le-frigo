@@ -22,6 +22,9 @@ export class Dish {
   @Property({ nullable: true })
   recipe?: string;
 
+  @Property({ nullable: true })
+  image?: string;
+
   @ManyToOne(() => User)
   user!: User;
 

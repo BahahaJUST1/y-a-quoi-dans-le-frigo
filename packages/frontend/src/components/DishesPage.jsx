@@ -24,6 +24,9 @@ const DishesPage = () => {
     fetchDishes();
   }, []);
 
+
+  console.log(dishes);
+
   // Si les données sont en cours de chargement
   if (loading) {
     return <p>Chargement des plats...</p>;
@@ -42,6 +45,7 @@ const DishesPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {dishes.map((dish) => (
             <div key={dish.id} className="p-4 border rounded-lg shadow-lg">
+              <img src={`https://res.cloudinary.com/dd50khgyk/image/upload/${dish.image}`} alt={`photo-${dish.name.split(' ').join('-').toLowerCase()}`} />
               <h2 className="text-xl font-semibold">{dish.name}</h2>
               <p className="text-gray-600">{dish.description}</p>
               <p className="text-green-600 font-bold mt-2">{dish.price} €</p>
