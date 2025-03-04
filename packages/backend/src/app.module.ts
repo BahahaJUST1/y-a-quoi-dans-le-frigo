@@ -22,6 +22,7 @@ import * as Joi from 'joi';
         DB_PASS: Joi.string().required(),
         DB_HOST: Joi.string().required(),
         DB_PORT: Joi.number().required(),
+        JWT_SECRET: Joi.string().required(),
       })
     }),
     MikroOrmModule.forRootAsync({
