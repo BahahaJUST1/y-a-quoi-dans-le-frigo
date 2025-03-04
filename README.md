@@ -1,13 +1,11 @@
 # Y'a quoi dans le frigo ?
 
----
 
 ### Prérequis
 
 - Node version 22.14.0+
 - Base de données MySql en local sur Wamp
 
----
 
 ### Installation
 
@@ -15,7 +13,6 @@
 npm i
 ```
 
----
 
 ### Lancement
 
