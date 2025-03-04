@@ -3,7 +3,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { IngredientCategory } from '../../database/models/ingredient_category.entity';
 import { IngredientCategoryService } from './ingredient_category.service';
 import { IngredientCategoryController } from './ingredient_category.controller';
-import { AuthModule } from '../../auth/auth.module';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [

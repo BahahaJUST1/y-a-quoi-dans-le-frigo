@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Put, UseGuards } from '@nestjs/common';
 import { IngredientService } from './ingredient.service';
 import { Ingredient } from '../../database/models/ingredient.entity';
-import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 
 @Controller('ingredient')
 export class IngredientController {

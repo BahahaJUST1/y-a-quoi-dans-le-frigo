@@ -10,6 +10,7 @@ import { IngredientCategoryModule } from './features/ingredient_category/ingredi
 import { UnitModule } from './features/unit/unit.module';
 import { UserModule } from './features/user/user.module';
 import * as Joi from 'joi';
+import { AuthModule } from './features/auth/auth.module';
 
 @Module({
   imports: [
@@ -23,11 +24,13 @@ import * as Joi from 'joi';
         DB_HOST: Joi.string().required(),
         DB_PORT: Joi.number().required(),
         JWT_SECRET: Joi.string().required(),
+        BCRYPT_SALT_ROUND: Joi.number().required(),
       })
     }),
     MikroOrmModule.forRootAsync({
       useClass: MikroOrmConfigService
     }),
+    AuthModule,
     DishModule,
     DishIngredientModule,
     IngredientModule,

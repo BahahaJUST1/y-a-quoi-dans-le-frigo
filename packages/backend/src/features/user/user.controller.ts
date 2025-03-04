@@ -1,7 +1,7 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from '../../database/models/user.entity';
-import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 
 @Controller('user')
 export class UserController {
@@ -11,10 +11,5 @@ export class UserController {
   @Get()
   async findAll(): Promise<User[]> {
     return await this.userService.findAll();
-  }
-
-  @Get("/login/:id")
-  async loginUser(@Param('id') id: number): Promise<string> {
-    return await this.userService.login(id);
   }
 }
