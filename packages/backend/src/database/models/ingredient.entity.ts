@@ -19,6 +19,9 @@ export class Ingredient {
   @Property({ nullable: true })
   image?: string;
 
+  @Property({ nullable: true })
+  bgColor?: string;
+
   @ManyToOne(() => User)
   user!: User;
 

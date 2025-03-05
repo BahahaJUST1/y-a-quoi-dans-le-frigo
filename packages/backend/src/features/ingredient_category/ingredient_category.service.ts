@@ -14,4 +14,13 @@ export class IngredientCategoryService {
       throw e;
     }
   }
+
+  async findOne(id: number): Promise<IngredientCategory | null> {
+    try {
+      return await this.em.findOne(IngredientCategory, { id });
+    }
+    catch (e) {
+      throw e;
+    }
+  }
 }

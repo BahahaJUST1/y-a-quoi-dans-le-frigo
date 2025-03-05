@@ -8,6 +8,9 @@ export class IngredientCategory {
   @Property()
   name!: string;
 
+  @Property({ nullable: true })
+  image?: string;
+
   @Property({ type: 'date' })
   createdAt: Date = new Date();
 
