@@ -16,12 +16,20 @@ export class DishIngredientService {
     }
   }
 
-  async findAllWithIngredients(ingredientIdsList: number[]): Promise<RawDishIngredientType[]> {
-    if (!ingredientIdsList.length) {
-      throw new Error("No ingredients provided !");
-    }
-
+  async findByDishId(dishId: number): Promise<DishIngredient[]> {
     try {
+      return await this.em.find(DishIngredient,
+        { dish: dishId },
+        { populate: ['ingredient', 'unit'] }
+      );
+    }
+    catch (e) {
+      throw e;
+    }
+  }
+
+  async findAllWithIngredients(ingredientIdsList: number[]): Promise<RawDishIngredientType[]> {
+   try {
       const formatedIds = ingredientIdsList.map((id) => id).join(',');
       return await this.em.execute(`
           SELECT *

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { DishService } from './dish.service';
 import { Dish } from '../../database/models/dish.entity';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
@@ -20,7 +20,7 @@ export class DishController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get("/ingredients")
+  @Post("/ingredients")
   async findAllWithIngredients(@Body() body: { ingredientIdsList: number[] }): Promise<Dish[] | null> {
     return await this.dishService.findAllWithIngredients(body.ingredientIdsList);
   }

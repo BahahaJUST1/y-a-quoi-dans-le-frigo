@@ -23,7 +23,7 @@ const LoginPage = () => {
       localStorage.setItem('authToken', response.data);
 
       // redirect user to homepage
-      navigate('/dishes');
+      navigate('/ingredients');
     }
     catch (err) {
       setError("Email ou mot de passe incorrect");

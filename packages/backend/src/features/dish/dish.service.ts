@@ -43,6 +43,10 @@ export class DishService {
 
   async findAllWithIngredients(ingredientIdsList: number[]): Promise<Dish[] | null> {
     try {
+      if (!ingredientIdsList.length) {
+        return await this.findAll();
+      }
+
       const dishIngredientList: RawDishIngredientType[] = await this.dishIngredientService.findAllWithIngredients(ingredientIdsList);
       const dishes: Dish[] = [];
 
