@@ -13,7 +13,8 @@ const DishesPage = () => {
     const fetchDishes = async () => {
       try {
         const response = await $http.post('http://localhost:3000/dish/ingredients', {
-          ingredientIdsList: location.state.selectedIngredients
+          ingredientIdsList: location.state.selectedIngredients,
+          preparationTime: location.state.preparationTime
         });
         setDishes(response.data);
       } catch (err) {
@@ -47,7 +48,7 @@ const DishesPage = () => {
         <h1 className="text-3xl font-bold mb-6 text-center">Mes Plats</h1>
 
         {dishes.length === 0 ? (
-          <p className="text-center text-gray-500">Aucun plat disponible en fonction des ingrédients sélectionnés</p>
+          <p className="text-center text-gray-500">Aucun plat disponible en fonction des ingrédients et du temps de préparation sélectionnés</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {dishes.map((dish) => (
@@ -61,6 +62,24 @@ const DishesPage = () => {
                   alt={`photo-${dish.name.split(' ').join('-').toLowerCase()}`}
                 />
                 <h2 className="text-xl font-semibold">{dish.name}</h2>
+                <div className="flex items-center mt-1">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="currentColor"
+                    className="w-5 h-5 mr-1"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 6v6l4 2"
+                    />
+                    <circle cx="12" cy="12" r="9" />
+                  </svg>
+                  <span>{dish.preparationTime}min</span>
+                </div>
               </div>
             ))}
           </div>

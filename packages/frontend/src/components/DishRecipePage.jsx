@@ -53,6 +53,27 @@ const DishRecipePage = () => {
           className="w-full h-64 object-cover rounded-lg mb-6"
         />
 
+        <h2 className="text-1xl font-bold mb-6">
+          <div className="flex items-center mt-1">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="w-5 h-5 mr-1"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 6v6l4 2"
+              />
+              <circle cx="12" cy="12" r="9" />
+            </svg>
+            <span>Temps de préparation : {dish.preparationTime}min</span>
+          </div>
+        </h2>
+
         <h2 className="text-3xl font-bold mb-6">Ingrédients</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           {dishIngredients.map((item) => (

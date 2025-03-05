@@ -9,6 +9,7 @@ const IngredientsPage = () => {
   const [loadingIngredientCategories, setLoadingIngredientCategories] = useState(true);
   const [error, setError] = useState(null);
   const [selectedIngredients, setSelectedIngredients] = useState([]);
+  const [preparationTime, setPreparationTime] = useState(180);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -56,10 +57,11 @@ const IngredientsPage = () => {
   const navigateToDishesAccordingToIngredients = () => {
     navigate('/dishes', {
       state: {
-        selectedIngredients
+        selectedIngredients,
+        preparationTime
       }
     });
-  }
+  };
 
   if (loadingIngredients || loadingIngredientCategories) {
     return <p>Chargement des ingrédients...</p>;
@@ -73,6 +75,19 @@ const IngredientsPage = () => {
     <div className="flex items-center justify-center min-h-screen">
       <div className="max-w-6xl w-full p-6 bg-white shadow-xl rounded-2xl">
         <h1 className="text-3xl font-bold mb-6 text-center">Mes Ingrédients</h1>
+
+        <div className="mb-6">
+          <label htmlFor="time-slider" className="block text-lg font-semibold mb-2">Temps de préparation : {preparationTime} min</label>
+          <input
+            id="time-slider"
+            type="range"
+            min="0"
+            max="180"
+            value={preparationTime}
+            onChange={(e) => setPreparationTime(Number(e.target.value))}
+            className="w-1/3"
+          />
+        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {ingredients.map((ingredient) => {
