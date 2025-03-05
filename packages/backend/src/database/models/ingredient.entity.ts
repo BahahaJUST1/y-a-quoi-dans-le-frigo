@@ -16,6 +16,9 @@ export class Ingredient {
   @Property({ default: false })
   favourite: boolean;
 
+  @Property({ nullable: true })
+  image?: string;
+
   @ManyToOne(() => User)
   user!: User;
 
