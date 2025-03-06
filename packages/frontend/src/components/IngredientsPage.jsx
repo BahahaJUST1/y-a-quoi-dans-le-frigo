@@ -86,10 +86,6 @@ const IngredientsPage = () => {
     return <p>Chargement des ingrédients...</p>;
   }
 
-  if (error) {
-    return <p>{error}</p>;
-  }
-
   return (
     <div className="flex items-center justify-center min-h-screen">
       <div className="max-w-6xl w-full p-6 bg-white shadow-xl rounded-2xl">
@@ -110,7 +106,7 @@ const IngredientsPage = () => {
           </div>
           <button
             className={`${displayFavourites ? "bg-red-500 text-white hover:bg-red-400" : "border text-gray-800 hover:bg-gray-50" } py-2 px-4 rounded-lg text-lg font-semibold`}
-            onClick={() => {displayFavouritesIngredients()}}
+            onClick={displayFavouritesIngredients}
           >
             Ingrédients favoris
           </button>
@@ -125,8 +121,8 @@ const IngredientsPage = () => {
             return (
               <div
                 key={ingredient.id}
-                className={`flex items-center p-4 rounded-lg shadow-lg cursor-pointer transition-opacity duration-300 ${isSelected ? 'opacity-100' : 'opacity-50'}`}
-                style={{ backgroundColor: ingredient.bgColor }}
+                className={`flex items-center p-4 rounded-lg shadow-lg cursor-pointer transition-opacity duration-300 ${isSelected ? 'opacity-100' : 'opacity-70'}`}
+                style={isSelected ? { backgroundColor: ingredient.bgColor, borderColor: 'darkgray', borderWidth: '1px' } : { borderColor: 'lightgray', borderWidth: '1px' }}
                 onClick={() => toggleIngredientSelection(ingredient.id)}
               >
                 <img
@@ -140,20 +136,24 @@ const IngredientsPage = () => {
                   {ingredient.name}
                   <span className="ml-2">
                     <svg
-                      width="30"
-                      height="30"
+                      width="35"
+                      height="35"
                       viewBox="0 0 32 32"
                       xmlns="http://www.w3.org/2000/svg"
-                      fill={ingredient.favourite ? "red" : "none"}
-                      stroke={"black"}
-                      strokeWidth={0.5}
-                      className="transition-transform duration-200 hover:scale-125"
+                      fill={ingredient.favourite ? "#EF4444" : "none"}
+                      stroke={
+                        isSelected
+                          ? ingredient.favourite ? "#EF4444" : "red"
+                          : "red"
+                      }
+                      strokeWidth={isSelected ? '1' : '0.5'}
+                      className="transition-transform duration-200 hover:scale-110"
                       onClick={(event) => {
                         event.stopPropagation();
                         likeIngredient(ingredient.id);
                       }}
                     >
-                      <path d="M16 29s-13-8.14-13-17A8 8 0 0 1 16 5a8 8 0 0 1 13 7c0 8.86-13 17-13 17z" />
+                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                     </svg>
                   </span>
                 </h2>
