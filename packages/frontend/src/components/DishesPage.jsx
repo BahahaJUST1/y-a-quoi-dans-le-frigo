@@ -5,7 +5,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 const DishesPage = () => {
   const [dishes, setDishes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const navigate = useNavigate();
   const [displayFavourites, setDisplayFavourites] = useState(false);
   const location = useLocation();
@@ -19,7 +18,6 @@ const DishesPage = () => {
         });
         setDishes(response.data);
       } catch (err) {
-        setError('Erreur lors de la récupération des plats.');
         console.error(err);
       } finally {
         setLoading(false);
@@ -27,7 +25,7 @@ const DishesPage = () => {
     };
 
     fetchDishes();
-  }, []);
+  });
 
   const likeDish = async (dishId) => {
     // Toggle the favourite state locally for immediate changes
@@ -83,7 +81,7 @@ const DishesPage = () => {
                   className="p-4 border rounded-lg shadow-lg cursor-pointer relative"
                 >
                   <img
-                    src={`https://res.cloudinary.com/dd50khgyk/image/upload/${dish.image}`}
+                    src={`https://res.cloudinary.com/dd50khgyk/image/upload/${dish.image ? dish.image : "placeholders/g2dkz5ae3ce3u5gde5cz"}`}
                     alt={`photo-${dish.name.split(' ').join('-').toLowerCase()}`}
                     className="w-full h-auto rounded-lg"
                   />

@@ -4,10 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 const IngredientsPage = () => {
   const [ingredients, setIngredients] = useState([]);
-  const [ingredientCategories, setIngredientCategories] = useState([]);
   const [loadingIngredients, setLoadingIngredients] = useState(true);
-  const [loadingIngredientCategories, setLoadingIngredientCategories] = useState(true);
-  const [error, setError] = useState(null);
   const [selectedIngredients, setSelectedIngredients] = useState([]);
   const [preparationTime, setPreparationTime] = useState(180);
   const [displayFavourites, setDisplayFavourites] = useState(false);
@@ -19,33 +16,14 @@ const IngredientsPage = () => {
         const response = await $http.get('http://localhost:3000/ingredient');
         setIngredients(response.data);
       } catch (err) {
-        setError('Erreur lors de la récupération des ingrédients.');
         console.error(err);
       } finally {
         setLoadingIngredients(false);
       }
     };
 
-    const fetchIngredientCategories = async () => {
-      try {
-        const response = await $http.get('http://localhost:3000/ingredient-category');
-        setIngredientCategories(response.data);
-      } catch (err) {
-        setError("Erreur lors de la récupération des catégories d'ingrédients.");
-        console.error(err);
-      } finally {
-        setLoadingIngredientCategories(false);
-      }
-    };
-
     fetchIngredients();
-    fetchIngredientCategories();
-  }, []);
-
-  const getIngredientCategoryPlaceholder = (ingredientCategoryId) => {
-    const category = ingredientCategories.find((ingredientCategory) => ingredientCategory.id === ingredientCategoryId);
-    return category?.image;
-  };
+  });
 
   const toggleIngredientSelection = (ingredientId) => {
     setSelectedIngredients((prevSelected) =>
@@ -82,7 +60,7 @@ const IngredientsPage = () => {
     setDisplayFavourites(!displayFavourites);
   }
 
-  if (loadingIngredients || loadingIngredientCategories) {
+  if (loadingIngredients) {
     return <p>Chargement des ingrédients...</p>;
   }
 
@@ -128,9 +106,9 @@ const IngredientsPage = () => {
                 <img
                   src={ingredient.image
                     ? `https://res.cloudinary.com/dd50khgyk/image/upload/${ingredient.image}`
-                    : `https://res.cloudinary.com/dd50khgyk/image/upload/${getIngredientCategoryPlaceholder(ingredient.category)}`}
+                    : `https://res.cloudinary.com/dd50khgyk/image/upload/${ingredient.category.image}`}
                   alt={`photo-${ingredient.name.split(' ').join('-').toLowerCase()}`}
-                  className="w-16 h-16 object-cover rounded-md mr-4"
+                  className={`w-16 h-16 object-cover ${ingredient.image ? "rounded-md" : ""} mr-4`}
                 />
                 <h2 className="text-xl font-semibold flex items-center justify-between w-full">
                   {ingredient.name}

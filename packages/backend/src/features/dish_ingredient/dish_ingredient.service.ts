@@ -20,7 +20,7 @@ export class DishIngredientService {
     try {
       return await this.em.find(DishIngredient,
         { dish: dishId },
-        { populate: ['ingredient', 'unit'] }
+        { populate: ['ingredient', 'unit', 'ingredient.category'] }
       );
     }
     catch (e) {
