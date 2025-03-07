@@ -1,5 +1,18 @@
-# Y'a quoi dans le frigo ?
+<style>
+.center {
+    text-align: center;
+    font-weight: bold;
+    font-size: 2rem;
+    margin-bottom: -2rem;
+    text-decoration: underline;
+}
+</style>
 
+<p class="center">Y'a quoi dans le frigo ?</p>
+
+![Logo du projet](./packages/frontend/public/logo.png)
+
+---
 
 ### Prérequis
 
