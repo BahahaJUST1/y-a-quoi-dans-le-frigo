@@ -29,7 +29,7 @@ const DishesPage = () => {
     };
 
     fetchDishes();
-  }, []);
+  }, [location.state.preparationTime, location.state.selectedIngredients]);
 
   const likeDish = async (dishId) => {
     // Toggle the favourite state locally for immediate changes
