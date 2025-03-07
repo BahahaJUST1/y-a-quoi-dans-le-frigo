@@ -1,8 +1,6 @@
-<p align="center" style="font-weight: bold; font-size: 2rem; margin-bottom: -2rem; text-decoration: underline;">
-Y'a quoi dans le frigo ?
-</p>
+# Y'a quoi dans le frigo ?
 
-![Logo du projet](./packages/frontend/public/logo.png)
+![Logo du projet](./packages/frontend/public/git-logo.png)
 
 ---
 
