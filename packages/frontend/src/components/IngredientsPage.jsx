@@ -15,6 +15,8 @@ const IngredientsPage = () => {
   const [displayFavourites, setDisplayFavourites] = useState(false);
   const [displayIngredientsCategory, setDisplayIngredientsCategory] = useState(0);
 
+  const [searchTerm, setSearchTerm] = useState('');
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -96,6 +98,15 @@ const IngredientsPage = () => {
     <div className="flex items-center justify-center min-h-screen">
       <div className="max-w-6xl w-full p-6 bg-white shadow-xl rounded-2xl">
         <h1 className="text-3xl font-bold mb-6 text-center">Mes Ingrédients</h1>
+        
+        <div className="mb-4">
+          <input
+            type="text"
+            placeholder="Rechercher un ingrédient..."
+            className="border rounded-lg p-2 w-full"
+            onChange={(e) => setSearchTerm(e.target.value.toLowerCase())}
+          />
+        </div>
 
         <div className="mb-6 flex justify-between items-center">
           <div className="flex flex-col items-start">
@@ -117,11 +128,13 @@ const IngredientsPage = () => {
               onChange={(e) => displayIngredientsByCategory(e.target.value)}
             >
               <option value="">Toutes les catégories</option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
+              {
+                categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))
+              }
             </select>
           </div>
           <button
@@ -133,56 +146,69 @@ const IngredientsPage = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {ingredients.map((ingredient) => {
-            const isSelected = selectedIngredients.includes(ingredient.id);
-            if (displayFavourites && !ingredient.favourite) {
-              return null;
-            }
-            if (displayIngredientsCategory && ingredient.category.id !== displayIngredientsCategory) {
-              return null;
-            }
-            return (
-              <div
-                key={ingredient.id}
-                className={`flex items-center p-4 rounded-lg shadow-lg cursor-pointer transition-opacity duration-300 ${isSelected ? 'opacity-100' : 'opacity-70'}`}
-                style={isSelected ? { backgroundColor: ingredient.bgColor, borderColor: 'darkgray', borderWidth: '1px' } : { borderColor: 'lightgray', borderWidth: '1px' }}
-                onClick={() => toggleIngredientSelection(ingredient.id)}
-              >
-                <img
-                  src={ingredient.image
-                    ? `https://res.cloudinary.com/dd50khgyk/image/upload/${ingredient.image}`
-                    : `https://res.cloudinary.com/dd50khgyk/image/upload/${ingredient.category.image}`}
-                  alt={`photo-${ingredient.name.split(' ').join('-').toLowerCase()}`}
-                  className={`w-16 h-16 object-cover ${ingredient.image ? "rounded-md" : ""} mr-4`}
-                />
-                <h2 className="text-xl font-semibold flex items-center justify-between w-full">
-                  {ingredient.name}
-                  <span className="ml-2">
-                    <svg
-                      width="35"
-                      height="35"
-                      viewBox="0 0 32 32"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill={ingredient.favourite ? "#EF4444" : "none"}
-                      stroke={
-                        isSelected
-                          ? ingredient.favourite ? "#EF4444" : "red"
-                          : "red"
-                      }
-                      strokeWidth={isSelected ? '1' : '0.5'}
-                      className="transition-transform duration-200 hover:scale-110"
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        likeIngredient(ingredient.id);
-                      }}
-                    >
-                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                    </svg>
-                  </span>
-                </h2>
-              </div>
-            );
-          })}
+          {
+            ingredients.filter((ingredient) => {
+              return ingredient.name
+                .toLowerCase()
+                .split(' ')
+                .join('')
+                .includes(
+                  searchTerm
+                    .toLowerCase()
+                    .split(' ')
+                    .join('')
+                );
+            }).map((ingredient) => {
+              const isSelected = selectedIngredients.includes(ingredient.id);
+              if (displayFavourites && !ingredient.favourite) {
+                return null;
+              }
+              if (displayIngredientsCategory && ingredient.category.id !== displayIngredientsCategory) {
+                return null;
+              }
+              return (
+                <div
+                  key={ingredient.id}
+                  className={`flex items-center p-4 rounded-lg shadow-lg cursor-pointer transition-opacity duration-300 ${isSelected ? 'opacity-100' : 'opacity-70'}`}
+                  style={isSelected ? { backgroundColor: ingredient.bgColor, borderColor: 'darkgray', borderWidth: '1px' } : { borderColor: 'lightgray', borderWidth: '1px' }}
+                  onClick={() => toggleIngredientSelection(ingredient.id)}
+                >
+                  <img
+                    src={ingredient.image
+                      ? `https://res.cloudinary.com/dd50khgyk/image/upload/${ingredient.image}`
+                      : `https://res.cloudinary.com/dd50khgyk/image/upload/${ingredient.category.image}`}
+                    alt={`photo-${ingredient.name.split(' ').join('-').toLowerCase()}`}
+                    className={`w-16 h-16 object-cover ${ingredient.image ? "rounded-md" : ""} mr-4`}
+                  />
+                  <h2 className="text-xl font-semibold flex items-center justify-between w-full">
+                    {ingredient.name}
+                    <span className="ml-2">
+                      <svg
+                        width="35"
+                        height="35"
+                        viewBox="0 0 32 32"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill={ingredient.favourite ? "#EF4444" : "none"}
+                        stroke={
+                          isSelected
+                            ? ingredient.favourite ? "#EF4444" : "red"
+                            : "red"
+                        }
+                        strokeWidth={isSelected ? '1' : '0.5'}
+                        className="transition-transform duration-200 hover:scale-110"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          likeIngredient(ingredient.id);
+                        }}
+                      >
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                      </svg>
+                    </span>
+                  </h2>
+                </div>
+              );
+            })
+          }
         </div>
 
         <button
