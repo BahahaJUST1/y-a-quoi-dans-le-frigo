@@ -90,7 +90,7 @@ const IngredientsPage = () => {
     }
   }
 
-  if (loadingIngredients) {
+  if (loadingIngredients || loadingCategories) {
     return <p>Chargement des ingrédients...</p>;
   }
 
