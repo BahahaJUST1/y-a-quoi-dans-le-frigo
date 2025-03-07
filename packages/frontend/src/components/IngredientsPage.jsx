@@ -11,7 +11,10 @@ const IngredientsPage = () => {
 
   const [selectedIngredients, setSelectedIngredients] = useState([]);
   const [preparationTime, setPreparationTime] = useState(180);
+
   const [displayFavourites, setDisplayFavourites] = useState(false);
+  const [displayIngredientsCategory, setDisplayIngredientsCategory] = useState(0);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -76,6 +79,15 @@ const IngredientsPage = () => {
     setDisplayFavourites(!displayFavourites);
   }
 
+  const displayIngredientsByCategory = (categoryId) => {
+    if (!categoryId) {
+      setDisplayIngredientsCategory(0);
+    }
+    else {
+      setDisplayIngredientsCategory(parseInt(categoryId));
+    }
+  }
+
   if (loadingIngredients) {
     return <p>Chargement des ingrédients...</p>;
   }
@@ -98,6 +110,20 @@ const IngredientsPage = () => {
               className="w-full"
             />
           </div>
+          <div className="flex flex-col items-start">
+            <select
+              id="category-select"
+              className="border rounded-lg p-2"
+              onChange={(e) => displayIngredientsByCategory(e.target.value)}
+            >
+              <option value="">Toutes les catégories</option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </div>
           <button
             className={`${displayFavourites ? "bg-red-500 text-white hover:bg-red-400" : "border text-gray-800 hover:bg-gray-50" } py-2 px-4 rounded-lg text-lg font-semibold`}
             onClick={displayFavouritesIngredients}
@@ -110,6 +136,9 @@ const IngredientsPage = () => {
           {ingredients.map((ingredient) => {
             const isSelected = selectedIngredients.includes(ingredient.id);
             if (displayFavourites && !ingredient.favourite) {
+              return null;
+            }
+            if (displayIngredientsCategory && ingredient.category.id !== displayIngredientsCategory) {
               return null;
             }
             return (
