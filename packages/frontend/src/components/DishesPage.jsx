@@ -25,7 +25,7 @@ const DishesPage = () => {
     };
 
     fetchDishes();
-  });
+  }, []);
 
   const likeDish = async (dishId) => {
     // Toggle the favourite state locally for immediate changes

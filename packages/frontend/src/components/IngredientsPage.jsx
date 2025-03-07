@@ -4,7 +4,11 @@ import { useNavigate } from 'react-router-dom';
 
 const IngredientsPage = () => {
   const [ingredients, setIngredients] = useState([]);
+  const [categories, setCategories] = useState([]);
+
   const [loadingIngredients, setLoadingIngredients] = useState(true);
+  const [loadingCategories, setLoadingCategories] = useState(true);
+
   const [selectedIngredients, setSelectedIngredients] = useState([]);
   const [preparationTime, setPreparationTime] = useState(180);
   const [displayFavourites, setDisplayFavourites] = useState(false);
@@ -22,8 +26,20 @@ const IngredientsPage = () => {
       }
     };
 
+    const fetchCategories = async () => {
+      try {
+        const response = await $http.get('http://localhost:3000/ingredient-category');
+        setCategories(response.data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoadingCategories(false);
+      }
+    };
+
     fetchIngredients();
-  });
+    fetchCategories();
+  }, []);
 
   const toggleIngredientSelection = (ingredientId) => {
     setSelectedIngredients((prevSelected) =>
