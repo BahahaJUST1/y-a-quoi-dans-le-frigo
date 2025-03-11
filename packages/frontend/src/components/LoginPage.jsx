@@ -37,7 +37,12 @@ const LoginPage = () => {
       navigate('/ingredients');
     }
     catch (err) {
-      setError("Erreur lors de l'authentification");
+      if (isLogin) {
+        setError("Email ou mot de passe incorrect");
+      }
+      else {
+        setError("Erreur lors de l'inscription");
+      }
     }
   };
 
@@ -111,7 +116,10 @@ const LoginPage = () => {
               <button
                 type="button"
                 className="inline-block text-[#ff8f0c] mt-1 rounded hover:underline"
-                onClick={() => setIsLogin(!isLogin)}
+                onClick={() => {
+                  setIsLogin(!isLogin);
+                  setError('');
+                }}
               >
                 {isLogin ? "Pas encore de compte ? Inscrivez-vous" : "Déjà un compte ? Connectez-vous"}
               </button>

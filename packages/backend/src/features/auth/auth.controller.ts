@@ -29,4 +29,25 @@ export class AuthController {
     const jwtSignature = await this.authService.login(user);
     return jwtSignature.access_token;
   }
+
+  @Post("/register")
+  async register(
+    @Body("firstName") firstName: string,
+    @Body("lastName") lastName: string,
+    @Body("email") email: string,
+    @Body("password") password: string
+  ) {
+    // recover user
+    const user = await this.userService.findOneByEmail(email);
+    if (user) {
+      throw new UnauthorizedException;
+    }
+
+    // create new user
+    const newUser = await this.userService.createUser(firstName, lastName, email, password);
+
+    // generate jwt access token
+    const jwtSignature = await this.authService.login(newUser);
+    return jwtSignature.access_token;
+  }
 }
