@@ -66,6 +66,11 @@ body::before {
     -webkit-text-fill-color: black !important;
 }
 
-.font-courage {
-    font-family: 'Zoo-Carnival', sans-serif;
-}
+.scrollbar-hide {
+    -ms-overflow-style: none;  /* Pour Internet Explorer et Edge */
+    scrollbar-width: none;     /* Pour Firefox */
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;            /* Pour Chrome, Safari et Opera */
+  }

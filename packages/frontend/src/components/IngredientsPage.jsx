@@ -90,14 +90,10 @@ const IngredientsPage = () => {
     }
   }
 
-  if (loadingIngredients || loadingCategories) {
-    return <p>Chargement des ingrédients...</p>;
-  }
-
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="max-w-6xl w-full p-6 bg-white shadow-xl rounded-2xl">
-        <h1 className="text-3xl font-bold mb-6 text-center">Mes Ingrédients</h1>
+    <div className="flex items-center justify-center h-screen overflow-hidden max-[768px]:mx-8">
+      <div className="max-w-6xl w-full p-6 max-[768px]:p-4 bg-white shadow-xl rounded-2xl flex flex-col h-[90vh] max-[768px]:h-[92vh]">
+        <h1 className="text-3xl font-bold mb-6 max-[768px]:mt-1 text-center">Mes Ingrédients</h1>
         
         <div className="mb-4">
           <input
@@ -145,7 +141,7 @@ const IngredientsPage = () => {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-[768px]:gap-4 overflow-y-auto flex-grow scrollbar-hide content-start">
           {
             ingredients.filter((ingredient) => {
               return ingredient.name
@@ -169,7 +165,7 @@ const IngredientsPage = () => {
               return (
                 <div
                   key={ingredient.id}
-                  className={`flex items-center p-4 rounded-lg shadow-lg cursor-pointer transition-opacity duration-300 ${isSelected ? 'opacity-100' : 'opacity-70'}`}
+                  className={`flex items-center p-4 rounded-lg shadow-lg cursor-pointer transition-opacity duration-300 w-full h-24 ${isSelected ? 'opacity-100' : 'opacity-70'}`}
                   style={isSelected ? { backgroundColor: ingredient.bgColor, borderColor: 'darkgray', borderWidth: '1px' } : { borderColor: 'lightgray', borderWidth: '1px' }}
                   onClick={() => toggleIngredientSelection(ingredient.id)}
                 >
@@ -213,7 +209,7 @@ const IngredientsPage = () => {
 
         <button
           onClick={() => navigateToDishesAccordingToIngredients()}
-          className="mt-8 w-full bg-blue-500 text-white py-3 rounded-lg text-lg font-semibold hover:bg-blue-600 transition"
+          className="bg-[#FFEBB3] text-black hover:bg-[#ffe394] mt-8 max-[768px]:mt-4 w-full py-3 max-[768px]:py-2 rounded-lg text-lg transition"
         >
           Voir les plats
         </button>
