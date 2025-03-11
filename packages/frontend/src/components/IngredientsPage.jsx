@@ -180,7 +180,7 @@ const IngredientsPage = () => {
                     alt={`photo-${ingredient.name.split(' ').join('-').toLowerCase()}`}
                     className={`w-16 h-16 object-cover ${ingredient.image ? "rounded-md" : ""} mr-4`}
                   />
-                  <h2 className="text-xl font-semibold flex items-center justify-between w-full">
+                  <h2 className="item-font text-xl font-semibold flex items-center justify-between w-full">
                     {ingredient.name}
                     <span className="ml-2">
                       <svg

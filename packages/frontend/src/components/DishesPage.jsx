@@ -119,7 +119,7 @@ const DishesPage = () => {
                           />
                           <div className="flex justify-between items-center mt-2 mx-1">
                             <div className="flex flex-col">
-                              <h2 className="text-xl font-semibold">{dish.name}</h2>
+                              <h2 className="item-font text-xl font-semibold">{dish.name}</h2>
                               <div className="flex items-center mt-1">
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
