@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 const DishesPage = () => {
   const [dishes, setDishes] = useState([]);
+  const [loadingDishes, setLoadingDishes] = useState(true);
 
   const [displayFavourites, setDisplayFavourites] = useState(false);
 
@@ -23,11 +24,17 @@ const DishesPage = () => {
         setDishes(response.data);
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoadingDishes(false);
       }
     };
 
     fetchDishes();
   }, [location.state.selectedIngredients]);
+
+  if (loadingDishes) {
+    return;
+  }
 
   const likeDish = async (dishId) => {
     // Toggle the favourite state locally for immediate changes
@@ -77,8 +84,7 @@ const DishesPage = () => {
 
   return (
     <div className="flex items-center justify-center h-screen overflow-hidden max-[768px]:mx-8">
-      <div
-        className="max-w-6xl w-full p-6 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col h-[90vh] max-[768px]:h-[92vh]">
+      <div className="max-w-6xl w-full p-6 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col h-[90vh] max-[768px]:h-[92vh]">
         <h1 className="text-3xl font-bold mb-6 max-[768px]:mt-1 text-center">
           Mes Plats
         </h1>
@@ -284,7 +290,7 @@ const DishesPage = () => {
                         />
                         <div className="flex justify-between items-center mt-2 mx-1">
                           <div className="flex flex-col">
-                            <h2 className="item-font text-xl font-semibold">{dish.name}</h2>
+                            <h2 className="text-xl font-semibold">{dish.name}</h2>
                             <div className="flex items-center mt-1">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"

@@ -9,6 +9,9 @@ const IngredientsPage = () => {
   const [ingredients, setIngredients] = useState([]);
   const [categories, setCategories] = useState([]);
 
+  const [loadingIngredients, setLoadingIngredients] = useState(true);
+  const [loadingCategories, setLoadingCategories] = useState(true);
+
   const [selectedIngredients, setSelectedIngredients] = useState([]);
 
   const [displayFavourites, setDisplayFavourites] = useState(false);
@@ -25,6 +28,8 @@ const IngredientsPage = () => {
         setIngredients(response.data);
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoadingIngredients(false);
       }
     };
 
@@ -34,12 +39,18 @@ const IngredientsPage = () => {
         setCategories(response.data);
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoadingCategories(false);
       }
     };
 
     fetchIngredients();
     fetchCategories();
   }, []);
+
+  if (loadingIngredients || loadingCategories) {
+    return;
+  }
 
   const toggleIngredientSelection = (ingredientId) => {
     setSelectedIngredients((prevSelected) =>
@@ -233,7 +244,7 @@ const IngredientsPage = () => {
                     alt={`photo-${ingredient.name.split(' ').join('-').toLowerCase()}`}
                     className={`w-16 h-16 object-cover ${ingredient.image ? "rounded-md" : ""} mr-4`}
                   />
-                  <h2 className="item-font text-xl font-semibold flex items-center justify-between w-full">
+                  <h2 className="text-xl font-semibold flex items-center justify-between w-full">
                     {ingredient.name}
                     <span className="ml-2">
                       <svg
