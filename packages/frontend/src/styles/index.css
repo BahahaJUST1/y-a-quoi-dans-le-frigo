@@ -51,8 +51,8 @@ body::before {
     right: -50%;
     bottom: -50%;
     background-image:
-            url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='325' height='125' viewBox='0 0 225 225'%3E%3Ctext x='50%' y='50%' font-size='45' fill='white' text-anchor='middle' dominant-baseline='middle' font-family='Arial, sans-serif'%3E Y'A QUOI DANS LE FRIGO %3C/text%3E%3C/svg%3E"),
-            url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='325' height='125' viewBox='0 0 225 225'%3E%3Ctext x='50%' y='50%' font-size='45' fill='white' text-anchor='middle' dominant-baseline='middle' font-family='Arial, sans-serif'%3E Y'A QUOI DANS LE FRIGO %3C/text%3E%3C/svg%3E");
+        url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='325' height='125' viewBox='0 0 225 225'%3E%3Ctext x='50%' y='50%' font-size='45' fill='white' text-anchor='middle' dominant-baseline='middle' font-family='Arial, sans-serif'%3E Y'A QUOI DANS LE FRIGO %3C/text%3E%3C/svg%3E"),
+        url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='325' height='125' viewBox='0 0 225 225'%3E%3Ctext x='50%' y='50%' font-size='45' fill='white' text-anchor='middle' dominant-baseline='middle' font-family='Arial, sans-serif'%3E Y'A QUOI DANS LE FRIGO %3C/text%3E%3C/svg%3E");
     background-repeat: repeat;
     transform: rotate(45deg) scale(1.1);
     transform-origin: center center;
@@ -67,10 +67,10 @@ body::before {
 }
 
 .scrollbar-hide {
-    -ms-overflow-style: none;  /* Pour Internet Explorer et Edge */
-    scrollbar-width: none;     /* Pour Firefox */
-  }
-  
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;            /* Pour Chrome, Safari et Opera */
-  }
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}

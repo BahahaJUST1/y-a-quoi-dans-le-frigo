@@ -41,10 +41,10 @@ export class DishService {
     }
   }
 
-  async findAllWithIngredients(ingredientIdsList: number[], preparationTime: number): Promise<Dish[] | null> {
+  async findAllWithIngredients(ingredientIdsList: number[]): Promise<Dish[] | null> {
     try {
       if (!ingredientIdsList.length) {
-        return await this.findAllByCookingTime(preparationTime);
+        return await this.findAll();
       }
 
       const dishIngredientList: RawDishIngredientType[] = await this.dishIngredientService.findAllWithIngredients(ingredientIdsList);
@@ -52,13 +52,6 @@ export class DishService {
 
       if (!dishIngredientList.length) {
         return null;
-      }
-
-      for (const dishIngredient of dishIngredientList) {
-        const dish = await this.findOne(dishIngredient.dish_id);
-        if (dish && dish.preparationTime && dish.preparationTime <= preparationTime) {
-          dishes.push(dish);
-        }
       }
 
       return dishes;

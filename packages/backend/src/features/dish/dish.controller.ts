@@ -22,10 +22,9 @@ export class DishController {
   @UseGuards(JwtAuthGuard)
   @Post("/ingredients")
   async findAllWithIngredients(
-    @Body("ingredientIdsList") ingredientIdsList: number[],
-    @Body("preparationTime") preparationTime: number,
+    @Body("ingredientIdsList") ingredientIdsList: number[]
   ): Promise<Dish[] | null> {
-    return await this.dishService.findAllWithIngredients(ingredientIdsList, preparationTime);
+    return await this.dishService.findAllWithIngredients(ingredientIdsList);
   }
 
   @UseGuards(JwtAuthGuard)

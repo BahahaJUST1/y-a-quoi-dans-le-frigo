@@ -95,7 +95,7 @@ const IngredientsPage = () => {
 
   return (
     <div className="flex items-center justify-center h-screen overflow-hidden max-[768px]:mx-8">
-      <div className="max-w-6xl w-full p-6 max-[768px]:p-4 bg-white shadow-xl rounded-2xl flex flex-col h-[90vh] max-[768px]:h-[92vh]">
+      <div className="max-w-6xl w-full p-6 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col h-[90vh] max-[768px]:h-[92vh]">
         <h1 className="text-3xl font-bold mb-6 max-[768px]:mt-1 text-center">
           Mes Ingrédients
         </h1>
@@ -197,7 +197,7 @@ const IngredientsPage = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-[768px]:gap-2 overflow-y-auto flex-grow scrollbar-hide content-start">
+        <div className="pb-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-[768px]:gap-2 overflow-y-auto flex-grow scrollbar-hide content-start">
           {
             ingredients.filter((ingredient) => {
               return ingredient.name
