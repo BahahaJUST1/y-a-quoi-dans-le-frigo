@@ -48,13 +48,15 @@ const LoginPage = () => {
 
   return (
     <div className="flex items-center justify-center h-screen max-[768px]:p-3">
-      <div className="flex max-w-5xl bg-white p-8 rounded-xl shadow-lg max-[768px]:flex-col w-full max-[768px]:min-h-[calc(100vh-4rem)] max-[768px]:w-[calc(100%-3rem)]">
+      <div className={`${!isLogin ? "" : ""} 
+        flex max-w-5xl bg-white p-8 rounded-xl shadow-lg max-[768px]:flex-col w-full max-[768px]:min-h-[calc(100vh-4rem)] max-[768px]:w-[calc(100%-3rem)]
+      `}>
         <div className="flex-1 flex items-center justify-center mr-5 max-[768px]:mr-0 max-[768px]:mb-4">
-          <img src={logo} alt="Logo" className={`${!isLogin ? "max-[768px]:mb-[1rem]" : ""} h-full max-[768px]:disabled:true max-[768px]:h-full max-[768px]:my-[-1rem]`} />
+          <img src={logo} alt="Logo" className={`max-[768px]:w-4/5 max-[768px]:mb-0`} />
         </div>
         <div className="flex-1 flex items-center justify-center">
           <form onSubmit={handleSubmit} className="w-full">
-            <h1 className="text-4xl mb-6 text-center title-font">Y'a quoi dans le frigo ?</h1>
+            <h1 className={`text-4xl mb-6 text-center title-font ${isLogin ? "max-[768px]:mt-[-5rem]" : ""}`}>Y'a quoi dans le frigo ?</h1>
 
             {error && <p className="text-red-500 mb-4">{error}</p>}
 
@@ -115,7 +117,7 @@ const LoginPage = () => {
             <div className="flex justify-center">
               <button
                 type="button"
-                className="inline-block text-[#ff8f0c] mt-1 rounded hover:underline"
+                className="inline-block text-[#ff8f0c] mt-1 rounded hover:underline max-[768px]:underline"
                 onClick={() => {
                   setIsLogin(!isLogin);
                   setError('');
