@@ -2,13 +2,14 @@ import { useState, useEffect } from 'react';
 import $http from '../axiosInstance';
 import { useNavigate } from 'react-router-dom';
 import { backgroundTextColor } from '../utils/backgroundTextColor.ts';
+import Select from 'react-select';
+import { reactSelectCustomStyle } from '../styles/react-select';
 
 const IngredientsPage = () => {
   const [ingredients, setIngredients] = useState([]);
   const [categories, setCategories] = useState([]);
 
   const [selectedIngredients, setSelectedIngredients] = useState([]);
-  // const [preparationTime, setPreparationTime] = useState(180);
 
   const [displayFavourites, setDisplayFavourites] = useState(false);
   const [displayIngredientsCategory, setDisplayIngredientsCategory] = useState(0);
@@ -84,6 +85,14 @@ const IngredientsPage = () => {
     }
   }
 
+  const categoryOptions = [
+    { value: "", label: "Toutes les catégories" },
+    ...categories.map(category => ({
+      value: category.id,
+      label: category.name
+    }))
+  ];
+
   return (
     <div className="flex items-center justify-center h-screen overflow-hidden max-[768px]:mx-8">
       <div className="max-w-6xl w-full p-6 max-[768px]:p-4 bg-white shadow-xl rounded-2xl flex flex-col h-[90vh] max-[768px]:h-[92vh]">
@@ -96,19 +105,15 @@ const IngredientsPage = () => {
           {/* DESKTOP VERSION */}
           <div className="hidden md:flex md:flex-row md:items-center md:gap-4 md:w-full">
             <div className="w-1/4">
-              <select
-                id="category-select"
-                className="border border-gray-300 rounded-lg p-2 w-full focus:outline-0"
-                onChange={(e) => displayIngredientsByCategory(e.target.value)}
-                value={displayIngredientsCategory || ""}
-              >
-                <option value="">Toutes les catégories</option>
-                {categories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                ))}
-              </select>
+              <Select
+                classNames="focus:outline-0"
+                styles={reactSelectCustomStyle}
+                options={categoryOptions}
+                value={categoryOptions.find(option => option.value === displayIngredientsCategory) || categoryOptions[0]}
+                onChange={(option) => displayIngredientsByCategory(option.value)}
+                isSearchable={false}
+                menuPlacement="bottom"
+              />
             </div>
 
             <button
@@ -116,7 +121,7 @@ const IngredientsPage = () => {
                 displayFavourites
                   ? "bg-red-500 border border-red-400 text-white hover:bg-red-400"
                   : "bg-white border border-gray-300 text-gray-800 hover:bg-gray-50"
-              } py-2 px-4 rounded-lg text-base font-medium h-10 flex items-center gap-1 flex-shrink-0`}
+              } py-2 px-4 rounded-lg text-base font-medium h9 flex items-center gap-1 flex-shrink-0`}
               onClick={displayFavouritesIngredients}
               type="button"
             >
@@ -147,19 +152,15 @@ const IngredientsPage = () => {
             <div className="grid grid-cols-1 gap-2">
               <div className="flex items-end gap-2">
                 <div className="flex-grow">
-                  <select
-                    id="category-select-mobile"
-                    className="border border-gray-300 rounded-lg p-2 w-full focus:outline-0"
-                    onChange={(e) => displayIngredientsByCategory(e.target.value)}
-                    value={displayIngredientsCategory || ""}
-                  >
-                    <option value="">Toutes les catégories</option>
-                    {categories.map((category) => (
-                      <option key={`mobile-${category.id}`} value={category.id}>
-                        {category.name}
-                      </option>
-                    ))}
-                  </select>
+                  <Select
+                    classNames="focus:outline-0"
+                    styles={reactSelectCustomStyle}
+                    options={categoryOptions}
+                    value={categoryOptions.find(option => option.value === displayIngredientsCategory) || categoryOptions[0]}
+                    onChange={(option) => displayIngredientsByCategory(option.value)}
+                    isSearchable={false}
+                    menuPlacement="bottom"
+                  />
                 </div>
 
                 <button
@@ -268,7 +269,7 @@ const IngredientsPage = () => {
 
         <button
           onClick={navigateToDishesAccordingToIngredients}
-          className="bg-[#FFEBB3] text-black hover:bg-[#ffe394] mt-8 max-[768px]:mt-4 w-full py-3 max-[768px]:py-2 rounded-lg text-lg transition"
+          className="max-[768px]:bg-[#ffe394] bg-[#FFEBB3] text-black hover:bg-[#FFE394] mt-8 max-[768px]:mt-4 w-full py-3 max-[768px]:py-2 rounded-lg text-lg transition"
           type="button"
         >
           Voir les plats
