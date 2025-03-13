@@ -51,10 +51,7 @@ const IngredientsPage = () => {
 
   const navigateToDishesAccordingToIngredients = () => {
     navigate('/dishes', {
-      state: {
-        selectedIngredients,
-        preparationTime: 180
-      }
+      state: { selectedIngredients }
     });
   };
 

@@ -54,6 +54,13 @@ export class DishService {
         return null;
       }
 
+      for (const dishIngredient of dishIngredientList) {
+        const dish = await this.findOne(dishIngredient.dish_id);
+        if (dish) {
+          dishes.push(dish);
+        }
+      }
+
       return dishes;
     }
     catch (e) {
