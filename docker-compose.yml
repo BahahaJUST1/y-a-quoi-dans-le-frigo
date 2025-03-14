@@ -10,8 +10,11 @@ services:
       MYSQL_PASSWORD: ${DB_PASS}
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "3306:3306"
+    networks:
+      - app-network
 
   backend:
     build: ./packages/backend
@@ -62,3 +65,7 @@ services:
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
