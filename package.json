@@ -6,6 +6,6 @@
   "scripts": {
     "backend": "cd ./packages/backend && npm run start",
     "frontend": "cd ./packages/frontend && npm start",
-    "apache": "docker-compose up --build -d"
+    "docker": "sudo docker-compose up"
   }
 }
