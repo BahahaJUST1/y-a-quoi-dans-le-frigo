@@ -19,4 +19,4 @@ RUN npm run build
 EXPOSE 3000
 
 # startup command
-CMD ["npm", "run", "backend"]
+CMD ["npm", "run", "start"]
