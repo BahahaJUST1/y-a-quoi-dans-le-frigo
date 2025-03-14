@@ -15,6 +15,10 @@ services:
       - "3306:3306"
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
 
   backend:
     build: ./packages/backend
@@ -25,7 +29,8 @@ services:
     volumes:
       - ./packages/backend/src:/app/src
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     ports:
       - "3000:3000"
     networks:
