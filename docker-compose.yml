@@ -1,7 +1,7 @@
 services:
   mysql:
     image: mysql:5.7
-    container_name: mysql_db
+    container_name: mysql
     restart: always
     env_file:
       - ./packages/backend/.env
@@ -63,6 +63,8 @@ services:
     depends_on:
       - frontend
       - backend
+    networks:
+      - app-network
 
 networks:
   app-network:
