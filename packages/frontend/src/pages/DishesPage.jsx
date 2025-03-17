@@ -84,12 +84,12 @@ const DishesPage = () => {
 
   return (
     <div className="flex items-center justify-center h-screen overflow-hidden max-[768px]:mx-8">
-      <div className="max-w-6xl w-full p-6 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col h-[90vh] max-[768px]:h-[92vh]">
-        <h1 className="text-3xl font-bold mb-6 max-[768px]:mt-1 text-center">
+      <div className="max-w-6xl w-full p-6 py-4 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col h-[90vh] max-[768px]:h-[92vh]">
+        <h1 className="text-3xl font-bold mb-3 max-[768px]:mt-1 text-center">
           Mes Plats
         </h1>
 
-        <div className="bg-gray-50 max-[768px]:p-2 p-4 rounded-xl mb-6 max-[768px]:mb-5 shadow-sm">
+        <div className="bg-gray-100 max-[768px]:p-2 p-4 rounded-xl mb-4 max-[768px]:mb-5 shadow-sm">
 
           {/* DESKTOP VERSION */}
           <div className="hidden md:flex md:flex-row md:items-center md:gap-4 md:w-full">

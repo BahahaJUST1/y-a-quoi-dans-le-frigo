@@ -103,12 +103,12 @@ const IngredientsPage = () => {
 
   return (
     <div className="flex items-center justify-center h-screen overflow-hidden max-[768px]:mx-8">
-      <div className="max-w-6xl w-full p-6 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col h-[90vh] max-[768px]:h-[92vh]">
-        <h1 className="text-3xl font-bold mb-6 max-[768px]:mt-1 text-center">
+      <div className="max-w-6xl w-full p-6 py-4 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col h-[90vh] max-[768px]:h-[92vh]">
+        <h1 className="text-3xl font-bold mb-3 max-[768px]:mt-1 text-center">
           Mes Ingrédients
         </h1>
 
-        <div className="bg-gray-50 max-[768px]:p-2 p-4 rounded-xl mb-6 max-[768px]:mb-5 shadow-sm">
+        <div className="bg-gray-100 max-[768px]:p-2 p-4 rounded-xl mb-4 max-[768px]:mb-5 shadow-sm">
 
           {/* DESKTOP VERSION */}
           <div className="hidden md:flex md:flex-row md:items-center md:gap-4 md:w-full">
@@ -229,7 +229,7 @@ const IngredientsPage = () => {
               return (
                 <div
                   key={ingredient.id}
-                  className={`flex items-center p-4 max-[768px]:p-2 rounded-lg shadow-lg cursor-pointer transition-opacity duration-300 w-full h-24 max-[768px]:h-20 ${isSelected ? 'opacity-100' : 'opacity-70'}`}
+                  className={`flex items-center p-2 rounded-lg shadow-lg cursor-pointer transition-opacity duration-300 w-full h-20 ${isSelected ? 'opacity-100' : 'opacity-70'}`}
                   style={
                     isSelected
                       ? { color: backgroundTextColor(ingredient.bgColor), backgroundColor: ingredient.bgColor, borderColor: 'darkgray', borderWidth: '1px' }
@@ -277,7 +277,7 @@ const IngredientsPage = () => {
 
         <button
           onClick={navigateToDishesAccordingToIngredients}
-          className="max-[768px]:bg-[#ffe394] bg-[#FFEBB3] text-black hover:bg-[#FFE394] mt-8 max-[768px]:mt-4 w-full py-3 max-[768px]:py-2 rounded-lg text-lg transition"
+          className="max-[768px]:bg-[#ffe394] bg-[#FFEBB3] text-black hover:bg-[#FFE394] mt-4 max-[768px]:mt-4 w-full py-3 max-[768px]:py-2 rounded-lg text-lg transition"
           type="button"
         >
           Voir les plats
