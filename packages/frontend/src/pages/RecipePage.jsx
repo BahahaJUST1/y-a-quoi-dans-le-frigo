@@ -49,7 +49,7 @@ const RecipePage = () => {
 
         <GoBackArrow to={"/dishes"} state={{ selectedIngredients: [] }} />
 
-        <h1 className="text-3xl font-bold mb-6 text-center sticky top-0 bg-white z-10">
+        <h1 className="w-[90%] mx-auto text-3xl font-bold mb-6 text-center sticky top-0 bg-white z-10">
           {dish.name}
         </h1>
         
