@@ -49,7 +49,7 @@ const LoginPage = () => {
   return (
     <div className="flex items-center justify-center h-screen max-[768px]:p-3">
       <div className="flex max-w-5xl bg-white p-8 rounded-xl shadow-lg max-[768px]:flex-col w-full max-[768px]:min-h-[calc(100vh-4rem)] max-[768px]:w-[calc(100%-3rem)]">
-        <div className="flex-1 flex items-center justify-center mr-5 max-[768px]:mr-0 max-[768px]:mb-4">
+        <div className="flex-1 flex items-center justify-center mr-5 max-[768px]:mr-0 max-[768px]:mb-0">
           <img src={logo} alt="Logo" className={`max-[768px]:w-4/5`} />
         </div>
         <div className="flex-1 flex items-center justify-center">
