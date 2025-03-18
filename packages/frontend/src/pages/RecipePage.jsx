@@ -97,9 +97,9 @@ const RecipePage = () => {
               Recette pour {dish.numberOfPeople} personnes
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-[768px]:gap-2 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 max-[768px]:gap-2 mb-6">
             {dishIngredients.map((item) => (
-              <div key={item.id} className="flex items-center gap-4 p-4 max-[768px]:p-2 border rounded-lg shadow-sm">
+              <div key={item.id} className="flex items-center gap-4 p-2 border rounded-lg shadow-sm">
                 <img
                   src={item.ingredient.image
                     ? `https://res.cloudinary.com/dd50khgyk/image/upload/${item.ingredient.image}`
