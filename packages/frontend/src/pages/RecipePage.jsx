@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import $http from '../axiosInstance';
 import { useParams } from 'react-router-dom';
+import GoBackArrow from '../components/GoBackArrow';
 
 const RecipePage = () => {
   const { id } = useParams();
@@ -44,7 +45,10 @@ const RecipePage = () => {
 
   return (
     <div className="flex items-center justify-center h-screen overflow-hidden max-[768px]:mx-8">
-      <div className="max-w-6xl w-full p-6 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col h-[90vh] max-[768px]:h-[92vh]">
+      <div className="relative max-w-6xl w-full p-6 py-4 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col h-[90vh] max-[768px]:h-[92vh]">
+
+        <GoBackArrow to={"/dishes"} state={{ selectedIngredients: [] }} />
+
         <h1 className="text-3xl font-bold mb-6 text-center sticky top-0 bg-white z-10">
           {dish.name}
         </h1>

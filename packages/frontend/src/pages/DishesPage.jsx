@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import $http from '../axiosInstance';
 import { useLocation, useNavigate } from 'react-router-dom';
+import GoBackArrow from '../components/GoBackArrow';
 
 const DishesPage = () => {
   const [dishes, setDishes] = useState([]);
@@ -19,7 +20,7 @@ const DishesPage = () => {
     const fetchDishes = async () => {
       try {
         const response = await $http.post('http://localhost:3000/dish/ingredients', {
-          ingredientIdsList: location.state.selectedIngredients
+          ingredientIdsList: location.state?.selectedIngredients || []
         });
         setDishes(response.data);
       } catch (err) {
@@ -30,7 +31,7 @@ const DishesPage = () => {
     };
 
     fetchDishes();
-  }, [location.state.selectedIngredients]);
+  }, [location.state?.selectedIngredients]);
 
   if (loadingDishes) {
     return;
@@ -84,12 +85,15 @@ const DishesPage = () => {
 
   return (
     <div className="flex items-center justify-center h-screen overflow-hidden max-[768px]:mx-8">
-      <div className="max-w-6xl w-full p-6 py-4 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col h-[90vh] max-[768px]:h-[92vh]">
+      <div className="relative max-w-6xl w-full p-6 py-4 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col h-[90vh] max-[768px]:h-[92vh]">
+
+        <GoBackArrow to={"/ingredients"} />
+
         <h1 className="text-3xl font-bold mb-3 max-[768px]:mt-1 text-center">
           Mes Plats
         </h1>
 
-        <div className="bg-gray-100 max-[768px]:p-2 p-4 rounded-xl mb-4 max-[768px]:mb-5 shadow-sm">
+        <div className="bg-gray-100 max-[768px]:p-2 p-3 rounded-xl mb-5 mt-1 shadow-sm">
 
           {/* DESKTOP VERSION */}
           <div className="hidden md:flex md:flex-row md:items-center md:gap-4 md:w-full">
@@ -163,7 +167,9 @@ const DishesPage = () => {
                   fill="currentColor"
                   aria-hidden="true"
                 >
-                  <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"/>
+                  <path fillRule="evenodd"
+                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                        clipRule="evenodd" />
                 </svg>
               </div>
               <input
@@ -220,8 +226,11 @@ const DishesPage = () => {
                   onClick={displayFavouritesDishes}
                   type="button"
                 >
-                  <svg className="mt-1 ml-[-3px]" width="16" height="16" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill={displayFavourites ? "white" : "none"} stroke={displayFavourites ? "white" : "red"} strokeWidth="2">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                  <svg className="mt-1 ml-[-3px]" width="16" height="16" viewBox="0 0 32 32"
+                       xmlns="http://www.w3.org/2000/svg" fill={displayFavourites ? "white" : "none"}
+                       stroke={displayFavourites ? "white" : "red"} strokeWidth="2">
+                    <path
+                      d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                   </svg>
                   Favoris
                 </button>
@@ -234,7 +243,9 @@ const DishesPage = () => {
                     fill="currentColor"
                     aria-hidden="true"
                   >
-                    <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+                    <path fillRule="evenodd"
+                          d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                          clipRule="evenodd" />
                   </svg>
                 </div>
                 <input
@@ -257,7 +268,8 @@ const DishesPage = () => {
               </p>
             )
             : (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pb-3 mb-2 max-[768px]:my-1 overflow-y-auto flex-grow scrollbar-hide content-start">
+              <div
+                className="grid grid-cols-1 md:grid-cols-3 gap-4 pb-3 mb-2 max-[768px]:my-1 overflow-y-auto flex-grow scrollbar-hide content-start">
                 {
                   dishes.filter((dish) => {
                     return dish.name
