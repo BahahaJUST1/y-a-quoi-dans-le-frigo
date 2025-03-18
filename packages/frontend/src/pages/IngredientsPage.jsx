@@ -112,7 +112,7 @@ const IngredientsPage = () => {
           Mes Ingrédients
         </h1>
 
-        <div className="bg-gray-100 max-[768px]:p-2 p-3 rounded-xl mb-5 mt-1 shadow-sm">
+        <div className="z-20 bg-gray-100 max-[768px]:p-2 p-3 rounded-xl mb-5 mt-1 shadow-sm">
 
           {/* DESKTOP VERSION */}
           <div className="hidden md:flex md:flex-row md:items-center md:gap-4 md:w-full">
@@ -257,7 +257,7 @@ const IngredientsPage = () => {
                         alt={`photo-${ingredient.name.split(' ').join('-').toLowerCase()}`}
                         className={`w-16 h-16 object-cover ${ingredient.image ? "rounded-md" : ""} mr-4`}
                       />
-                      <h2 className="text-xl font-semibold flex items-center justify-between w-full">
+                      <h2 className="text-xl max-[768px]:text-lg font-semibold flex items-center justify-between w-full">
                         {ingredient.name}
                         <span className="ml-2">
                       <svg

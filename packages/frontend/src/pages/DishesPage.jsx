@@ -93,7 +93,7 @@ const DishesPage = () => {
           Mes Plats
         </h1>
 
-        <div className="bg-gray-100 max-[768px]:p-2 p-3 rounded-xl mb-5 mt-1 shadow-sm">
+        <div className="z-20 bg-gray-100 max-[768px]:p-2 p-3 rounded-xl mb-5 mt-1 shadow-sm">
 
           {/* DESKTOP VERSION */}
           <div className="hidden md:flex md:flex-row md:items-center md:gap-4 md:w-full">
@@ -304,7 +304,7 @@ const DishesPage = () => {
                         />
                         <div className="flex justify-between items-center mt-2 mx-1">
                           <div className="flex flex-col">
-                            <h2 className="text-xl font-semibold">{dish.name}</h2>
+                            <h2 className="text-xl max-[768px]:text-lg font-semibold">{dish.name}</h2>
                             <div className="flex items-center mt-1">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
