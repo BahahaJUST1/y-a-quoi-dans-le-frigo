@@ -211,46 +211,55 @@ const IngredientsPage = () => {
 
         <div className="pb-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-[768px]:gap-2 overflow-y-auto flex-grow scrollbar-hide content-start">
           {
-            ingredients.filter((ingredient) => {
-              return ingredient.name
-              .toLowerCase()
-              .split(' ')
-              .join('')
-              .includes(
-                searchTerm
-                .toLowerCase()
-                .split(' ')
-                .join('')
-              );
-            }).map((ingredient) => {
-              const isSelected = selectedIngredients.includes(ingredient.id);
-              if (displayFavourites && !ingredient.favourite) {
-                return null;
-              }
-              if (displayIngredientsCategory && ingredient.category.id !== displayIngredientsCategory) {
-                return null;
-              }
-              return (
-                <div
-                  key={ingredient.id}
-                  className={`flex items-center p-2 rounded-lg shadow-lg cursor-pointer transition-opacity duration-300 w-full h-20 ${isSelected ? 'opacity-100' : 'opacity-70'}`}
-                  style={
-                    isSelected
-                      ? { color: backgroundTextColor(ingredient.bgColor), backgroundColor: ingredient.bgColor, borderColor: 'darkgray', borderWidth: '1px' }
-                      : { borderColor: 'lightgray', borderWidth: '1px' }
+            ingredients.length === 0
+              ? (
+                <div className="absolute inset-0 z-10 flex items-center justify-center">
+                  <p className="text-center text-gray-500">
+                    Vous n'avez pas encore enregistré d'ingrédients
+                  </p>
+                </div>
+              )
+              : (
+                ingredients.filter((ingredient) => {
+                  return ingredient.name
+                  .toLowerCase()
+                  .split(' ')
+                  .join('')
+                  .includes(
+                    searchTerm
+                    .toLowerCase()
+                    .split(' ')
+                    .join('')
+                  );
+                }).map((ingredient) => {
+                  const isSelected = selectedIngredients.includes(ingredient.id);
+                  if (displayFavourites && !ingredient.favourite) {
+                    return null;
                   }
-                  onClick={() => toggleIngredientSelection(ingredient.id)}
-                >
-                  <img
-                    src={ingredient.image
-                      ? `https://res.cloudinary.com/dd50khgyk/image/upload/${ingredient.image}`
-                      : `https://res.cloudinary.com/dd50khgyk/image/upload/${ingredient.category.image}`}
-                    alt={`photo-${ingredient.name.split(' ').join('-').toLowerCase()}`}
-                    className={`w-16 h-16 object-cover ${ingredient.image ? "rounded-md" : ""} mr-4`}
-                  />
-                  <h2 className="text-xl font-semibold flex items-center justify-between w-full">
-                    {ingredient.name}
-                    <span className="ml-2">
+                  if (displayIngredientsCategory && ingredient.category.id !== displayIngredientsCategory) {
+                    return null;
+                  }
+                  return (
+                    <div
+                      key={ingredient.id}
+                      className={`flex items-center p-2 rounded-lg shadow-lg cursor-pointer transition-opacity duration-300 w-full h-20 ${isSelected ? 'opacity-100' : 'opacity-70'}`}
+                      style={
+                        isSelected
+                          ? { color: backgroundTextColor(ingredient.bgColor), backgroundColor: ingredient.bgColor, borderColor: 'darkgray', borderWidth: '1px' }
+                          : { borderColor: 'lightgray', borderWidth: '1px' }
+                      }
+                      onClick={() => toggleIngredientSelection(ingredient.id)}
+                    >
+                      <img
+                        src={ingredient.image
+                          ? `https://res.cloudinary.com/dd50khgyk/image/upload/${ingredient.image}`
+                          : `https://res.cloudinary.com/dd50khgyk/image/upload/${ingredient.category.image}`}
+                        alt={`photo-${ingredient.name.split(' ').join('-').toLowerCase()}`}
+                        className={`w-16 h-16 object-cover ${ingredient.image ? "rounded-md" : ""} mr-4`}
+                      />
+                      <h2 className="text-xl font-semibold flex items-center justify-between w-full">
+                        {ingredient.name}
+                        <span className="ml-2">
                       <svg
                         width="35"
                         height="35"
@@ -272,16 +281,17 @@ const IngredientsPage = () => {
                         <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                       </svg>
                     </span>
-                  </h2>
-                </div>
-              );
-            })
+                      </h2>
+                    </div>
+                  );
+                })
+              )
           }
         </div>
 
         <button
           onClick={navigateToDishesAccordingToIngredients}
-          className="max-[768px]:bg-[#ffe394] bg-[#FFEBB3] text-black hover:bg-[#FFE394] mt-4 max-[768px]:mt-4 w-full py-3 max-[768px]:py-2 rounded-lg text-lg transition"
+          className="z-20 max-[768px]:bg-[#ffe394] bg-[#FFEBB3] text-black hover:bg-[#FFE394] mt-4 max-[768px]:mt-4 w-full py-3 max-[768px]:py-2 rounded-lg text-lg transition"
           type="button"
         >
           Voir les plats

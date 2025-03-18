@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { DishModule } from './features/dish/dish.module';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { MikroOrmConfigService } from './database/mikro-orm.config';
@@ -11,6 +11,7 @@ import { UnitModule } from './features/unit/unit.module';
 import { UserModule } from './features/user/user.module';
 import * as Joi from 'joi';
 import { AuthModule } from './features/auth/auth.module';
+import { ExtraUserMiddleware } from './decorators/middlewares/extract-user.middleware';
 
 @Module({
   imports: [
@@ -25,10 +26,10 @@ import { AuthModule } from './features/auth/auth.module';
         DB_PORT: Joi.number().required(),
         JWT_SECRET: Joi.string().required(),
         BCRYPT_SALT_ROUND: Joi.number().required(),
-      })
+      }),
     }),
     MikroOrmModule.forRootAsync({
-      useClass: MikroOrmConfigService
+      useClass: MikroOrmConfigService,
     }),
     AuthModule,
     DishModule,
@@ -36,9 +37,13 @@ import { AuthModule } from './features/auth/auth.module';
     IngredientModule,
     IngredientCategoryModule,
     UnitModule,
-    UserModule
+    UserModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(ExtraUserMiddleware).forRoutes('*');
+  }
+}

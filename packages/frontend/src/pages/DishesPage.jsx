@@ -263,9 +263,11 @@ const DishesPage = () => {
         {
           dishes.length === 0
             ? (
-              <p className="text-center text-gray-500">
-                Aucun plat disponible en fonction des ingrédients et/ou du temps de préparation sélectionné
-              </p>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <p className="max-[768px]:w-[90%] text-center text-gray-500">
+                  Aucun plat disponible en fonction des ingrédients et/ou du temps de préparation sélectionné
+                </p>
+              </div>
             )
             : (
               <div
