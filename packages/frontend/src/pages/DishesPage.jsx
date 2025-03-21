@@ -180,6 +180,18 @@ const DishesPage = () => {
                 onChange={(e) => setSearchTerm(e.target.value.toLowerCase())}
               />
             </div>
+
+            <button
+              className="bg-white hover:bg-[#FFE394] border border-gray-300 font-bold rounded-lg w-10 h-10 flex items-center justify-center flex-shrink-0"
+              onClick={() => navigate("/")}
+              type="button"
+              title="Ajouter un nouveau plat"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </button>
           </div>
 
           {/* MOBILE VERSION */}
@@ -248,13 +260,26 @@ const DishesPage = () => {
                           clipRule="evenodd" />
                   </svg>
                 </div>
-                <input
-                  type="text"
-                  placeholder="Rechercher un plat..."
-                  className="focus:outline-0 border border-gray-300 rounded-lg py-2 pl-10 pr-3 w-full"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value.toLowerCase())}
-                />
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Rechercher un plat..."
+                    className="focus:outline-0 border border-gray-300 rounded-lg py-2 pl-10 pr-3 w-full"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value.toLowerCase())}
+                  />
+                  <button
+                    className="bg-white hover:bg-[#FFE394] border border-gray-300 font-bold rounded-lg w-10 h-10 flex items-center justify-center flex-shrink-0"
+                    onClick={() => navigate("/")}
+                    type="button"
+                    title="Ajouter un nouveau plat"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="12" y1="5" x2="12" y2="19"></line>
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
