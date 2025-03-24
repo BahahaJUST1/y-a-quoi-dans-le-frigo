@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards, UseInterceptors } from '@nestjs/common';
 import { DishIngredientService } from './dish_ingredient.service';
 import { DishIngredient } from '../../database/models/dish_ingredient.entity';
 import { JwtAuthGuard } from '../../decorators/guards/jwt-auth.guard';
@@ -18,5 +18,10 @@ export class DishIngredientController {
   @Get("/dish/:dishId")
   async findByDishId(@Param('dishId') dishId: number): Promise<DishIngredient[] | null> {
     return await this.dishIngredientService.findByDishId(dishId);
+  }
+
+  @Post()
+  async createOne(@Body() body: DishIngredient): Promise<DishIngredient> {
+    return await this.dishIngredientService.createOne(body);
   }
 }

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import $http from '../axiosInstance';
 import { useParams } from 'react-router-dom';
 import GoBackArrow from '../components/GoBackArrow';
+import { getNoRecipeText } from '../utils/noRecipeText.ts';
 
 const RecipePage = () => {
   const { id } = useParams();
@@ -61,7 +62,7 @@ const RecipePage = () => {
           />
 
           <h2 className="text-1xl font-bold mb-6">
-            <div className="flex items-center mt-1">
+            <div className={`${dish.preparationTime ? '' : 'hidden' } flex items-center mt-1`}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -117,7 +118,11 @@ const RecipePage = () => {
 
           <div className="bg-[#FFFEE5] border mb-1 p-6 pb-4 max-[768px]:p-4 max-[768px]:pb-2 rounded-lg">
             <h2 className="text-3xl font-bold mb-6">Recette</h2>
-            <p className="whitespace-pre-line pb-3">{dish.recipe}</p>
+            {
+              dish.recipe
+                ? <p className="whitespace-pre-line pb-3">{dish.recipe}</p>
+                : <p className="whitespace-pre-line pb-3">{getNoRecipeText()}</p>
+            }
           </div>
         </div>
       </div>

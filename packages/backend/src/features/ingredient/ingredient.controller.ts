@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Put, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, UseGuards, UseInterceptors } from '@nestjs/common';
 import { IngredientService } from './ingredient.service';
 import { Ingredient } from '../../database/models/ingredient.entity';
 import { JwtAuthGuard } from '../../decorators/guards/jwt-auth.guard';
@@ -28,5 +28,10 @@ export class IngredientController {
   @Put("/like/:id")
   async likeOrUnlikeDish(@Param('id') id: number): Promise<void> {
     await this.ingredientService.likeOrUnlikeDish(id);
+  }
+
+  @Post()
+  async createOne(@Body() body: Ingredient): Promise<Ingredient> {
+    return await this.ingredientService.createOne(body);
   }
 }

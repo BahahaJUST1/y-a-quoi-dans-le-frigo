@@ -88,4 +88,10 @@ export class DishService {
     dish.favourite = !dish.favourite;
     await this.em.flush();
   }
+
+  async createOne(dish: Dish): Promise<Dish> {
+    const newDish = this.em.create(Dish, dish);
+    await this.em.flush();
+    return newDish;
+  }
 }

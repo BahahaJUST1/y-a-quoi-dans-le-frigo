@@ -270,7 +270,9 @@ const IngredientsPage = () => {
                       className={`flex items-center p-2 rounded-lg shadow-lg cursor-pointer transition-opacity duration-300 w-full h-20 ${isSelected ? 'opacity-100' : 'opacity-70'}`}
                       style={
                         isSelected
-                          ? { color: backgroundTextColor(ingredient.bgColor), backgroundColor: ingredient.bgColor, borderColor: 'darkgray', borderWidth: '1px' }
+                          ? ingredient.bgColor
+                            ? { color: backgroundTextColor(ingredient.bgColor), backgroundColor: ingredient.bgColor, borderColor: 'darkgray', borderWidth: '1px' }
+                            : { backgroundColor: '#fafafa', borderColor: 'darkgray', borderWidth: '1px' }
                           : { borderColor: 'lightgray', borderWidth: '1px' }
                       }
                       onClick={() => toggleIngredientSelection(ingredient.id)}

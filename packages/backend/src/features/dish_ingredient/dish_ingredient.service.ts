@@ -43,4 +43,10 @@ export class DishIngredientService {
       throw e;
     }
   }
+
+  async createOne(dishIngredient: DishIngredient): Promise<DishIngredient> {
+    const newDishIngredient = this.em.create(DishIngredient, dishIngredient);
+    await this.em.flush();
+    return newDishIngredient;
+  }
 }

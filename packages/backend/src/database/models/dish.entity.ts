@@ -36,7 +36,4 @@ export class Dish {
 
   @Property({ type: 'date', nullable: true })
   deletedAt?: Date;
-
-  @OneToMany(() => DishIngredient, dishIngredient => dishIngredient.dish)
-  ingredients = new Collection<DishIngredient>(this);
 }

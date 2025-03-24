@@ -58,7 +58,7 @@ const DishesPage = () => {
   const handleTimeChange = (increment) => {
     setTimeValue(prev => {
       const newValue = prev + increment;
-      return Math.min(Math.max(newValue, 0), 180);
+      return Math.min(Math.max(newValue, 5), 180);
     });
   };
 
@@ -119,7 +119,7 @@ const DishesPage = () => {
                   value={`${timeValue}min`}
                   onChange={(e) => setTimeValue(Math.min(Math.max(parseInt(e.target.value.split("min")[0]) || 0, 0), 180))}
                   className="w-20 text-center border-x border-gray-300 py-2 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                  min="0"
+                  min="5"
                   max="180"
                   step="5"
                 />
@@ -214,7 +214,7 @@ const DishesPage = () => {
                     value={`${timeValue}min`}
                     onChange={(e) => setTimeValue(Math.min(Math.max(parseInt(e.target.value.split("min")[0]) || 0, 0), 180))}
                     className="w-20 border-x border-gray-300 h-full text-center focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                    min="0"
+                    min="5"
                     max="180"
                     step="5"
                   />
@@ -330,7 +330,7 @@ const DishesPage = () => {
                         <div className="flex justify-between items-center mt-2 mx-1">
                           <div className="flex flex-col">
                             <h2 className="text-xl max-[768px]:text-lg font-semibold">{dish.name}</h2>
-                            <div className="flex items-center mt-1">
+                            <div className={`flex items-center mt-1 ${dish.preparationTime ? '' : 'hidden' } `}>
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"

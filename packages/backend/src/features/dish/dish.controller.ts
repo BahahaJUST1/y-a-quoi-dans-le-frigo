@@ -41,4 +41,9 @@ export class DishController {
   async likeOrUnlikeDish(@Param('id') id: number): Promise<void> {
     await this.dishService.likeOrUnlikeDish(id);
   }
+
+  @Post()
+  async createOne(@Body() body: Dish): Promise<Dish> {
+    return await this.dishService.createOne(body);
+  }
 }

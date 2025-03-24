@@ -46,4 +46,10 @@ export class IngredientService {
     ingredient.favourite = !ingredient.favourite;
     await this.em.flush();
   }
+
+  async createOne(ingredient: Ingredient): Promise<Ingredient> {
+    const newIngredient = this.em.create(Ingredient, ingredient);
+    await this.em.flush();
+    return newIngredient;
+  }
 }
