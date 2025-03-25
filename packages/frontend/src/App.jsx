@@ -1,8 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import LoginPage from './pages/LoginPage';
-import DishesPage from './pages/DishesPage';
-import IngredientsPage from './pages/IngredientsPage';
-import RecipePage from './pages/RecipePage';
+import LoginPage from './pages/login/LoginPage';
+import DishesPage from './pages/dishes/DishesPage';
+import IngredientsPage from './pages/ingredients/IngredientsPage';
+import RecipePage from './pages/recipes/RecipePage';
 
 const App = () => {
   return (

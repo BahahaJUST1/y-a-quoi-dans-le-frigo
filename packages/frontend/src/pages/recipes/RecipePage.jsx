@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import $http from '../axiosInstance';
+import $http from '../../axiosInstance';
 import { useParams } from 'react-router-dom';
-import GoBackArrow from '../components/GoBackArrow';
-import { getNoRecipeText } from '../utils/noRecipeText.ts';
+import GoBackArrow from '../../components/GoBackArrow';
+import { getNoRecipeText } from '../../utils/noRecipeText.ts';
 
 const RecipePage = () => {
   const { id } = useParams();

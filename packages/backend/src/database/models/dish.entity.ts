@@ -1,8 +1,7 @@
-import { Entity, PrimaryKey, Property, ManyToOne, OneToMany, Collection } from '@mikro-orm/core';
+import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
 import { User } from './user.entity';
-import { DishIngredient } from './dish_ingredient.entity';
 
-@Entity({ tableName: "dishes" })
+@Entity({ tableName: 'dishes' })
 export class Dish {
   @PrimaryKey()
   id!: number;

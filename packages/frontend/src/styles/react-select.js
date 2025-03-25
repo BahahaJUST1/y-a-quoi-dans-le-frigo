@@ -1,11 +1,11 @@
-const checkIfMobile = () => {
+export const checkIfMobile = () => {
   return window.matchMedia('(max-width: 768px)').matches;
 };
 
 export const reactSelectCustomStyle = {
   control: (baseStyles) => ({
     ...baseStyles,
-    padding: checkIfMobile() ? '1px 0' : '2px 1px',
+    padding: checkIfMobile() ? '2px 0' : '2px 1px',
     borderRadius: '0.5rem',
     borderColor: '#D1D5DB',
     boxShadow: 'none',
