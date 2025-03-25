@@ -3,6 +3,7 @@ import { IngredientService } from './ingredient.service';
 import { Ingredient } from '../../database/models/ingredient.entity';
 import { JwtAuthGuard } from '../../decorators/guards/jwt-auth.guard';
 import { DatabaseResponseUserInterceptor } from '../../decorators/interceptors/database-response-user.interceptor';
+import { UserIdInterceptor } from '../../decorators/interceptors/user-id.interceptor';
 
 @Controller('ingredient')
 @UseGuards(JwtAuthGuard)
@@ -31,6 +32,7 @@ export class IngredientController {
   }
 
   @Post()
+  @UseInterceptors(UserIdInterceptor)
   async createOne(@Body() body: Ingredient): Promise<Ingredient> {
     return await this.ingredientService.createOne(body);
   }

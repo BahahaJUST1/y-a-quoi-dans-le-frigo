@@ -3,7 +3,7 @@ import { reactSelectCustomStyle } from '../../styles/react-select';
 import $http from '../../axiosInstance';
 import { useEffect, useState } from 'react';
 
-const CategorySelect = ({ selectedCategory, onCategoryChange }) => {
+const CategorySelect = ({ defaultCategoryName, selectedCategory, onCategoryChange }) => {
   
   const [categories, setCategories] = useState([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
@@ -28,7 +28,7 @@ const CategorySelect = ({ selectedCategory, onCategoryChange }) => {
   }
 
   const categoryOptions = [
-    { value: "", label: "Toutes les catégories" },
+    { value: "", label: defaultCategoryName },
     ...categories.map(category => ({
       value: category.id,
       label: category.name
