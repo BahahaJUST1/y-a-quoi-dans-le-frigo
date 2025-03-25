@@ -12,6 +12,7 @@ import { UserModule } from './features/user/user.module';
 import * as Joi from 'joi';
 import { AuthModule } from './features/auth/auth.module';
 import { ExtraUserMiddleware } from './decorators/middlewares/extract-user.middleware';
+import { CloudinaryModule } from './features/cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -26,12 +27,16 @@ import { ExtraUserMiddleware } from './decorators/middlewares/extract-user.middl
         DB_PORT: Joi.number().required(),
         JWT_SECRET: Joi.string().required(),
         BCRYPT_SALT_ROUND: Joi.number().required(),
+        CLOUDINARY_NAME: Joi.string().required(),
+        CLOUDINARY_KEY: Joi.string().required(),
+        CLOUDINARY_SECRET: Joi.string().required(),
       }),
     }),
     MikroOrmModule.forRootAsync({
       useClass: MikroOrmConfigService,
     }),
     AuthModule,
+    CloudinaryModule,
     DishModule,
     DishIngredientModule,
     IngredientModule,
