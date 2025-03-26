@@ -47,25 +47,11 @@ services:
       - "443:443"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
-      - certbot_challenge:/var/www/certbot
-      - /etc/letsencrypt:/etc/letsencrypt
     depends_on:
       - frontend
       - backend
     networks:
       - app-network
-
-  certbot:
-    image: certbot/certbot
-    container_name: certbot
-    volumes:
-      - certbot_challenge:/var/www/certbot
-      - /etc/letsencrypt:/etc/letsencrypt
-    entrypoint: >
-      sh -c "certbot certonly --webroot -w /var/www/certbot
-      -d y-a-quoi-dans-le-frigo.fr
-      -d y-a-quoi-dans-le-frigo.com
-      -d y-a-quoi-dans-le-frigo.online"
 
 networks:
   app-network:
@@ -73,6 +59,4 @@ networks:
 
 volumes:
   mysql_data:
-    driver: local
-  certbot_challenge:
     driver: local
