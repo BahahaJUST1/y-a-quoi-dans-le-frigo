@@ -29,10 +29,6 @@ services:
   frontend:
     build:
       context: ./packages/frontend
-      args:
-        - REACT_APP_CLOUDINARY_NAME=${REACT_APP_CLOUDINARY_NAME}
-        - REACT_APP_CLOUDINARY_KEY=${REACT_APP_CLOUDINARY_KEY}
-        - REACT_APP_CLOUDINARY_SECRET=${REACT_APP_CLOUDINARY_SECRET}
     container_name: frontend
     restart: always
     depends_on:
@@ -41,12 +37,10 @@ services:
       - "3001:80"
     networks:
       - app-network
-    env_file:
-      - ./packages/frontend/.env
 
   nginx:
     image: nginx:alpine
-    container_name: proxy
+    container_name: nginx
     restart: always
     ports:
       - "80:80"
@@ -71,8 +65,7 @@ services:
       sh -c "certbot certonly --webroot -w /var/www/certbot
       -d y-a-quoi-dans-le-frigo.fr
       -d y-a-quoi-dans-le-frigo.com
-      -d y-a-quoi-dans-le-frigo.online
-      --email ton-email@example.com --agree-tos --no-eff-email --force-renewal"
+      -d y-a-quoi-dans-le-frigo.online"
 
 networks:
   app-network:
