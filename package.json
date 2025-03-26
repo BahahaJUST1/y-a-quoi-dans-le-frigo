@@ -5,9 +5,6 @@
   "license": "ISC",
   "scripts": {
     "backend": "cd ./packages/backend && npm run start",
-    "frontend": "cd ./packages/frontend && npm start",
-    "nginx:up": "docker-compose up -d nginx",
-    "nginx:ssl": "docker-compose run --rm certbot",
-    "nginx:restart": "docker-compose restart nginx"
+    "frontend": "cd ./packages/frontend && npm start"
   }
 }
