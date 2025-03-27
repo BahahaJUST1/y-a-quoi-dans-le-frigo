@@ -7,8 +7,6 @@ ARG REACT_APP_ENV
 # transform arguments to environment variables
 ENV REACT_APP_ENV=$REACT_APP_ENV
 
-RUN echo "REACT_APP_ENV is set to: $REACT_APP_ENV"
-
 # definition of main directory
 WORKDIR /app
 
