@@ -23,7 +23,7 @@ const DishesPage = () => {
   useEffect(() => {
     const fetchDishes = async () => {
       try {
-        const response = await $http.post('http://localhost:3000/dish/ingredients', {
+        const response = await $http.post('/dish/ingredients', {
           ingredientIdsList: location.state?.selectedIngredients || []
         });
         setDishes(response.data);
@@ -52,7 +52,7 @@ const DishesPage = () => {
     setDishes(currentDishes);
 
     // Toggle the nest request to handle the change in database
-    await $http.put(`http://localhost:3000/dish/like/${dishId}`);
+    await $http.put(`/dish/like/${dishId}`);
   };
 
   const displayFavouritesDishes = () => {

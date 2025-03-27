@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import $http from '../../axiosInstance';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/images/logo.png';
 
@@ -20,13 +20,13 @@ const LoginPage = () => {
       let response;
 
       if (isLogin) {
-        response = await axios.post('http://localhost:3000/auth/login', {
+        response = await $http.post('/auth/login', {
           email,
           password,
         });
       }
       else {
-        response = await axios.post('http://localhost:3000/auth/register', {
+        response = await $http.post('/auth/register', {
           firstName,
           lastName,
           email,

@@ -1,7 +1,9 @@
 import axios from 'axios';
 
 const $http = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: process.env.REACT_APP_ENV === "master"
+    ? 'https://y-a-quoi-dans-le-frigo.fr'
+    : 'http://localhost:3000'
 });
 
 $http.interceptors.request.use((config) => {

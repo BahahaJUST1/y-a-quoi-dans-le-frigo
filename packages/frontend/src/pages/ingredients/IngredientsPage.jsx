@@ -24,7 +24,7 @@ const IngredientsPage = () => {
   useEffect(() => {
     const fetchIngredients = async () => {
       try {
-        const response = await $http.get('http://localhost:3000/ingredient');
+        const response = await $http.get('/ingredient');
         setIngredients(response.data);
       } catch (err) {
         console.error(err);
@@ -77,7 +77,7 @@ const IngredientsPage = () => {
     setIngredients(currentIngredients);
 
     // Toggle the nest request to handle the change in database
-    await $http.put(`http://localhost:3000/ingredient/like/${ingredientId}`);
+    await $http.put(`/ingredient/like/${ingredientId}`);
   };
 
   return (

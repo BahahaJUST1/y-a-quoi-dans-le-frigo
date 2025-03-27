@@ -24,7 +24,7 @@ const NewIngredientPage = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await $http.get('http://localhost:3000/ingredient-category');
+        const response = await $http.get('/ingredient-category');
         setCategories(response.data);
       } catch (err) {
         console.error(err);
@@ -79,7 +79,7 @@ const NewIngredientPage = () => {
         const imageFormData = new FormData();
         imageFormData.append('file', imageFile);
 
-        const result = await $http.post('http://localhost:3000/cloudinary/ingredients', imageFormData);
+        const result = await $http.post('/cloudinary/ingredients', imageFormData);
         console.log("RESULT DATA", result.data);
 
         const updatedFormData = {
@@ -92,7 +92,7 @@ const NewIngredientPage = () => {
         console.log("FORMDATA", updatedFormData);
       }
 
-      await $http.post('http://localhost:3000/ingredient', formData);
+      await $http.post('/ingredient', formData);
       navigate('/ingredients');
     } catch (error) {
       console.error('Erreur lors de la création de l\'ingrédient:', error);

@@ -11,7 +11,7 @@ const CategorySelect = ({ defaultCategoryName, selectedCategory, onCategoryChang
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await $http.get('http://localhost:3000/ingredient-category');
+        const response = await $http.get('/ingredient-category');
         setCategories(response.data);
       } catch (err) {
         console.error(err);

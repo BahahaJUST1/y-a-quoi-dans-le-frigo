@@ -16,7 +16,7 @@ const RecipePage = () => {
   useEffect(() => {
     const fetchDish = async () => {
       try {
-        const response = await $http.get(`http://localhost:3000/dish/${id}`);
+        const response = await $http.get(`/dish/${id}`);
         setDish(response.data);
       } catch (err) {
         console.error(err);
@@ -27,7 +27,7 @@ const RecipePage = () => {
 
     const fetchDishIngredients = async () => {
       try {
-        const response = await $http.get(`http://localhost:3000/dish-ingredient/dish/${id}`);
+        const response = await $http.get(`/dish-ingredient/dish/${id}`);
         setDishIngredients(response.data);
       } catch (err) {
         console.error(err);
