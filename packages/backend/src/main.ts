@@ -8,6 +8,9 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
 
+  // declare every route as API
+  app.setGlobalPrefix('api');
+
   app.enableCors({
     origin: [
       'http://localhost:3001',

@@ -4,8 +4,8 @@ const $http = axios.create({
   baseURL: (() => {
     console.log('REACT_APP_ENV:', process.env.REACT_APP_ENV);
     return process.env.REACT_APP_ENV === "master"
-      ? 'https://y-a-quoi-dans-le-frigo.fr'
-      : 'http://localhost:3000'
+      ? 'https://y-a-quoi-dans-le-frigo.fr/api'
+      : 'http://localhost:3000/api'
   })()
 });
 
