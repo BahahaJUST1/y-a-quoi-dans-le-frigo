@@ -28,14 +28,14 @@ services:
   frontend:
     build:
       context: ./packages/frontend
+      args:
+        - REACT_APP_ENV=master
     container_name: frontend
     restart: always
     depends_on:
       - backend
     ports:
       - "3001:80"
-    environment:
-      - REACT_APP_ENV=master
     networks:
       - app-network
 
