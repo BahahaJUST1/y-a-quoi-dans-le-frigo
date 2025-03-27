@@ -7,7 +7,6 @@ services:
       - ./packages/backend/.env
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./packages/backend/src/database/dump.sql:/docker-entrypoint-initdb.d/dump.sql
     ports:
       - "3306:3306"
     networks:
