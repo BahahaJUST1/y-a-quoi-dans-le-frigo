@@ -3,6 +3,7 @@ import $http from '../../axiosInstance';
 import { useParams } from 'react-router-dom';
 import GoBackArrow from '../../components/GoBackArrow';
 import { getNoRecipeText } from '../../utils/noRecipeText.ts';
+import CustomCheckbox from '../../components/CustomCheckbox';
 
 const RecipePage = () => {
   const { id } = useParams();
@@ -129,7 +130,16 @@ const RecipePage = () => {
             <h2 className="text-3xl font-bold mb-6">Recette</h2>
             {
               dish.recipe
-                ? <p className="whitespace-pre-line pb-3">{dish.recipe}</p>
+                ? dish.recipe
+                    .split('\n')
+                    .filter(line => line.trim())
+                    .map((line, index) => (
+                      <CustomCheckbox 
+                        key={index}
+                        id={`step-${index}`}
+                        label={line}
+                      />
+                    ))
                 : <p className="whitespace-pre-line pb-3">{getNoRecipeText()}</p>
             }
           </div>

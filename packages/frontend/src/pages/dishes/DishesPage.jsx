@@ -24,7 +24,9 @@ const DishesPage = () => {
     const fetchDishes = async () => {
       try {
         // create an array with only the ingredients ids
-        const ingredientIdsList = location.state?.selectedIngredients.map(ingredient => ingredient.id);
+        const ingredientIdsList = location.state?.selectedIngredients.length
+          ? location.state?.selectedIngredients.map(ingredient => ingredient.id)
+          : []
         const response = await $http.post('/dish/ingredients', {
           ingredientIdsList
         });
@@ -138,7 +140,7 @@ const DishesPage = () => {
         </div>
 
         <div className={`
-          ${location.state?.selectedIngredients.length === 0 ? 'hidden' : 'visible'}
+          ${location.state?.selectedIngredients.length === 0 || !location.state?.selectedIngredients ? 'hidden' : 'visible'}
           ml-1 mt-[-0.5rem] mb-1.5 text-gray-400 font-normal italic
         `}>
           <span>{location.state?.selectedIngredients.length > 1 ? "Ingrédients sélectionnés : " : "Ingrédient sélectionné : "}</span>
