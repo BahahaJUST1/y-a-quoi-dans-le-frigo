@@ -186,7 +186,14 @@ const IngredientsPage = () => {
                           ? `https://res.cloudinary.com/dd50khgyk/image/upload/${ingredient.image}`
                           : `https://res.cloudinary.com/dd50khgyk/image/upload/${ingredient.category.image}`}
                         alt={`photo-${ingredient.name.split(' ').join('-').toLowerCase()}`}
-                        className={`w-16 h-16 object-cover ${ingredient.image ? "rounded-md" : ""} mr-4`}
+                        className={`
+                          w-16 h-16 object-cover mr-4 
+                          ${ingredient.image // if we have a placeholder image and ingredient is selected, switch it to white if bgColor is dark
+                            ? "rounded-md"
+                            : isSelected
+                              ? backgroundTextColor(ingredient.bgColor) === "#000000" ? "" : "invert"
+                              : ""}
+                        `}
                       />
                       <h2 className="text-xl max-[768px]:text-lg font-semibold flex items-center justify-between w-full">
                         {ingredient.name}
