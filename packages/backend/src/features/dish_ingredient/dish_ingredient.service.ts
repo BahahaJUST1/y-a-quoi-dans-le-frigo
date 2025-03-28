@@ -32,7 +32,7 @@ export class DishIngredientService {
    try {
       const formatedIds = ingredientIdsList.map((id) => id).join(',');
       return await this.em.execute(`
-          SELECT *
+          SELECT dish_id
           FROM dishes_ingredients
           WHERE ingredient_id IN (${formatedIds})
           GROUP BY dish_id
