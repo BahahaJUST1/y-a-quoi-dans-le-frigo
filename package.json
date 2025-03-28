@@ -5,6 +5,7 @@
   "license": "ISC",
   "scripts": {
     "backend": "cd ./packages/backend && npm run start",
-    "frontend": "cd ./packages/frontend && npm start"
+    "frontend": "cd ./packages/frontend && npm start",
+    "update": "git pull && docker-compose down && docker-compose build && docker-compose up -d"
   }
 }
