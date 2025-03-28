@@ -38,9 +38,10 @@ const PreparationTimeInput = ({ timeValue, handleTimeChange }) => {
       </button>
       <input
         type="text"
+        readOnly={true}
         value={`${timeValue}min`}
         onChange={handleTimeChange}
-        className="w-20 text-center border-x border-gray-300 py-2 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        className="cursor-default w-20 text-center border-x border-gray-300 py-2 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
         min="5"
         max="180"
         step="5"

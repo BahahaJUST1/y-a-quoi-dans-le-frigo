@@ -95,7 +95,7 @@ const RecipePage = () => {
               >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 14.5c-3.5 0-6.5 2.5-6.5 5.5v1h13v-1c0-3-3-5.5-6.5-5.5zM12 12a3 3 0 100-6 3 3 0 000 6z" />
               </svg>
-              Recette pour {dish.numberOfPeople} personnes
+              Recette pour {dish.numberOfPeople} {dish.numberOfPeople === 1 ? "personne" : "personnes"}
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 max-[768px]:gap-2 mb-6">
@@ -110,7 +110,16 @@ const RecipePage = () => {
                 />
                 <div>
                   <p className="text-lg font-semibold">{item.ingredient.name}</p>
-                  <p>{item.quantity} {item.unit.name}</p>
+                  <p>
+                    {item.quantity} {' '}
+                    {
+                      [1,9].includes(item.unit.id)
+                        ? item.quantity === 1
+                            ? item.unit.name
+                            : item.unit.name + 's'
+                        : item.unit.name
+                    }
+                  </p>
                 </div>
               </div>
             ))}

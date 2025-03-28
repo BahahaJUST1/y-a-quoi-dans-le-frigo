@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import $http from '../../axiosInstance';
 import { useNavigate } from 'react-router-dom';
 import { backgroundTextColor } from '../../utils/backgroundTextColor.ts';
-import GoBackArrow from '../../components/GoBackArrow';
 import CategorySelect from '../../components/toolboxHeader/CategorySelect';
 import FavouritesDisplayBtn from '../../components/toolboxHeader/FavouritesDisplayBtn';
 import SearchBar from '../../components/toolboxHeader/SearchBar';
@@ -83,8 +82,6 @@ const IngredientsPage = () => {
   return (
     <div className="flex items-center justify-center h-screen overflow-hidden max-[768px]:mx-8">
       <div className="max-w-6xl w-full p-6 py-4 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col h-[90vh] max-[768px]:h-[92vh] relative">
-
-        <GoBackArrow to={"/"} />
 
         <h1 className="text-3xl font-bold mb-3 max-[768px]:mt-1 text-center">
           Mes Ingrédients
@@ -174,7 +171,7 @@ const IngredientsPage = () => {
                   return (
                     <div
                       key={ingredient.id}
-                      className={`flex items-center p-2 rounded-lg shadow-lg cursor-pointer transition-opacity duration-300 w-full h-20 ${isSelected ? 'opacity-100' : 'opacity-70'}`}
+                      className={`flex items-center p-2 rounded-lg shadow-lg max-[768px]:shadow-md cursor-pointer transition-opacity duration-300 w-full h-20 ${isSelected ? 'opacity-100' : 'opacity-70'}`}
                       style={
                         isSelected
                           ? ingredient.bgColor
