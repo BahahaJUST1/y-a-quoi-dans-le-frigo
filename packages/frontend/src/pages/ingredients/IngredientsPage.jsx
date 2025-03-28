@@ -39,12 +39,21 @@ const IngredientsPage = () => {
     return;
   }
 
-  const toggleIngredientSelection = (ingredientId) => {
-    setSelectedIngredients((prevSelected) =>
-      prevSelected.includes(ingredientId)
-        ? prevSelected.filter((id) => id !== ingredientId)
-        : [...prevSelected, ingredientId]
-    );
+  const toggleIngredientSelection = (ingredientId, ingredientName) => {
+    // recover current selected ingredients
+    let currentSelectedIngredients = [
+      ...selectedIngredients
+    ];
+    // if new one is already selected -> remove it from array
+    const ingredientAlreadySelected = currentSelectedIngredients.some(ingredient => ingredient.id === ingredientId);
+    if (ingredientAlreadySelected) {
+      currentSelectedIngredients = currentSelectedIngredients.filter(ingredient => ingredient.id !== ingredientId);
+    }
+    // if new one is not already selected -> select it
+    else {
+      currentSelectedIngredients.push({ id: ingredientId, name: ingredientName });
+    }
+    setSelectedIngredients(currentSelectedIngredients);
   };
 
   const navigateToDishesAccordingToIngredients = () => {
@@ -161,7 +170,7 @@ const IngredientsPage = () => {
                     .join('')
                   );
                 }).map((ingredient) => {
-                  const isSelected = selectedIngredients.includes(ingredient.id);
+                  const isSelected = selectedIngredients.some(selectedIngredient => ingredient.id === selectedIngredient.id);
                   if (displayFavourites && !ingredient.favourite) {
                     return null;
                   }
@@ -179,7 +188,7 @@ const IngredientsPage = () => {
                             : { backgroundColor: '#fafafa', borderColor: 'darkgray', borderWidth: '1px' }
                           : { borderColor: 'lightgray', borderWidth: '1px' }
                       }
-                      onClick={() => toggleIngredientSelection(ingredient.id)}
+                      onClick={() => toggleIngredientSelection(ingredient.id, ingredient.name)}
                     >
                       <img
                         src={ingredient.image

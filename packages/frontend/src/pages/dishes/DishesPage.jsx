@@ -23,8 +23,10 @@ const DishesPage = () => {
   useEffect(() => {
     const fetchDishes = async () => {
       try {
+        // create an array with only the ingredients ids
+        const ingredientIdsList = location.state?.selectedIngredients.map(ingredient => ingredient.id);
         const response = await $http.post('/dish/ingredients', {
-          ingredientIdsList: location.state?.selectedIngredients || []
+          ingredientIdsList
         });
         setDishes(response.data);
       } catch (err) {
@@ -133,6 +135,14 @@ const DishesPage = () => {
 
             </div>
           </div>
+        </div>
+
+        <div className={`
+          ${location.state?.selectedIngredients.length === 0 ? 'hidden' : 'visible'}
+          ml-1 mt-[-0.5rem] mb-1.5 text-gray-400 font-normal italic
+        `}>
+          <span>{location.state?.selectedIngredients.length > 1 ? "Ingrédients sélectionnés : " : "Ingrédient sélectionné : "}</span>
+          <span>{location.state?.selectedIngredients.map((ingredient) => ingredient.name).join(', ')}</span>
         </div>
 
         {
