@@ -75,24 +75,16 @@ const NewIngredientPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      let dataToSubmit = { ...formData };
+
       if (imageFile) {
         const imageFormData = new FormData();
         imageFormData.append('file', imageFile);
-
         const result = await $http.post('/cloudinary/ingredients', imageFormData);
-        console.log("RESULT DATA", result.data);
-
-        const updatedFormData = {
-          ...formData,
-          image: result.data
-        };
-
-        setFormData(updatedFormData);
-
-        console.log("FORMDATA", updatedFormData);
+        dataToSubmit = { ...dataToSubmit, image: result.data };
       }
 
-      await $http.post('/ingredient', formData);
+      await $http.post('/ingredient', dataToSubmit);
       navigate('/ingredients');
     } catch (error) {
       console.error('Erreur lors de la création de l\'ingrédient:', error);
