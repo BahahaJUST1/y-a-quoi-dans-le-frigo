@@ -4,6 +4,7 @@ import $http from '../../axiosInstance';
 import GoBackArrow from '../../components/GoBackArrow';
 import CategorySelect from '../../components/toolboxHeader/CategorySelect';
 import { backgroundTextColor } from '../../utils/backgroundTextColor.ts';
+import WarningSimilarItems from '../../components/WarningSimilarItems';
 
 const NewIngredientPage = () => {
   const [formData, setFormData] = useState({
@@ -139,27 +140,13 @@ const NewIngredientPage = () => {
       <div className="max-w-6xl w-full p-6 py-4 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col h-[90vh] max-[768px]:h-[92vh] relative">
 
         {/* WARNING SIMILAR INGREDIENTS MESSAGE */}
-        <div className={`
-          ${displaySimilarWarning ? 'visible' : 'hidden'} 
-          p-8 bg-white rounded-lg absolute border-2 border-red-500 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
-        `}>
-          Warning !
-          <div className="flex gap-4 mt-auto pt-4">
-            <button
-              type="button"
-              onClick={() => setDisplaySimilarWarning(false)}
-              className="flex-1 py-2 px-4 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition"
-            >
-              Non
-            </button>
-            <button
-              onClick={createIngredient}
-              className="flex-1 py-2 px-4 rounded-md transition max-[768px]:bg-[#ffe394] bg-[#FFEBB3] text-black hover:bg-[#FFE394]"
-            >
-              Oui
-            </button>
-          </div>
-        </div>
+        <WarningSimilarItems
+          newItemName={formData.name}
+          displayWarning={displaySimilarWarning}
+          setDisplayWarning={setDisplaySimilarWarning}
+          createItem={createIngredient}
+          similarItems={similarIngredients}
+        />
 
         <GoBackArrow to={'/ingredients'} />
 
