@@ -21,6 +21,12 @@ const NewIngredientPage = () => {
   const [imageFile, setImageFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
 
+  const [displayCategoryError, setDisplayCategoryError] = useState(false);
+  const [displayNameError, setDisplayNameError] = useState(false);
+
+  const [similarIngredients, setSimilarIngredients] = useState([]);
+  const [displaySimilarWarning, setDisplaySimilarWarning] = useState(false);
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -47,6 +53,10 @@ const NewIngredientPage = () => {
       [name]: value
     };
     setFormData(updatedFormData);
+
+    if (name === "name") {
+      setDisplayNameError(false);
+    }
   };
 
   const handleImageChange = (e) => {
@@ -70,13 +80,46 @@ const NewIngredientPage = () => {
       category: value
     };
     setFormData(updatedFormData);
+    setDisplayCategoryError(false);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (formData.name.trim().length === 0) {
+      setDisplayNameError(true);
+      return;
+    }
+    setDisplayNameError(false);
+
+    if (!formData.category) {
+      setDisplayCategoryError(true);
+      return;
+    }
+    setDisplayCategoryError(false);
+
+    // check if there is no similar names
+    try {
+      const result = await $http.get(`/ingredient/similar/${formData.name}`);
+      if (!result.data || !result.data.length) {
+        await createIngredient();
+      }
+      // if there are similar ingredients, show warning message
+      else {
+        setSimilarIngredients(result.data);
+        setDisplaySimilarWarning(true);
+      }
+    }
+    catch (e) {
+      throw e;
+    }
+  };
+
+  const createIngredient = async () => {
     try {
       let dataToSubmit = { ...formData };
 
+      // create cloudinary image if needed
       if (imageFile) {
         const imageFormData = new FormData();
         imageFormData.append('file', imageFile);
@@ -86,15 +129,39 @@ const NewIngredientPage = () => {
 
       await $http.post('/ingredient', dataToSubmit);
       navigate('/ingredients');
-    } catch (error) {
-      console.error('Erreur lors de la création de l\'ingrédient:', error);
+    } catch (e) {
+      throw e;
     }
-  };
+  }
 
   return (
     <div className="flex items-center justify-center h-screen overflow-hidden max-[768px]:mx-8">
       <div className="max-w-6xl w-full p-6 py-4 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col h-[90vh] max-[768px]:h-[92vh] relative">
-        <GoBackArrow to={"/ingredients"} />
+
+        {/* WARNING SIMILAR INGREDIENTS MESSAGE */}
+        <div className={`
+          ${displaySimilarWarning ? 'visible' : 'hidden'} 
+          p-8 bg-white rounded-lg absolute border-2 border-red-500 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
+        `}>
+          Warning !
+          <div className="flex gap-4 mt-auto pt-4">
+            <button
+              type="button"
+              onClick={() => setDisplaySimilarWarning(false)}
+              className="flex-1 py-2 px-4 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition"
+            >
+              Non
+            </button>
+            <button
+              onClick={createIngredient}
+              className="flex-1 py-2 px-4 rounded-md transition max-[768px]:bg-[#ffe394] bg-[#FFEBB3] text-black hover:bg-[#FFE394]"
+            >
+              Oui
+            </button>
+          </div>
+        </div>
+
+        <GoBackArrow to={'/ingredients'} />
 
         <h1 className="text-3xl font-bold mb-6 max-[768px]:mt-1 text-center">
           Nouvel Ingrédient
@@ -153,8 +220,9 @@ const NewIngredientPage = () => {
           <form onSubmit={handleSubmit} className="space-y-6 flex-1 overflow-y-auto">
             <div>
               <label htmlFor="name" className="block text-xl font-medium text-gray-700 mb-2">
-                Nom de l'ingrédient
+                Nom de l'ingrédient <span className="error-text">*</span>
               </label>
+
               <input
                 type="text"
                 id="name"
@@ -165,11 +233,14 @@ const NewIngredientPage = () => {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none"
                 required
               />
+              <span className={`${displayNameError ? 'visible' : 'hidden'} error-text`}>
+                Veuillez saisir un nom !
+              </span>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Catégorie
+                Catégorie <span className="error-text">*</span>
               </label>
 
               <CategorySelect
@@ -177,6 +248,9 @@ const NewIngredientPage = () => {
                 selectedCategory={formData.category}
                 onCategoryChange={handleCategoryChange}
               />
+              <span className={`${displayCategoryError ? 'visible' : 'hidden'} error-text`}>
+                Veuillez saisir une catégorie !
+              </span>
 
             </div>
 

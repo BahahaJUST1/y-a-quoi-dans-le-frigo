@@ -91,3 +91,7 @@ body::before {
 .scrollbar-hide::-webkit-scrollbar {
     display: none;
 }
+
+.error-text {
+    color: red;
+}

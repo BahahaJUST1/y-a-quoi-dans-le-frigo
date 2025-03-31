@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/mysql';
 import { Ingredient } from '../../database/models/ingredient.entity';
+import { getSimilarNames } from '../../utils/filters/similaritySearch';
 
 @Injectable()
 export class IngredientService {
@@ -35,6 +36,10 @@ export class IngredientService {
     return await this.em.find(Ingredient, {
       category: { $in: categoryIdsList },
     });
+  }
+
+  async findAllWithSimilarName(name: string): Promise<string[] | null> {
+    return await getSimilarNames(name, "ingredients", 3, this.em);
   }
 
   async likeOrUnlikeDish(id: number): Promise<void> {
