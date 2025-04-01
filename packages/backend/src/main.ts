@@ -4,8 +4,6 @@ import { configuration } from './database/configuration';
 
 async function bootstrap() {
 
-  console.log(configuration());
-
   const app = await NestFactory.create(AppModule);
 
   // declare every route as API
