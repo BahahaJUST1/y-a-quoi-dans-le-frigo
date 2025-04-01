@@ -5,6 +5,9 @@ import GoBackArrow from '../../components/GoBackArrow';
 import CategorySelect from '../../components/toolboxHeader/CategorySelect';
 import { backgroundTextColor } from '../../utils/backgroundTextColor.ts';
 import WarningSimilarItems from '../../components/WarningSimilarItems';
+import ItemName from '../../components/newItem/ItemName';
+import ItemImage from '../../components/newItem/ItemImage';
+import ItemBgColor from '../../components/newItem/ItemBgColor';
 
 const NewIngredientPage = () => {
   const [formData, setFormData] = useState({
@@ -137,7 +140,7 @@ const NewIngredientPage = () => {
 
   return (
     <div className="flex items-center justify-center h-screen overflow-hidden max-[768px]:mx-8">
-      <div className="max-w-6xl w-full p-6 py-4 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col h-[90vh] max-[768px]:h-[92vh] relative">
+      <div className="max-w-3xl w-full p-6 py-4 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col h-[75vh] max-[768px]:h-[92vh] relative">
 
         {/* WARNING SIMILAR INGREDIENTS MESSAGE */}
         <WarningSimilarItems
@@ -156,14 +159,14 @@ const NewIngredientPage = () => {
 
         <div className="flex flex-col h-full">
 
-          {/* INGREDIENT PRE-VISUALISATION */}
-          <div>
-            <h2>
+          {/* PREVISUALISATION */}
+          <div className="md:text-lg text-md text-black pb-4 md:border-b border-gray-300">
+            <h2 className="mb-1">
               Prévisualisation
             </h2>
-            <div className="bg-gray-100 p-4 rounded-md">
+            <div className="rounded-md mb-5">
               <div
-                className="flex items-center p-2 rounded-lg shadow-lg w-full md:w-2/5 h-20"
+                className="flex items-center p-2 rounded-lg shadow-lg w-full md:w-1/2 h-20"
                 style={{
                   color: backgroundTextColor(formData.bgColor),
                   backgroundColor: formData.bgColor,
@@ -175,13 +178,13 @@ const NewIngredientPage = () => {
                   src={previewImage
                     ? previewImage
                     : formData.category
-                      ? `https://res.cloudinary.com/dd50khgyk/image/upload/${categories[formData.category -1].image}`
+                      ? `https://res.cloudinary.com/dd50khgyk/image/upload/${categories[formData.category - 1].image}`
                       : `https://res.cloudinary.com/dd50khgyk/image/upload/placeholders/ikaqizn0ejqtmidebibc`
                   }
                   alt="ingrédient"
                   className={`w-16 h-16 object-cover ${formData.image ? 'rounded-md' : ''} mr-4`}
                 />
-                <h2 className="text-xl max-[768px]:text-lg font-semibold flex items-center justify-between w-full">
+                <h2 className="font-semibold flex items-center justify-between w-full">
                   {formData.name.length ? formData.name : "Nouvel ingrédient"}
                   <span className="ml-2">
                     <svg
@@ -203,82 +206,61 @@ const NewIngredientPage = () => {
             </div>
           </div>
 
-          {/* NEW INGREDIENT FORMULA */}
-          <form onSubmit={handleSubmit} className="space-y-6 flex-1 overflow-y-auto">
-            <div>
-              <label htmlFor="name" className="block text-xl font-medium text-gray-700 mb-2">
-                Nom de l'ingrédient <span className="error-text">*</span>
-              </label>
+          {/* FORMULA INPUTS */}
+          <form onSubmit={handleSubmit} className="md:mt-8 flex-1 overflow-y-auto py-4 bg-gray-50 rounded-md">
+            {/* Desktop layout: left-right split */}
+            <div className="md:flex md:gap-8 md:space-y-0 space-y-4">
+              {/* Left column: Name, Category, Image */}
+              <div className="md:w-2/3 md:pl-7">
+                <div className="mb-5">
+                  <ItemName
+                    name={formData.name}
+                    handleInputChange={handleInputChange}
+                    displayNameError={displayNameError}
+                  />
+                </div>
 
-              <input
-                type="text"
-                id="name"
-                name="name"
-                placeholder="Nouvel ingrédient"
-                value={formData.name}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none"
-                required
-              />
-              <span className={`${displayNameError ? 'visible' : 'hidden'} error-text`}>
-                Veuillez saisir un nom !
-              </span>
-            </div>
+                <div className="mb-5">
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block">
+                      Catégorie
+                      <span className="error-text"> * </span>
+                    </label>
+                    <span className={`${displayCategoryError ? 'visible' : 'invisible'} error-text md:text-sm text-xs`}>
+                      Veuillez saisir une catégorie !
+                    </span>
+                  </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Catégorie <span className="error-text">*</span>
-              </label>
+                  <CategorySelect
+                    defaultCategoryName={'Choisir une catégorie'}
+                    selectedCategory={formData.category}
+                    onCategoryChange={handleCategoryChange}
+                    width={'w-full'}
+                  />
+                </div>
 
-              <CategorySelect
-                defaultCategoryName={'Choisir une catégorie'}
-                selectedCategory={formData.category}
-                onCategoryChange={handleCategoryChange}
-              />
-              <span className={`${displayCategoryError ? 'visible' : 'hidden'} error-text`}>
-                Veuillez saisir une catégorie !
-              </span>
+                <div>
+                  <ItemImage
+                    handleImageChange={handleImageChange}
+                  />
+                </div>
+              </div>
 
-            </div>
-
-            <div>
-              <label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-2">
-                Image
-              </label>
-              <input
-                type="file"
-                id="image"
-                name="image"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="bgColor" className="block text-sm font-medium text-gray-700 mb-2">
-                Couleur de fond
-              </label>
-              <div className="flex items-center gap-4">
-                <input
-                  type="color"
-                  id="bgColor"
-                  name="bgColor"
-                  value={formData.bgColor}
-                  onChange={handleInputChange}
-                  className="w-20 h-10 rounded-md cursor-pointer"
-                />
-                <input
-                  type="text"
-                  readOnly={true}
-                  value={formData.bgColor}
-                  className="w-32 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              {/* Right column: Color picker */}
+              <div className="md:w-2/5">
+                <ItemBgColor
+                  bgColor={formData.bgColor}
+                  handleInputChange={handleInputChange}
                 />
               </div>
             </div>
           </form>
 
-          <div className="flex gap-4 mt-auto pt-4">
+          <p className="mt-1 text-gray-400 font-normal italic text-right w-2/3 ml-auto">
+            Les champs marqués d'une <span className="error-text">*</span> sont obligatoires
+          </p>
+
+          <div className="flex gap-4 md:mt-10">
             <button
               type="button"
               onClick={() => navigate('/ingredients')}

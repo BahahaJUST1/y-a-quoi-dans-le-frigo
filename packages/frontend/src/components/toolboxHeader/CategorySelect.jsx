@@ -3,7 +3,7 @@ import { reactSelectCustomStyle } from '../../styles/react-select';
 import $http from '../../axiosInstance';
 import { useEffect, useState } from 'react';
 
-const CategorySelect = ({ defaultCategoryName, selectedCategory, onCategoryChange }) => {
+const CategorySelect = ({ defaultCategoryName, selectedCategory, onCategoryChange, width }) => {
   
   const [categories, setCategories] = useState([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
@@ -36,7 +36,7 @@ const CategorySelect = ({ defaultCategoryName, selectedCategory, onCategoryChang
   ];
 
   return (
-    <div className="w-full md:w-1/4">
+    <div className={`md:${width}`}>
       <Select
         classNames="focus:outline-0"
         styles={reactSelectCustomStyle}

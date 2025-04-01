@@ -104,6 +104,7 @@ const IngredientsPage = () => {
               defaultCategoryName={"Toutes les catégories"}
               selectedCategory={displayIngredientsCategory}
               onCategoryChange={handleCategoryChange}
+              width={"w-1/4"}
             />
 
             <FavouritesDisplayBtn
@@ -127,6 +128,7 @@ const IngredientsPage = () => {
                   defaultCategoryName={"Toutes les catégories"}
                   selectedCategory={displayIngredientsCategory}
                   onCategoryChange={handleCategoryChange}
+                  width={"w-full"}
                 />
 
                 <FavouritesDisplayBtn
