@@ -1,7 +1,21 @@
 import { useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const WarningSimilarItems = ({ newItemName, displayWarning, setDisplayWarning, createItem, similarItems }) => {
   const location = useLocation();
+
+  useEffect(() => {
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') {
+        setDisplayWarning(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [setDisplayWarning]);
 
   const getItemType = () => {
     let itemType = location.pathname.includes("ingredients") ? "ingrédient" : "plat";
