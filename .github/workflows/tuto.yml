@@ -1,13 +1,30 @@
-name: tuto
-run-name: ${{ github.actor }} is learning GitHub Actions
-on: [push]
+name: master auto-deploy on PC2
+
+on:
+  push:
+    branches:
+      - master
+
 jobs:
-  check-bats-version:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - run: npm install -g bats
-      - run: bats -v
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup SSH
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private_key
+          chmod 600 private_key
+
+      - name: Deploy to PC2
+        run: |
+          ssh -o StrictHostKeyChecking=no -i private_key user@PC2_IP << 'EOF'
+            cd /path/to/project
+            git pull origin master
+            docker compose down
+            docker compose up -d --build
+          EOF
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
