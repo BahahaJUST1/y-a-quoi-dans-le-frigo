@@ -140,7 +140,7 @@ const NewIngredientPage = () => {
 
   return (
     <div className="flex items-center justify-center h-screen overflow-hidden max-[768px]:mx-8">
-      <div className="max-w-3xl w-full p-6 py-4 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col h-[75vh] max-[768px]:h-[92vh] relative">
+      <div className="max-w-3xl w-full p-6 py-4 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col md:max-h-[90vh] h-auto max-[768px]:h-[92vh] relative">
 
         {/* WARNING SIMILAR INGREDIENTS MESSAGE */}
         <WarningSimilarItems
@@ -153,20 +153,20 @@ const NewIngredientPage = () => {
 
         <GoBackArrow to={'/ingredients'} />
 
-        <h1 className="text-3xl font-bold mb-6 max-[768px]:mt-1 text-center">
+        <h1 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4 max-[768px]:mt-1 text-center">
           Nouvel Ingrédient
         </h1>
 
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full overflow-hidden">
 
           {/* PREVISUALISATION */}
-          <div className="md:text-lg text-md text-black pb-4 md:border-b border-gray-300">
+          <div className="text-sm md:text-md lg:text-lg text-black pb-2 md:pb-3">
             <h2 className="mb-1">
               Prévisualisation
             </h2>
-            <div className="rounded-md mb-5">
+            <div className="rounded-md mb-2 md:mb-3">
               <div
-                className="flex items-center p-2 rounded-lg shadow-lg w-full md:w-1/2 h-20"
+                className="flex items-center p-2 rounded-lg shadow-lg w-full md:w-1/2 h-16 md:h-20"
                 style={{
                   color: backgroundTextColor(formData.bgColor),
                   backgroundColor: formData.bgColor,
@@ -182,20 +182,20 @@ const NewIngredientPage = () => {
                       : `https://res.cloudinary.com/dd50khgyk/image/upload/placeholders/ikaqizn0ejqtmidebibc`
                   }
                   alt="ingrédient"
-                  className={`w-16 h-16 object-cover ${formData.image ? 'rounded-md' : ''} mr-4`}
+                  className={`w-12 h-12 md:w-16 md:h-16 object-cover ${formData.image ? 'rounded-md' : ''} mr-4`}
                 />
                 <h2 className="font-semibold flex items-center justify-between w-full">
                   {formData.name.length ? formData.name : "Nouvel ingrédient"}
                   <span className="ml-2">
                     <svg
-                      width="35"
-                      height="35"
+                      width="30"
+                      height="30"
                       viewBox="0 0 32 32"
                       xmlns="http://www.w3.org/2000/svg"
                       fill='#EF4444'
                       stroke='#EF4444'
                       strokeWidth='1'
-                      className="mt-2"
+                      className="mt-1"
                     >
                       <path
                         d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
@@ -207,12 +207,12 @@ const NewIngredientPage = () => {
           </div>
 
           {/* FORMULA INPUTS */}
-          <form onSubmit={handleSubmit} className="md:mt-8 flex-1 overflow-y-auto py-4 bg-gray-50 rounded-md">
+          <form onSubmit={handleSubmit} className="md:border border-gray-300 flex-1 overflow-y-auto py-2 md:py-3 bg-gray-50 rounded-md">
             {/* Desktop layout: left-right split */}
-            <div className="md:flex md:gap-8 md:space-y-0 space-y-4">
+            <div className="md:flex md:gap-4 md:space-y-0 space-y-2 md:px-4">
               {/* Left column: Name, Category, Image */}
-              <div className="md:w-2/3 md:pl-7">
-                <div className="mb-5">
+              <div className="md:w-2/3 md:pl-2">
+                <div className="mb-3">
                   <ItemName
                     name={formData.name}
                     handleInputChange={handleInputChange}
@@ -220,9 +220,9 @@ const NewIngredientPage = () => {
                   />
                 </div>
 
-                <div className="mb-5">
+                <div className="mb-3">
                   <div className="flex justify-between items-center mb-1">
-                    <label className="block">
+                    <label className="block text-sm md:text-base">
                       Catégorie
                       <span className="error-text"> * </span>
                     </label>
@@ -256,21 +256,21 @@ const NewIngredientPage = () => {
             </div>
           </form>
 
-          <p className="mt-1 text-gray-400 font-normal italic text-right w-2/3 ml-auto">
+          <p className="mt-1 text-xs md:text-sm text-gray-400 font-normal italic text-right w-2/3 ml-auto">
             Les champs marqués d'une <span className="error-text">*</span> sont obligatoires
           </p>
 
-          <div className="flex gap-4 md:mt-10">
+          <div className="flex gap-4 mt-2 md:mt-4">
             <button
               type="button"
               onClick={() => navigate('/ingredients')}
-              className="flex-1 py-2 px-4 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition"
+              className="flex-1 py-1 md:py-2 px-4 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition"
             >
               Annuler
             </button>
             <button
               onClick={handleSubmit}
-              className="flex-1 py-2 px-4 rounded-md transition max-[768px]:bg-[#ffe394] bg-[#FFEBB3] text-black hover:bg-[#FFE394]"
+              className="flex-1 py-1 md:py-2 px-4 rounded-md transition max-[768px]:bg-[#ffe394] bg-[#FFEBB3] text-black hover:bg-[#FFE394]"
             >
               Créer
             </button>

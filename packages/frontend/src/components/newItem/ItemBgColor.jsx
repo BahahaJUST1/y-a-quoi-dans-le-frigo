@@ -1,6 +1,6 @@
 // #vibe-coded
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const ColorPicker = ({ bgColor = '#FAFAFA', handleInputChange }) => {
   const [selectedColor, setSelectedColor] = useState(bgColor);
@@ -39,6 +39,7 @@ const ColorPicker = ({ bgColor = '#FAFAFA', handleInputChange }) => {
         case r: h = (g - b) / d + (g < b ? 6 : 0); break;
         case g: h = (b - r) / d + 2; break;
         case b: h = (r - g) / d + 4; break;
+        default: break;
       }
       h /= 6;
     }
@@ -93,7 +94,7 @@ const ColorPicker = ({ bgColor = '#FAFAFA', handleInputChange }) => {
     }
   }, [bgColor]);
 
-  const updateColor = (x, y, newHue = hue) => {
+  const updateColor = useCallback((x, y, newHue = hue) => {
     if (!colorPanelRef.current) return;
 
     const panelRect = colorPanelRef.current.getBoundingClientRect();
@@ -110,9 +111,9 @@ const ColorPicker = ({ bgColor = '#FAFAFA', handleInputChange }) => {
     if (handleInputChange) {
       handleInputChange({ target: { name: 'bgColor', value: hexColor } });
     }
-  };
+  }, [handleInputChange, hue]);
 
-  const handleColorPanelInteraction = (e) => {
+  const handleColorPanelInteraction = useCallback((e) => {
     if (!colorPanelRef.current) return;
 
     const panelRect = colorPanelRef.current.getBoundingClientRect();
@@ -124,7 +125,7 @@ const ColorPicker = ({ bgColor = '#FAFAFA', handleInputChange }) => {
 
     setColorPosition({ x, y });
     updateColor(x, y);
-  };
+  }, [updateColor]);
 
   const handleHueSliderInteraction = (e) => {
     if (!hueSliderRef.current) return;
@@ -153,7 +154,7 @@ const ColorPicker = ({ bgColor = '#FAFAFA', handleInputChange }) => {
         });
       }
     }
-  }, []);
+  }, [selectedColor]);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -173,7 +174,7 @@ const ColorPicker = ({ bgColor = '#FAFAFA', handleInputChange }) => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [isDragging]);
+  }, [handleColorPanelInteraction, isDragging]);
 
   return (
     <div>
@@ -230,13 +231,10 @@ const ColorPicker = ({ bgColor = '#FAFAFA', handleInputChange }) => {
 
       {/* COLOR HEX DISPLAY */}
       <div className="flex items-center mt-2 gap-2">
-        <div
-          className="w-16 h-8 rounded-md border border-gray-300"
-          style={{ backgroundColor: selectedColor }}
-        />
         <input
           type="text"
           value={selectedColor}
+          onChange={handleInputChange}
           className="w-20 px-2 py-[5px] text-sm border border-gray-300 rounded-md focus:outline-none uppercase"
         />
       </div>
