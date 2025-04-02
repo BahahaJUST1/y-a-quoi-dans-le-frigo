@@ -1,4 +1,9 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { DishModule } from './features/dish/dish.module';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { MikroOrmConfigService } from './database/mikro-orm.config';
@@ -49,6 +54,12 @@ import { CloudinaryModule } from './features/cloudinary/cloudinary.module';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(ExtraUserMiddleware).forRoutes('*');
+    consumer
+      .apply(ExtraUserMiddleware)
+      .exclude(
+        { path: 'auth/login', method: RequestMethod.POST },
+        { path: 'auth/register', method: RequestMethod.POST },
+      )
+      .forRoutes('*');
   }
 }
