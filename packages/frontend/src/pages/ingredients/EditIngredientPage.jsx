@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import $http from '../../axiosInstance';
 import GoBackArrow from '../../components/GoBackArrow';
 import CategorySelect from '../../components/toolboxHeader/CategorySelect';
@@ -9,12 +9,15 @@ import ItemName from '../../components/newItem/ItemName';
 import ItemImage from '../../components/newItem/ItemImage';
 import ItemBgColor from '../../components/newItem/ItemBgColor';
 
-const NewIngredientPage = () => {
+const EditIngredientPage = () => {
+  const location = useLocation();
+  const ingredient = location.state?.ingredient;
+
   const [formData, setFormData] = useState({
-    name: '',
-    category: 0,
-    image: null,
-    bgColor: '#FAFAFA'
+    name: ingredient?.name || '',
+    category: ingredient?.category.id || 0,
+    image: ingredient?.image || null,
+    bgColor: ingredient?.bgColor || '#FAFAFA'
   });
 
   const [categories, setCategories] = useState([]);
@@ -23,7 +26,7 @@ const NewIngredientPage = () => {
   const navigate = useNavigate();
 
   const [imageFile, setImageFile] = useState(null);
-  const [previewImage, setPreviewImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState('');
 
   const [displayCategoryError, setDisplayCategoryError] = useState(false);
   const [displayNameError, setDisplayNameError] = useState(false);
@@ -76,6 +79,10 @@ const NewIngredientPage = () => {
       };
       reader.readAsDataURL(file);
     }
+    else {
+      setImageFile(null);
+      setPreviewImage('');
+    }
   };
 
   const handleCategoryChange = (value) => {
@@ -86,6 +93,25 @@ const NewIngredientPage = () => {
     setFormData(updatedFormData);
     setDisplayCategoryError(false);
   };
+
+  const getImageSource = () => {
+    const baseSource = "https://res.cloudinary.com/dd50khgyk/image/upload/";
+
+    // if preview image uploaded, use it
+    if (previewImage && previewImage.length) {
+      return previewImage;
+    }
+    // if it's an ingredient update, and we have an image, use it
+    if (formData.image && formData.image.length) {
+      return baseSource + formData.image;
+    }
+    // else, if we have an ingredient category, use its placeholder
+    if (formData.category) {
+      return baseSource + categories[formData.category - 1].image;
+    }
+    // default, recover rotten placeholder
+    return baseSource + "placeholders/ikaqizn0ejqtmidebibc";
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -102,24 +128,31 @@ const NewIngredientPage = () => {
     }
     setDisplayCategoryError(false);
 
-    // check if there is no similar names
-    try {
-      const result = await $http.get(`/ingredient/similar/${formData.name}`);
-      if (!result.data || !result.data.length) {
-        await createIngredient();
+    // ONLY FOR NEW INGREDIENT
+    if (!ingredient) {
+      // check if there is no similar names
+      try {
+        const result = await $http.get(`/ingredient/similar/${formData.name}`);
+        if (!result.data || !result.data.length) {
+          await editIngredient();
+        }
+        // if there are similar ingredients, show warning message
+        else {
+          setSimilarIngredients(result.data);
+          setDisplaySimilarWarning(true);
+        }
       }
-      // if there are similar ingredients, show warning message
-      else {
-        setSimilarIngredients(result.data);
-        setDisplaySimilarWarning(true);
+      catch (e) {
+        throw e;
       }
     }
-    catch (e) {
-      throw e;
+    // FOR INGREDIENT EDITION
+    else {
+      await editIngredient();
     }
   };
 
-  const createIngredient = async () => {
+  const editIngredient = async () => {
     try {
       let dataToSubmit = { ...formData };
 
@@ -131,7 +164,11 @@ const NewIngredientPage = () => {
         dataToSubmit = { ...dataToSubmit, image: result.data };
       }
 
-      await $http.post('/ingredient', dataToSubmit);
+      if (ingredient) {
+        await $http.put(`/ingredient/${ingredient.id}`, dataToSubmit);
+      } else {
+        await $http.post('/ingredient', dataToSubmit);
+      }
       navigate('/ingredients');
     } catch (e) {
       throw e;
@@ -147,14 +184,14 @@ const NewIngredientPage = () => {
           newItemName={formData.name}
           displayWarning={displaySimilarWarning}
           setDisplayWarning={setDisplaySimilarWarning}
-          createItem={createIngredient}
+          createItem={editIngredient}
           similarItems={similarIngredients}
         />
 
         <GoBackArrow to={'/ingredients'} />
 
         <h1 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4 max-[768px]:mt-1 text-center">
-          Nouvel Ingrédient
+          {ingredient ? 'Modifier l\'ingrédient' : 'Nouvel Ingrédient'}
         </h1>
 
         <div className="flex flex-col h-full overflow-hidden">
@@ -175,12 +212,7 @@ const NewIngredientPage = () => {
                 }}
               >
                 <img
-                  src={previewImage
-                    ? previewImage
-                    : formData.category
-                      ? `https://res.cloudinary.com/dd50khgyk/image/upload/${categories[formData.category - 1].image}`
-                      : `https://res.cloudinary.com/dd50khgyk/image/upload/placeholders/ikaqizn0ejqtmidebibc`
-                  }
+                  src={getImageSource()}
                   alt="ingrédient"
                   className={`w-12 h-12 md:w-16 md:h-16 object-cover ${formData.image ? 'rounded-md' : ''} mr-4`}
                 />
@@ -215,6 +247,7 @@ const NewIngredientPage = () => {
                 <div className="mb-3">
                   <ItemName
                     name={formData.name}
+                    placeholder={ingredient.name}
                     handleInputChange={handleInputChange}
                     displayNameError={displayNameError}
                   />
@@ -235,7 +268,6 @@ const NewIngredientPage = () => {
                     defaultCategoryName={'Choisir une catégorie'}
                     selectedCategory={formData.category}
                     onCategoryChange={handleCategoryChange}
-                    width={'w-full'}
                   />
                 </div>
 
@@ -272,7 +304,7 @@ const NewIngredientPage = () => {
               onClick={handleSubmit}
               className="flex-1 py-1 md:py-2 px-4 rounded-md transition max-[768px]:bg-[#ffe394] bg-[#FFEBB3] text-black hover:bg-[#FFE394]"
             >
-              Créer
+              {ingredient ? "Modifier" : "Créer"}
             </button>
           </div>
         </div>
@@ -281,4 +313,4 @@ const NewIngredientPage = () => {
   );
 };
 
-export default NewIngredientPage;
+export default EditIngredientPage;

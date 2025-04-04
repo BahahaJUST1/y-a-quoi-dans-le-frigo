@@ -1,4 +1,4 @@
-const ItemName = ({ name, handleInputChange, displayNameError }) => {
+const ItemName = ({ name, placeholder, handleInputChange, displayNameError }) => {
   return (
     <div>
       <div className="flex justify-between items-center mb-1">
@@ -14,7 +14,7 @@ const ItemName = ({ name, handleInputChange, displayNameError }) => {
         type="text"
         id="name"
         name="name"
-        placeholder="Nouvel ingrédient"
+        placeholder={`${placeholder ?? "Nouvel ingrédient"}`}
         value={name}
         onChange={handleInputChange}
         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none"

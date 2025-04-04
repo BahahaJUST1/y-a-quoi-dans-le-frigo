@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import GoBackArrow from '../../components/GoBackArrow';
 import FavouritesDisplayBtn from '../../components/toolboxHeader/FavouritesDisplayBtn';
 import SearchBar from '../../components/toolboxHeader/SearchBar';
-import CreateItem from '../../components/toolboxHeader/CreateItem';
+import CreateItem from '../../components/toolboxHeader/EditItem';
 import PreparationTimeInput from '../../components/toolboxHeader/PreparationTimeInput';
 
 const DishesPage = () => {

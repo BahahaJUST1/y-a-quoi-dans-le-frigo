@@ -5,7 +5,7 @@ import { backgroundTextColor } from '../../utils/backgroundTextColor.ts';
 import CategorySelect from '../../components/toolboxHeader/CategorySelect';
 import FavouritesDisplayBtn from '../../components/toolboxHeader/FavouritesDisplayBtn';
 import SearchBar from '../../components/toolboxHeader/SearchBar';
-import CreateItem from '../../components/toolboxHeader/CreateItem';
+import EditItem from '../../components/toolboxHeader/EditItem';
 
 const IngredientsPage = () => {
   const [ingredients, setIngredients] = useState([]);
@@ -13,6 +13,7 @@ const IngredientsPage = () => {
   const [loadingIngredients, setLoadingIngredients] = useState(true);
 
   const [selectedIngredients, setSelectedIngredients] = useState([]);
+  const [ingredientToUpdate, setIngredientToUpdate] = useState(null);
 
   const [displayFavourites, setDisplayFavourites] = useState(false);
   const [displayIngredientsCategory, setDisplayIngredientsCategory] = useState(0);
@@ -117,7 +118,9 @@ const IngredientsPage = () => {
               onTextTypingHandler={handleTextTyping}
             />
 
-            <CreateItem />
+            <EditItem
+              itemToUpdate={ingredients[0]}
+            />
           </div>
 
           {/* MOBILE VERSION */}
@@ -143,7 +146,9 @@ const IngredientsPage = () => {
                   onTextTypingHandler={handleTextTyping}
                 />
 
-                <CreateItem />
+                <EditItem
+                  itemToUpdate={ingredientToUpdate}
+                />
               </div>
             </div>
           </div>

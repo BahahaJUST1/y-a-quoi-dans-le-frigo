@@ -42,6 +42,18 @@ export class IngredientService {
     return await getSimilarNames(name, "ingredients", 3, this.em);
   }
 
+  async updateOne(id: number, data: Partial<Ingredient>): Promise<Ingredient> {
+    // recover current db ingredient
+    let dbIngredient: Ingredient | null = await this.findOne(id);
+    if (!dbIngredient) {
+      throw new Error("Ingredient not found for update !");
+    }
+    // update the ingredient in database with the new data
+    Object.assign(dbIngredient, data);
+    await this.em.flush();
+    return dbIngredient;
+  }
+
   async likeOrUnlikeDish(id: number): Promise<void> {
     const ingredient: Ingredient | null = await this.findOne(id);
     if (!ingredient) {

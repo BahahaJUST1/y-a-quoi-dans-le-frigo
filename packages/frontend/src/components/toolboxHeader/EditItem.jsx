@@ -1,22 +1,22 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 
-const CreateItem = () => {
+const EditItem = ({ itemToUpdate }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const navigateToItemCreation = () => {
+  const navigateToItemEdition = () => {
     if (location.pathname.includes("ingredients")) {
-      navigate("/ingredients/new");
+      navigate("/ingredients/edit", { state: { ingredient: itemToUpdate ?? null } });
     }
     else if (location.pathname.includes("dishes")) {
-      navigate("/dishes/new");
+      navigate("/dishes/edit");
     }
   }
 
   return (
     <button
       className="bg-white hover:bg-[#FFE394] border border-gray-300 font-bold rounded-lg w-[42px] h-[42px] flex items-center justify-center flex-shrink-0"
-      onClick={navigateToItemCreation}
+      onClick={navigateToItemEdition}
       type="button"
       title="Ajouter un nouvel ingrédient"
     >
@@ -29,4 +29,4 @@ const CreateItem = () => {
   )
 }
 
-export default CreateItem;
+export default EditItem;

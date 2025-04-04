@@ -16,7 +16,7 @@ const SearchBar = ({ searchTerm, onTextTypingHandler }) => {
       </div>
       <input
         type="text"
-        placeholder={`Rechercher un ${location.pathname === "/ingredients" ? "ingrédient" : "plat"}...`}
+        placeholder={`Rechercher un ${location.pathname.includes("ingredients") ? "ingrédient" : "plat"}...`}
         className="focus:outline-0 border border-gray-300 rounded-lg py-2 pl-10 pr-3 w-full"
         value={searchTerm}
         onChange={onTextTypingHandler}

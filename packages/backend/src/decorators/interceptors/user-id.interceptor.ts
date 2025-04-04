@@ -2,6 +2,7 @@ import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nes
 import { Observable } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
 
+/* This Interceptor is meant to automatically add the user ID to the database query */
 @Injectable()
 export class UserIdInterceptor implements NestInterceptor {
   constructor(private readonly jwtService: JwtService) {}

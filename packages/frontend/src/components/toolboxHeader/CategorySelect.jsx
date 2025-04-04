@@ -2,11 +2,14 @@ import Select from 'react-select';
 import { reactSelectCustomStyle } from '../../styles/react-select';
 import $http from '../../axiosInstance';
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
-const CategorySelect = ({ defaultCategoryName, selectedCategory, onCategoryChange, width }) => {
+const CategorySelect = ({ defaultCategoryName, selectedCategory, onCategoryChange }) => {
   
   const [categories, setCategories] = useState([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
+
+  const location = useLocation();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -36,7 +39,7 @@ const CategorySelect = ({ defaultCategoryName, selectedCategory, onCategoryChang
   ];
 
   return (
-    <div className={`md:${width}`}>
+    <div className={`md:${location.pathname.includes("/edit") ? "w-full" : "w-1/4"}`}>
       <Select
         classNames="focus:outline-0"
         styles={reactSelectCustomStyle}

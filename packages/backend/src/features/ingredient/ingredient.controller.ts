@@ -33,6 +33,15 @@ export class IngredientController {
     return await this.ingredientService.findAllWithSimilarName(name);
   }
 
+  @Put("/:id")
+  @UseInterceptors(UserIdInterceptor)
+  async updateOne(
+    @Param('id') id: number,
+    @Body() body: Partial<Ingredient>
+  ): Promise<Ingredient> {
+    return await this.ingredientService.updateOne(id, body);
+  }
+
   @Put("/like/:id")
   async likeOrUnlikeDish(@Param('id') id: number): Promise<void> {
     await this.ingredientService.likeOrUnlikeDish(id);

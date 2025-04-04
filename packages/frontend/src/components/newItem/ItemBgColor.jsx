@@ -3,14 +3,18 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const ColorPicker = ({ bgColor = '#FAFAFA', handleInputChange }) => {
+  // Track both the actual color and the temporary input value separately
   const [selectedColor, setSelectedColor] = useState(bgColor);
+  const [inputValue, setInputValue] = useState(bgColor);
   const [isDragging, setIsDragging] = useState(false);
   const [colorPosition, setColorPosition] = useState({ x: 0, y: 0 });
-  const [hue, setHue] = useState(0); // Valeur initiale neutre
+  // Hue is stored separately from the color position to simplify calculations
+  const [hue, setHue] = useState(0);
 
   const colorPanelRef = useRef(null);
   const hueSliderRef = useRef(null);
 
+  // Color space conversion utilities
   const hexToRgb = (hex) => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? {
@@ -33,7 +37,7 @@ const ColorPicker = ({ bgColor = '#FAFAFA', handleInputChange }) => {
     s = max === 0 ? 0 : d / max;
 
     if (max === min) {
-      h = 0; // achromatic
+      h = 0;
     } else {
       switch (max) {
         case r: h = (g - b) / d + (g < b ? 6 : 0); break;
@@ -77,6 +81,7 @@ const ColorPicker = ({ bgColor = '#FAFAFA', handleInputChange }) => {
     return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
   };
 
+  // Initialize color picker position and hue based on the provided bgColor
   useEffect(() => {
     if (bgColor) {
       const rgb = hexToRgb(bgColor);
@@ -94,6 +99,7 @@ const ColorPicker = ({ bgColor = '#FAFAFA', handleInputChange }) => {
     }
   }, [bgColor]);
 
+  // Core function to update color based on panel position and hue
   const updateColor = useCallback((x, y, newHue = hue) => {
     if (!colorPanelRef.current) return;
 
@@ -113,6 +119,7 @@ const ColorPicker = ({ bgColor = '#FAFAFA', handleInputChange }) => {
     }
   }, [handleInputChange, hue]);
 
+  // Handle mouse interactions with the main color panel
   const handleColorPanelInteraction = useCallback((e) => {
     if (!colorPanelRef.current) return;
 
@@ -127,6 +134,7 @@ const ColorPicker = ({ bgColor = '#FAFAFA', handleInputChange }) => {
     updateColor(x, y);
   }, [updateColor]);
 
+  // Handle vertical hue slider interactions
   const handleHueSliderInteraction = (e) => {
     if (!hueSliderRef.current) return;
 
@@ -140,6 +148,37 @@ const ColorPicker = ({ bgColor = '#FAFAFA', handleInputChange }) => {
     updateColor(colorPosition.x, colorPosition.y, newHue);
   };
 
+  const handleHexInputChange = (e) => {
+    const newValue = e.target.value;
+    if (newValue.length <= 7) {
+      setInputValue(newValue);
+    }
+  };
+
+  const handleHexInputBlur = () => {
+    if (/^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(inputValue)) {
+      const formattedValue = inputValue.startsWith('#') ? inputValue : `#${inputValue}`;
+      const finalValue = formattedValue.toUpperCase();
+      setSelectedColor(finalValue);
+      setInputValue(finalValue);
+      if (handleInputChange) {
+        handleInputChange({ target: { name: 'bgColor', value: finalValue } });
+      }
+    } else {
+      setInputValue(selectedColor);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === 'Escape' || e.key === 'Tab') {
+      e.target.blur();
+      if (e.key === 'Escape') {
+        setInputValue(selectedColor);
+      }
+    }
+  };
+
+  // Sync picker position when color changes externally
   useEffect(() => {
     if (colorPanelRef.current) {
       const rgb = hexToRgb(selectedColor);
@@ -156,6 +195,7 @@ const ColorPicker = ({ bgColor = '#FAFAFA', handleInputChange }) => {
     }
   }, [selectedColor]);
 
+  // Global mouse event handlers for drag interactions
   useEffect(() => {
     const handleMouseMove = (e) => {
       if (isDragging) {
@@ -233,8 +273,10 @@ const ColorPicker = ({ bgColor = '#FAFAFA', handleInputChange }) => {
       <div className="flex items-center mt-2 gap-2">
         <input
           type="text"
-          value={selectedColor}
-          onChange={handleInputChange}
+          value={inputValue}
+          onChange={handleHexInputChange}
+          onBlur={handleHexInputBlur}
+          onKeyDown={handleKeyDown}
           className="w-20 px-2 py-[5px] text-sm border border-gray-300 rounded-md focus:outline-none uppercase"
         />
       </div>
