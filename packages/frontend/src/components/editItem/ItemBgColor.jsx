@@ -1,6 +1,7 @@
 // #vibe-coded
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import UndoButton from './UndoButton';
 
 const ColorPicker = ({ bgColor = '#FAFAFA', handleInputChange }) => {
   // Track both the actual color and the temporary input value separately
@@ -13,6 +14,9 @@ const ColorPicker = ({ bgColor = '#FAFAFA', handleInputChange }) => {
 
   const colorPanelRef = useRef(null);
   const hueSliderRef = useRef(null);
+
+  // Initial color state to reset to
+  const initialColor = useRef(bgColor);
 
   // Color space conversion utilities
   const hexToRgb = (hex) => {
@@ -114,6 +118,7 @@ const ColorPicker = ({ bgColor = '#FAFAFA', handleInputChange }) => {
     const hexColor = rgbToHex(rgb.r, rgb.g, rgb.b);
 
     setSelectedColor(hexColor);
+    setInputValue(hexColor);
     if (handleInputChange) {
       handleInputChange({ target: { name: 'bgColor', value: hexColor } });
     }
@@ -270,7 +275,7 @@ const ColorPicker = ({ bgColor = '#FAFAFA', handleInputChange }) => {
       </div>
 
       {/* COLOR HEX DISPLAY */}
-      <div className="flex items-center mt-2 gap-2">
+      <div className="flex items-center mt-2 gap-1">
         <input
           type="text"
           value={inputValue}
@@ -278,6 +283,15 @@ const ColorPicker = ({ bgColor = '#FAFAFA', handleInputChange }) => {
           onBlur={handleHexInputBlur}
           onKeyDown={handleKeyDown}
           className="w-20 px-2 py-[5px] text-sm border border-gray-300 rounded-md focus:outline-none uppercase"
+        />
+        <UndoButton
+          handleUndo={() => {
+            setSelectedColor(initialColor.current);
+            setInputValue(initialColor.current);
+            if (handleInputChange) {
+              handleInputChange({ target: { name: 'bgColor', value: initialColor.current } });
+            }
+          }}
         />
       </div>
     </div>

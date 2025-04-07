@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import $http from '../../axiosInstance';
 import { useNavigate } from 'react-router-dom';
 import { backgroundTextColor } from '../../utils/backgroundTextColor.ts';
@@ -13,11 +13,13 @@ const IngredientsPage = () => {
   const [loadingIngredients, setLoadingIngredients] = useState(true);
 
   const [selectedIngredients, setSelectedIngredients] = useState([]);
-  const [ingredientToUpdate, setIngredientToUpdate] = useState(null);
 
   const [displayFavourites, setDisplayFavourites] = useState(false);
   const [displayIngredientsCategory, setDisplayIngredientsCategory] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
+  const [showMenuForIngredient, setShowMenuForIngredient] = useState(null);
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+  const menuRef = useRef(null);
 
   const navigate = useNavigate();
 
@@ -34,6 +36,19 @@ const IngredientsPage = () => {
     };
 
     fetchIngredients();
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setShowMenuForIngredient(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
 
   if (loadingIngredients) {
@@ -89,6 +104,34 @@ const IngredientsPage = () => {
     await $http.put(`/ingredient/like/${ingredientId}`);
   };
 
+  const handleMenuClick = (e, ingredientId, element) => {
+    e.stopPropagation();
+    const rect = element.getBoundingClientRect();
+    setMenuPosition({
+      x: rect.right - 192, // 192px = width of menu (48 * 4)
+      y: rect.top - 100 // 100px = approximate height of menu
+    });
+    setShowMenuForIngredient(showMenuForIngredient === ingredientId ? null : ingredientId);
+  };
+
+  const handleEditClick = (e, ingredient) => {
+    e.stopPropagation();
+    navigate("/ingredients/edit", { state: { ingredient } })
+  };
+
+  const handleDeleteClick = async (e, ingredientId) => {
+    e.stopPropagation();
+    try {
+      // remove ingredient from db
+      await $http.delete(`/ingredient/${ingredientId}`);
+      // remove it from current ingredients list
+      setIngredients(ingredients.filter(ing => ing.id !== ingredientId));
+    } catch (err) {
+      console.error(err);
+    }
+    setShowMenuForIngredient(null);
+  };
+
   return (
     <div className="flex items-center justify-center h-screen overflow-hidden max-[768px]:mx-8">
       <div className="max-w-6xl w-full p-6 py-4 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col h-[90vh] max-[768px]:h-[92vh] relative">
@@ -118,9 +161,7 @@ const IngredientsPage = () => {
               onTextTypingHandler={handleTextTyping}
             />
 
-            <EditItem
-              itemToUpdate={ingredients[0]}
-            />
+            <EditItem />
           </div>
 
           {/* MOBILE VERSION */}
@@ -146,9 +187,7 @@ const IngredientsPage = () => {
                   onTextTypingHandler={handleTextTyping}
                 />
 
-                <EditItem
-                  itemToUpdate={ingredientToUpdate}
-                />
+                <EditItem />
               </div>
             </div>
           </div>
@@ -213,7 +252,7 @@ const IngredientsPage = () => {
                       />
                       <h2 className="text-xl max-[768px]:text-lg font-semibold flex items-center justify-between w-full">
                         {ingredient.name}
-                        <span className="ml-2">
+                        <span className="ml-2 flex">
                           <svg
                             width="35"
                             height="35"
@@ -232,8 +271,28 @@ const IngredientsPage = () => {
                               likeIngredient(ingredient.id);
                             }}
                           >
-                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                            <path
+                              d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                           </svg>
+                          <div className="relative ml-[-0.5rem] mb-1">
+                            <svg
+                              width="30"
+                              height="30"
+                              viewBox="0 0 24 24"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="gray"
+                              stroke="gray"
+                              strokeWidth="1"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              className="transition-transform duration-200 hover:scale-110 mt-2 cursor-pointer"
+                              onClick={(e) => handleMenuClick(e, ingredient.id, e.currentTarget)}
+                            >
+                              <circle cx="12" cy="7" r="1" />
+                              <circle cx="12" cy="12" r="1" />
+                              <circle cx="12" cy="17" r="1" />
+                            </svg>
+                          </div>
                         </span>
                       </h2>
                     </div>
@@ -242,6 +301,65 @@ const IngredientsPage = () => {
               )
           }
         </div>
+
+        {showMenuForIngredient && (
+          <div
+            ref={menuRef}
+            className="fixed bg-white rounded-md shadow-lg border z-[9999]"
+            style={{
+              top: menuPosition.y,
+              left: menuPosition.x,
+              width: '192px'
+            }}
+          >
+            <div className="py-1">
+              <button
+                className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                onClick={(e) => handleEditClick(e, ingredients.find(i => i.id === showMenuForIngredient))}
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="gray"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="mr-2"
+                >
+                  <path d="M12 20h9"></path>
+                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                </svg>
+                Modifier
+              </button>
+              <button
+                className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-50"
+                onClick={(e) => handleDeleteClick(e, showMenuForIngredient)}
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#EF4444"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="mr-2"
+                >
+                  <path d="M3 6h18"></path>
+                  <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
+                  <path d="M9 10v8"></path>
+                  <path d="M12 10v8"></path>
+                  <path d="M15 10v8"></path>
+                </svg>
+                Supprimer
+              </button>
+            </div>
+          </div>
+        )}
 
         <button
           onClick={navigateToDishesAccordingToIngredients}

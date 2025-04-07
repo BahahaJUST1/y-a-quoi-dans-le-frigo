@@ -95,3 +95,21 @@ body::before {
 .error-text {
     color: red;
 }
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px; /* Largeur très fine */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent; /* Fond transparent */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #D1D5DB; /* Couleur gris clair */
+    border-radius: 10px; /* Bords arrondis */
+}
+
+/* Masquer les flèches du haut et du bas */
+.custom-scrollbar::-webkit-scrollbar-button {
+    display: none;
+}

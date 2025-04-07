@@ -1,6 +1,6 @@
 const ItemName = ({ name, placeholder, handleInputChange, displayNameError }) => {
   return (
-    <div>
+    <div className="flex-1">
       <div className="flex justify-between items-center mb-1">
         <label htmlFor="name" className="block">
           Nom <span className="error-text">*</span>

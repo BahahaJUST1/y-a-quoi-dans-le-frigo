@@ -5,9 +5,10 @@ import GoBackArrow from '../../components/GoBackArrow';
 import CategorySelect from '../../components/toolboxHeader/CategorySelect';
 import { backgroundTextColor } from '../../utils/backgroundTextColor.ts';
 import WarningSimilarItems from '../../components/WarningSimilarItems';
-import ItemName from '../../components/newItem/ItemName';
-import ItemImage from '../../components/newItem/ItemImage';
-import ItemBgColor from '../../components/newItem/ItemBgColor';
+import ItemName from '../../components/editItem/ItemName';
+import ItemImage from '../../components/editItem/ItemImage';
+import ItemBgColor from '../../components/editItem/ItemBgColor';
+import UndoButton from '../../components/editItem/UndoButton';
 
 const EditIngredientPage = () => {
   const location = useLocation();
@@ -80,8 +81,16 @@ const EditIngredientPage = () => {
       reader.readAsDataURL(file);
     }
     else {
+      // remove preview image
       setImageFile(null);
       setPreviewImage('');
+
+      // remove current image
+      const updatedFormData = {
+        ...formData,
+        image: null,
+      }
+      setFormData(updatedFormData);
     }
   };
 
@@ -177,8 +186,7 @@ const EditIngredientPage = () => {
 
   return (
     <div className="flex items-center justify-center h-screen overflow-hidden max-[768px]:mx-8">
-      <div className="max-w-3xl w-full p-6 py-4 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col md:max-h-[90vh] h-auto max-[768px]:h-[92vh] relative">
-
+      <div className="max-w-3xl w-full p-6 py-4 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col md:h-[90vh] max-[768px]:h-[92vh] relative">
         {/* WARNING SIMILAR INGREDIENTS MESSAGE */}
         <WarningSimilarItems
           newItemName={formData.name}
@@ -188,111 +196,165 @@ const EditIngredientPage = () => {
           similarItems={similarIngredients}
         />
 
-        <GoBackArrow to={'/ingredients'} />
+        {/* Fixed Header */}
+        <div className="sticky top-0 bg-white z-10 pb-3">
+          <GoBackArrow to={'/ingredients'} />
+          <h1 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4 max-[768px]:mt-1 text-center">
+            {ingredient ? 'Modifier l\'ingrédient' : 'Nouvel Ingrédient'}
+          </h1>
+        </div>
 
-        <h1 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4 max-[768px]:mt-1 text-center">
-          {ingredient ? 'Modifier l\'ingrédient' : 'Nouvel Ingrédient'}
-        </h1>
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto custom-scrollbar">
+          <div className="flex justify-center">
 
-        <div className="flex flex-col h-full overflow-hidden">
+            {/* FORMULA INPUTS */}
+            <form className="w-full py-4 bg-gray-100 rounded-md">
 
-          {/* PREVISUALISATION */}
-          <div className="text-sm md:text-md lg:text-lg text-black pb-2 md:pb-3">
-            <h2 className="mb-1">
-              Prévisualisation
-            </h2>
-            <div className="rounded-md mb-2 md:mb-3">
-              <div
-                className="flex items-center p-2 rounded-lg shadow-lg w-full md:w-1/2 h-16 md:h-20"
-                style={{
-                  color: backgroundTextColor(formData.bgColor),
-                  backgroundColor: formData.bgColor,
-                  borderColor: 'darkgray',
-                  borderWidth: '1px',
-                }}
-              >
-                <img
-                  src={getImageSource()}
-                  alt="ingrédient"
-                  className={`w-12 h-12 md:w-16 md:h-16 object-cover ${formData.image ? 'rounded-md' : ''} mr-4`}
-                />
-                <h2 className="font-semibold flex items-center justify-between w-full">
-                  {formData.name.length ? formData.name : "Nouvel ingrédient"}
-                  <span className="ml-2">
-                    <svg
-                      width="30"
-                      height="30"
-                      viewBox="0 0 32 32"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill='#EF4444'
-                      stroke='#EF4444'
-                      strokeWidth='1'
-                      className="mt-1"
-                    >
-                      <path
-                        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                    </svg>
-                  </span>
+              {/* PREVISUALISATION */}
+              <div className="text-sm md:text-md lg:text-lg text-black ml-6 mb-8">
+                <h2 className="mb-1">
+                  Prévisualisation
                 </h2>
-              </div>
-            </div>
-          </div>
-
-          {/* FORMULA INPUTS */}
-          <form onSubmit={handleSubmit} className="md:border border-gray-300 flex-1 overflow-y-auto py-2 md:py-3 bg-gray-50 rounded-md">
-            {/* Desktop layout: left-right split */}
-            <div className="md:flex md:gap-4 md:space-y-0 space-y-2 md:px-4">
-              {/* Left column: Name, Category, Image */}
-              <div className="md:w-2/3 md:pl-2">
-                <div className="mb-3">
-                  <ItemName
-                    name={formData.name}
-                    placeholder={ingredient.name}
-                    handleInputChange={handleInputChange}
-                    displayNameError={displayNameError}
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <div className="flex justify-between items-center mb-1">
-                    <label className="block text-sm md:text-base">
-                      Catégorie
-                      <span className="error-text"> * </span>
-                    </label>
-                    <span className={`${displayCategoryError ? 'visible' : 'invisible'} error-text md:text-sm text-xs`}>
-                      Veuillez saisir une catégorie !
+                <div className="rounded-md mb-2 md:mb-3">
+                  <div
+                    className="flex items-center p-2 rounded-lg shadow-lg w-full md:w-1/2 h-16 md:h-20"
+                    style={{
+                      color: backgroundTextColor(formData.bgColor),
+                      backgroundColor: formData.bgColor,
+                      borderColor: 'darkgray',
+                      borderWidth: '1px',
+                    }}
+                  >
+                    <img
+                      src={getImageSource()}
+                      alt="ingrédient"
+                      className={`w-12 h-12 md:w-16 md:h-16 object-cover ${formData.image ? 'rounded-md' : ''} mr-4`}
+                    />
+                    <h2 className="font-semibold flex items-center justify-between w-full">
+                      {formData.name.length ? formData.name : 'Nouvel ingrédient'}
+                      <span className="ml-2">
+                      <svg
+                        width="30"
+                        height="30"
+                        viewBox="0 0 32 32"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="#EF4444"
+                        stroke="#EF4444"
+                        strokeWidth="1"
+                        className="mt-1"
+                      >
+                        <path
+                          d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                      </svg>
                     </span>
+                    </h2>
+                  </div>
+                </div>
+              </div>
+
+              {/* Desktop layout: left-right split */}
+              <div className="md:flex md:gap-4 md:space-y-0 space-y-2 md:px-4">
+                {/* Left column: Name, Category, Image */}
+                <div className="md:w-2/3 md:pl-2">
+                  <div className="mb-3 flex items-center gap-0.5">
+                    <ItemName
+                      name={formData.name}
+                      placeholder={ingredient?.name}
+                      handleInputChange={handleInputChange}
+                      displayNameError={displayNameError}
+                    />
+                    <div className="ml-1 mt-7">
+                      <UndoButton
+                        handleUndo={() => {
+                          // recover current category
+                          const updatedFormData = {
+                            ...formData,
+                            name: ingredient?.name || '',
+                          };
+                          setFormData(updatedFormData);
+                        }}
+                      />
+                    </div>
                   </div>
 
-                  <CategorySelect
-                    defaultCategoryName={'Choisir une catégorie'}
-                    selectedCategory={formData.category}
-                    onCategoryChange={handleCategoryChange}
-                  />
+                  <div className="mb-3">
+                    <div className="flex justify-between items-center mb-1">
+                      <label className="block text-sm md:text-base">
+                        Catégorie
+                        <span className="error-text"> * </span>
+                      </label>
+                      <span
+                        className={`${displayCategoryError ? 'visible' : 'invisible'} error-text md:text-sm text-xs`}>
+                        Veuillez saisir une catégorie !
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-0.5">
+                      <CategorySelect
+                        defaultCategoryName={'Choisir une catégorie'}
+                        selectedCategory={formData.category}
+                        onCategoryChange={handleCategoryChange}
+                      />
+                      <div className="ml-1">
+                        <UndoButton
+                          handleUndo={() => {
+                            // recover current category
+                            const updatedFormData = {
+                              ...formData,
+                              category: ingredient?.category.id || 0,
+                            };
+                            setFormData(updatedFormData);
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center">
+                    <ItemImage
+                      handleImageChange={handleImageChange}
+                      imageDisplayed={previewImage}
+                    />
+                    <div className="mt-1.5">
+                      <UndoButton
+                        handleUndo={() => {
+                          // remove preview image
+                          setImageFile(null);
+                          setPreviewImage('');
+
+                          // recover current image
+                          const updatedFormData = {
+                            ...formData,
+                            image: ingredient?.image || null,
+                          };
+                          setFormData(updatedFormData);
+                        }}
+                      />
+                    </div>
+                  </div>
                 </div>
 
-                <div>
-                  <ItemImage
-                    handleImageChange={handleImageChange}
+                {/* Right column: Color picker */}
+                <div className="md:w-2/5">
+                  <ItemBgColor
+                    bgColor={formData.bgColor}
+                    handleInputChange={handleInputChange}
                   />
                 </div>
               </div>
-
-              {/* Right column: Color picker */}
-              <div className="md:w-2/5">
-                <ItemBgColor
-                  bgColor={formData.bgColor}
-                  handleInputChange={handleInputChange}
-                />
+              <div className="w-full mt-4 px-6">
+                <p className="text-xs md:text-sm text-gray-400 font-normal italic text-right">
+                  Les champs marqués d'une <span className="error-text">*</span> sont obligatoires
+                </p>
               </div>
-            </div>
-          </form>
+            </form>
+          </div>
+        </div>
 
-          <p className="mt-1 text-xs md:text-sm text-gray-400 font-normal italic text-right w-2/3 ml-auto">
-            Les champs marqués d'une <span className="error-text">*</span> sont obligatoires
-          </p>
-
-          <div className="flex gap-4 mt-2 md:mt-4">
+        {/* Fixed Footer with Buttons */}
+        <div className="sticky bottom-0 bg-white pt-2 pb-1">
+          <div className="flex gap-4 mt-2">
             <button
               type="button"
               onClick={() => navigate('/ingredients')}
