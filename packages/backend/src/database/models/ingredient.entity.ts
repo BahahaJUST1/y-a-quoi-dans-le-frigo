@@ -25,6 +25,9 @@ export class Ingredient {
   @ManyToOne(() => User)
   user!: User;
 
+  @Property({ default: false })
+  isGlobalItem: boolean;
+
   @Property({ type: 'date' })
   createdAt: Date = new Date();
 
