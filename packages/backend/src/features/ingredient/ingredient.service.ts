@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/mysql';
 import { Ingredient } from '../../database/models/ingredient.entity';
 import { getSimilarNames } from '../../utils/filters/similaritySearch';
+import { GlobalItemType } from '../../utils/enums/global_item.type';
+import { DeletedGlobalItem } from '../../database/models/deleted_global_items';
 
 @Injectable()
 export class IngredientService {
@@ -68,5 +70,16 @@ export class IngredientService {
     const newIngredient = this.em.create(Ingredient, ingredient);
     await this.em.flush();
     return newIngredient;
+  }
+
+  async deleteOne(id: number): Promise<Ingredient> {
+    // recover ingredient to mark as deleted
+    let ingredientToDelete: Ingredient | null = await this.findOne(id);
+    if (!ingredientToDelete) {
+      throw Error(`No ingredient found in database with id ${id} !`);
+    }
+    ingredientToDelete.deletedAt = new Date();
+    await this.em.flush();
+    return ingredientToDelete;
   }
 }

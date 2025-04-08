@@ -3,17 +3,16 @@ import { User } from './user.entity';
 import { GlobalItemType } from '../../utils/enums/global_item.type';
 
 @Entity({ tableName: 'deleted_global_items' })
-export class Dish {
+export class DeletedGlobalItem {
 
-  @PrimaryKey()
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { primary: true })
   user!: User;
 
   @PrimaryKey()
-  itemType!: GlobalItemType
+  itemType!: GlobalItemType;
 
   @PrimaryKey()
-  itemId!: number
+  itemId!: number;
 
   @Property({ type: 'date' })
   createdAt: Date = new Date();

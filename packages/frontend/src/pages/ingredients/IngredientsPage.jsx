@@ -119,13 +119,24 @@ const IngredientsPage = () => {
     navigate("/ingredients/edit", { state: { ingredient } })
   };
 
-  const handleDeleteClick = async (e, ingredientId) => {
+  const handleDeleteClick = async (e, ingredientIdToDelete) => {
     e.stopPropagation();
     try {
+      // recover ingredient from its id
+      const ingredientToDelete = ingredients.find((ing) => ing.id === ingredientIdToDelete);
+
       // remove ingredient from db
-      await $http.delete(`/ingredient/${ingredientId}`);
+      if (ingredientToDelete.isGlobalItem) {
+        await $http.post(`/deleted-global-item`, {
+          itemType: "ingredient",
+          itemId: ingredientToDelete.id
+        });
+      }
+      else {
+        await $http.delete(`/ingredient/${ingredientToDelete.id}`);
+      }
       // remove it from current ingredients list
-      setIngredients(ingredients.filter(ing => ing.id !== ingredientId));
+      setIngredients(ingredients.filter(ing => ing.id !== ingredientToDelete.id));
     } catch (err) {
       console.error(err);
     }

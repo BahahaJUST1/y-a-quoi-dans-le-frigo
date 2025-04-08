@@ -18,6 +18,7 @@ import * as Joi from 'joi';
 import { AuthModule } from './features/auth/auth.module';
 import { ExtraUserMiddleware } from './decorators/middlewares/extract-user.middleware';
 import { CloudinaryModule } from './features/cloudinary/cloudinary.module';
+import { DeletedGlobalItemModule } from './features/deleted_global_item/deleted_global_item.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { CloudinaryModule } from './features/cloudinary/cloudinary.module';
     }),
     AuthModule,
     CloudinaryModule,
+    DeletedGlobalItemModule,
     DishModule,
     DishIngredientModule,
     IngredientModule,

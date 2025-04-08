@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UseInterceptors } from '@nestjs/common';
 import { IngredientService } from './ingredient.service';
 import { Ingredient } from '../../database/models/ingredient.entity';
 import { JwtAuthGuard } from '../../decorators/guards/jwt-auth.guard';
@@ -51,5 +51,10 @@ export class IngredientController {
   @UseInterceptors(UserIdInterceptor)
   async createOne(@Body() body: Ingredient): Promise<Ingredient> {
     return await this.ingredientService.createOne(body);
+  }
+
+  @Delete("/:id")
+  async deleteOne(@Param('id') id: number): Promise<Ingredient> {
+    return await this.ingredientService.deleteOne(id);
   }
 }
