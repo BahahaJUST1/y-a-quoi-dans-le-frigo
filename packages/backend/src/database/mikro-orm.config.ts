@@ -8,7 +8,8 @@ import { Injectable } from '@nestjs/common';
 import { MikroOrmModuleOptions, MikroOrmOptionsFactory } from '@mikro-orm/nestjs';
 import { ConfigService } from '@nestjs/config';
 import { MySqlDriver } from '@mikro-orm/mysql';
-import { DeletedGlobalItem } from './models/deleted_global_items';
+import { DeletedGlobalItem } from './models/deleted_global_item';
+import { LikedGlobalItem } from './models/liked_global_item';
 
 @Injectable()
 export class MikroOrmConfigService implements MikroOrmOptionsFactory {
@@ -22,6 +23,7 @@ export class MikroOrmConfigService implements MikroOrmOptionsFactory {
         DishIngredient,
         Ingredient,
         IngredientCategory,
+        LikedGlobalItem,
         Unit,
         User
       ],

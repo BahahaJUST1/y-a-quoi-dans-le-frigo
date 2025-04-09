@@ -9,8 +9,10 @@ import EditItem from '../../components/toolboxHeader/EditItem';
 import OwnerBubbleIcon from '../../components/OwnerBubbleIcon';
 
 const IngredientsPage = () => {
-  const [ingredients, setIngredients] = useState([]);
+  const [likedGlobalIngredients, setLikedGlobalIngredients] = useState([]);
+  const [loadingLikedGlobalIngredients, setLoadingLikedGlobalIngredients] = useState(true);
 
+  const [ingredients, setIngredients] = useState([]);
   const [loadingIngredients, setLoadingIngredients] = useState(true);
 
   const [selectedIngredients, setSelectedIngredients] = useState([]);
@@ -18,6 +20,7 @@ const IngredientsPage = () => {
   const [displayFavourites, setDisplayFavourites] = useState(false);
   const [displayIngredientsCategory, setDisplayIngredientsCategory] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
+
   const [showMenuForIngredient, setShowMenuForIngredient] = useState(null);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const menuRef = useRef(null);
@@ -40,6 +43,23 @@ const IngredientsPage = () => {
   }, []);
 
   useEffect(() => {
+    const fetchLikedGlobalIngredients = async () => {
+      try {
+        const response = await $http.post('/liked-global-item/find-all', {
+          itemType: "ingredient"
+        });
+        setLikedGlobalIngredients(response.data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoadingLikedGlobalIngredients(false);
+      }
+    };
+
+    fetchLikedGlobalIngredients();
+  }, []);
+
+  useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setShowMenuForIngredient(null);
@@ -52,7 +72,7 @@ const IngredientsPage = () => {
     };
   }, []);
 
-  if (loadingIngredients) {
+  if (loadingIngredients || loadingLikedGlobalIngredients) {
     return;
   }
 
@@ -91,18 +111,69 @@ const IngredientsPage = () => {
     setSearchTerm(e.target.value.toLowerCase());
   }
 
-  const likeIngredient = async (ingredientId) => {
-    // Toggle the favourite state locally for immediate changes
-    const currentIngredients = ingredients.map((ingredient) => {
-      if (ingredient.id === ingredientId) {
-        return { ...ingredient, favourite: !ingredient.favourite };
+  const isIngredientLiked = (ingredient) => {
+    if (ingredient.isGlobalItem) {
+      /* none of global ingredients have been liked */
+      if (!likedGlobalIngredients || !likedGlobalIngredients.length) {
+        return false;
       }
-      return ingredient;
-    });
-    setIngredients(currentIngredients);
+      const potentialLikedGlobalIngredient = likedGlobalIngredients.find(item => item.itemId === ingredient.id);
+      /* there is some liked global ingredients but the current one has never been liked */
+      if (!potentialLikedGlobalIngredient) {
+        return false;
+      }
+      /* global ingredient has been liked once, check if it's still the case */
+      return potentialLikedGlobalIngredient.deletedAt === null;
+    }
+    else {
+      return ingredient.favourite
+    }
+  }
 
-    // Toggle the nest request to handle the change in database
-    await $http.put(`/ingredient/like/${ingredientId}`);
+  const likeIngredient = async (ingredientId) => {
+    // recover ingredient from its id
+    const ingredientToLike = ingredients.find((ing) => ing.id === ingredientId);
+
+    /* Toggle the favourite state locally for immediate changes */
+    if (ingredientToLike.isGlobalItem) {
+      // if ingredient has been liked once
+      const currentLikedGlobalIngredients = likedGlobalIngredients.map((likedGlobalIng) => {
+        if (likedGlobalIng.itemId === ingredientId) {
+          return { ...likedGlobalIng, deletedAt: likedGlobalIng.deletedAt === null ? new Date() : null };
+        }
+        return likedGlobalIng;
+      });
+      // if ingredient not in list, add it
+      const potentialCurrentLikedGlobalIngredient = currentLikedGlobalIngredients.find(ing => ing.itemId === ingredientId);
+      if (!potentialCurrentLikedGlobalIngredient) {
+        currentLikedGlobalIngredients.push({
+          itemId: ingredientId,
+          deletedAt: null,
+        });
+      }
+      setLikedGlobalIngredients(currentLikedGlobalIngredients);
+    }
+    else {
+      const currentIngredients = ingredients.map((ingredient) => {
+        if (ingredient.id === ingredientId) {
+          return { ...ingredient, favourite: !ingredient.favourite };
+        }
+        return ingredient;
+      });
+      setIngredients(currentIngredients);
+    }
+
+    /* Toggle the nest request to handle the change in database */
+    // like ingredient from db
+    if (ingredientToLike.isGlobalItem) {
+      await $http.post(`/liked-global-item`, {
+        itemType: "ingredient",
+        itemId: ingredientToLike.id
+      });
+    }
+    else {
+      await $http.put(`/ingredient/like/${ingredientId}`);
+    }
   };
 
   const handleMenuClick = (e, ingredientId, element) => {
@@ -271,10 +342,10 @@ const IngredientsPage = () => {
                             height="35"
                             viewBox="0 0 32 32"
                             xmlns="http://www.w3.org/2000/svg"
-                            fill={ingredient.favourite ? "#EF4444" : "none"}
+                            fill={isIngredientLiked(ingredient) ? "#EF4444" : "none"}
                             stroke={
                               isSelected
-                                ? ingredient.favourite ? "#EF4444" : "red"
+                                ? isIngredientLiked(ingredient) ? "#EF4444" : "red"
                                 : "red"
                             }
                             strokeWidth={isSelected ? '1' : '0.5'}

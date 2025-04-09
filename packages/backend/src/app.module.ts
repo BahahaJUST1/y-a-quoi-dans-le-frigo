@@ -19,6 +19,7 @@ import { AuthModule } from './features/auth/auth.module';
 import { ExtraUserMiddleware } from './decorators/middlewares/extract-user.middleware';
 import { CloudinaryModule } from './features/cloudinary/cloudinary.module';
 import { DeletedGlobalItemModule } from './features/deleted_global_item/deleted_global_item.module';
+import { LikedGlobalItemModule } from './features/liked_global_item/liked_global_item.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { DeletedGlobalItemModule } from './features/deleted_global_item/deleted_
     DishIngredientModule,
     IngredientModule,
     IngredientCategoryModule,
+    LikedGlobalItemModule,
     UnitModule,
     UserModule,
   ],

@@ -2,7 +2,7 @@ import { Body, Controller, Post, UseGuards, UseInterceptors } from '@nestjs/comm
 import { JwtAuthGuard } from '../../decorators/guards/jwt-auth.guard';
 import { DeletedGlobalItemService } from './deleted_global_item.service';
 import { UserIdInterceptor } from '../../decorators/interceptors/user-id.interceptor';
-import { DeletedGlobalItem } from '../../database/models/deleted_global_items';
+import { DeletedGlobalItem } from '../../database/models/deleted_global_item';
 
 @Controller('deleted-global-item')
 @UseGuards(JwtAuthGuard)
@@ -11,7 +11,7 @@ export class DeletedGlobalItemController {
 
   @Post()
   @UseInterceptors(UserIdInterceptor)
-  async createOne(@Body() body: DeletedGlobalItem) {
+  async createOne(@Body() body: DeletedGlobalItem): Promise<DeletedGlobalItem> {
     return await this.deletedGlobalItemService.createOne(body);
   }
 }

@@ -30,7 +30,7 @@ const OwnerBubbleIcon = ({ item, itemType }) => {
   }
 
   return (
-    <div className="absolute top-[-4px] right-[-4px]  border-2 rounded-full p-1 bg-white z-40">
+    <div className="absolute cursor-help top-[-4px] right-[-4px]  border-2 rounded-full p-1 bg-white z-40">
       <img
         src={getImage()}
         title={getTitle()}

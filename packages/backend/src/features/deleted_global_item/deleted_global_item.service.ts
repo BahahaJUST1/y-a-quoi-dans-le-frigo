@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/mysql';
-import { DeletedGlobalItem } from '../../database/models/deleted_global_items';
+import { DeletedGlobalItem } from '../../database/models/deleted_global_item';
 import { GlobalItemType } from '../../utils/enums/global_item.type';
 
 @Injectable()
@@ -15,8 +15,9 @@ export class DeletedGlobalItemService {
     });
   }
 
-  async createOne(body: DeletedGlobalItem) {
-    this.em.create(DeletedGlobalItem, body);
+  async createOne(body: DeletedGlobalItem): Promise<DeletedGlobalItem> {
+    const deletedGlobalItem = this.em.create(DeletedGlobalItem, body);
     await this.em.flush();
+    return deletedGlobalItem;
   }
 }
