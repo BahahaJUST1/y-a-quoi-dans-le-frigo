@@ -141,7 +141,9 @@ const EditIngredientPage = () => {
     if (!ingredient) {
       // check if there is no similar names
       try {
-        const result = await $http.get(`/ingredient/similar/${formData.name}`);
+        const result = await $http.post(`/ingredient/similar/${formData.name}`, {
+          bearer: localStorage.getItem('authToken')
+        });
         if (!result.data || !result.data.length) {
           await editIngredient();
         }
@@ -186,7 +188,7 @@ const EditIngredientPage = () => {
 
   return (
     <div className="flex items-center justify-center h-screen overflow-hidden max-[768px]:mx-8">
-      <div className="max-w-3xl w-full p-6 py-4 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col md:h-[90vh] max-[768px]:h-[92vh] relative">
+      <div className="max-w-3xl w-full p-6 py-4 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col h-[90vh] max-[768px]:h-[92vh] relative">
         {/* WARNING SIMILAR INGREDIENTS MESSAGE */}
         <WarningSimilarItems
           newItemName={formData.name}
@@ -196,13 +198,11 @@ const EditIngredientPage = () => {
           similarItems={similarIngredients}
         />
 
-        {/* Fixed Header */}
-        <div className="sticky top-0 bg-white z-10 pb-3">
-          <GoBackArrow to={'/ingredients'} />
-          <h1 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4 max-[768px]:mt-1 text-center">
-            {ingredient ? 'Modifier l\'ingrédient' : 'Nouvel Ingrédient'}
-          </h1>
-        </div>
+        <GoBackArrow to={'/ingredients'} />
+
+        <h1 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4 max-[768px]:mt-1 text-center">
+          {ingredient ? 'Modifier l\'ingrédient' : 'Nouvel Ingrédient'}
+        </h1>
 
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto custom-scrollbar">
@@ -229,7 +229,12 @@ const EditIngredientPage = () => {
                     <img
                       src={getImageSource()}
                       alt="ingrédient"
-                      className={`w-12 h-12 md:w-16 md:h-16 object-cover ${formData.image ? 'rounded-md' : ''} mr-4`}
+                      className={`
+                        w-12 h-12 md:w-16 md:h-16 object-cover mr-4
+                        ${formData.image 
+                          ? 'rounded-md' 
+                          : backgroundTextColor(formData.bgColor) === "#000000" ? "" : "invert"}
+                      `}
                     />
                     <h2 className="font-semibold flex items-center justify-between w-full">
                       {formData.name.length ? formData.name : 'Nouvel ingrédient'}

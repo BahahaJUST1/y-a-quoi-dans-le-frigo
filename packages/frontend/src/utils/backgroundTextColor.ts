@@ -7,6 +7,6 @@ export function backgroundTextColor(bgColor: string): string {
   const b = parseInt(bgColor.slice(5, 7), 16);  // extract blue
 
   let luma: number = 0.2126 * r + 0.7152 * g + 0.0722 * b; // magick trick 🧙
-  if (luma < 90) return "#FFFFFF";
+  if (luma < 110) return "#FFFFFF";
   return "#000000";
 }

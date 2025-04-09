@@ -28,11 +28,6 @@ export class IngredientController {
     return await this.ingredientService.findOne(id);
   }
 
-  @Get("/similar/:name")
-  async findAllWithSimilarName(@Param('name') name: string): Promise<string[] | null> {
-    return await this.ingredientService.findAllWithSimilarName(name);
-  }
-
   @Put("/:id")
   @UseInterceptors(UserIdInterceptor)
   async updateOne(
@@ -56,5 +51,13 @@ export class IngredientController {
   @Delete("/:id")
   async deleteOne(@Param('id') id: number): Promise<Ingredient> {
     return await this.ingredientService.deleteOne(id);
+  }
+
+  @Post("/similar/:name")
+  async findAllWithSimilarName(
+    @Param('name') name: string,
+    @Body() body: { bearer: string }
+  ): Promise<string[] | null> {
+    return await this.ingredientService.findAllWithSimilarName(name, body.bearer);
   }
 }

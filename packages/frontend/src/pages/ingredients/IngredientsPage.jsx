@@ -6,6 +6,7 @@ import CategorySelect from '../../components/toolboxHeader/CategorySelect';
 import FavouritesDisplayBtn from '../../components/toolboxHeader/FavouritesDisplayBtn';
 import SearchBar from '../../components/toolboxHeader/SearchBar';
 import EditItem from '../../components/toolboxHeader/EditItem';
+import OwnerBubbleIcon from '../../components/OwnerBubbleIcon';
 
 const IngredientsPage = () => {
   const [ingredients, setIngredients] = useState([]);
@@ -106,10 +107,11 @@ const IngredientsPage = () => {
 
   const handleMenuClick = (e, ingredientId, element) => {
     e.stopPropagation();
+    const fullIngredient = ingredients.find(i => i.id === ingredientId);
     const rect = element.getBoundingClientRect();
     setMenuPosition({
       x: rect.right - 192, // 192px = width of menu (48 * 4)
-      y: rect.top - 100 // 100px = approximate height of menu
+      y: fullIngredient.isGlobalItem ? rect.top -60 : rect.top - 100 // 100px = approximate height of menu
     });
     setShowMenuForIngredient(showMenuForIngredient === ingredientId ? null : ingredientId);
   };
@@ -323,9 +325,16 @@ const IngredientsPage = () => {
               width: '192px'
             }}
           >
-            <div className="py-1">
+            <div className="py-1 relative">
+              <OwnerBubbleIcon
+                item={ingredients.find(i => i.id === showMenuForIngredient)}
+                itemType="ingredient"
+              />
               <button
-                className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                className={`
+                  flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50
+                  ${ingredients.find(i => i.id === showMenuForIngredient).isGlobalItem ? 'hidden' : 'visible'}
+                `}
                 onClick={(e) => handleEditClick(e, ingredients.find(i => i.id === showMenuForIngredient))}
               >
                 <svg

@@ -4,6 +4,9 @@ function ngramsDecomposer(
   word: string,
   ngramSize: number
 ): string[] {
+  // remove unwanted characters (SQL will « partir en carafe » if ' is found)
+  word = word.replace("'", '"')
+
   if (word.length <= ngramSize) {
     return [word];
   }
@@ -20,13 +23,16 @@ function ngramsDecomposer(
 function sqlNgramsFinder(
   word: string,
   ngramSize: number,
-  tableName: string
+  tableName: string,
+  userId: number
 ): string {
   const ngrams = ngramsDecomposer(word, ngramSize);
 
   let query: string = `
     SELECT name FROM ${tableName} 
-    WHERE name LIKE '%${ngrams[0]}%'
+    WHERE (is_global_item = true OR user_id = ${userId})
+    AND deleted_at IS null
+    AND ( name LIKE '%${ngrams[0]}%'
   `
   if (ngrams.length > 1) {
     ngrams.forEach((ngram: string, index: number) => {
@@ -36,7 +42,7 @@ function sqlNgramsFinder(
       }
     });
   }
-  return query;
+  return query + ");";
 }
 
 
@@ -44,10 +50,11 @@ async function findPossiblySimilarNames(
   word: string,
   tableName: string,
   ngramSize: number,
-  em: EntityManager
+  em: EntityManager,
+  userId: number
 ): Promise<string[] | null> {
 
-  const query = sqlNgramsFinder(word, ngramSize, tableName);
+  const query = sqlNgramsFinder(word, ngramSize, tableName, userId);
   const result = await em.execute(query);
 
   if (!result || !result.length) {
@@ -62,10 +69,11 @@ export async function getSimilarNames(
   word: string,
   tableName: string,
   ngramSize: number,
-  em: EntityManager
+  em: EntityManager,
+  userId: number
 ): Promise<string[] | null> {
 
-  const candidates: string[] | null = await findPossiblySimilarNames(word, tableName, ngramSize, em);
+  const candidates: string[] | null = await findPossiblySimilarNames(word, tableName, ngramSize, em, userId);
   if (!candidates || !candidates.length) {
     return null;
   }
@@ -86,7 +94,7 @@ export async function getSimilarNames(
     });
     // make an average of the number of similar ngrams we found
     const sameNgramsRatio = similarities/ngramsCandidate.length;
-    if (sameNgramsRatio >= 0.25) {
+    if (sameNgramsRatio >= 0.40) {
       finalCandidates.push(candidate);
     }
   });

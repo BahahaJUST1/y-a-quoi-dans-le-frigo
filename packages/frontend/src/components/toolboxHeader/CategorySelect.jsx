@@ -39,7 +39,7 @@ const CategorySelect = ({ defaultCategoryName, selectedCategory, onCategoryChang
   ];
 
   return (
-    <div className={`md:${location.pathname.includes("/edit") ? "w-full" : "w-1/4"}`}>
+    <div className={`${location.pathname.includes("/edit") ? "w-full" : "w-1/4"} max-[768px]:w-full`}>
       <Select
         classNames="focus:outline-0"
         styles={reactSelectCustomStyle}

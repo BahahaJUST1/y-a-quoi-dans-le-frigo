@@ -2,12 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/mysql';
 import { Ingredient } from '../../database/models/ingredient.entity';
 import { getSimilarNames } from '../../utils/filters/similaritySearch';
-import { GlobalItemType } from '../../utils/enums/global_item.type';
-import { DeletedGlobalItem } from '../../database/models/deleted_global_items';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class IngredientService {
-  constructor(private readonly em: EntityManager) {}
+  constructor(
+    private readonly em: EntityManager,
+    private readonly jwtService: JwtService
+  ) {}
 
   async findAll(): Promise<Ingredient[]> {
     try {
@@ -40,8 +42,9 @@ export class IngredientService {
     });
   }
 
-  async findAllWithSimilarName(name: string): Promise<string[] | null> {
-    return await getSimilarNames(name, "ingredients", 3, this.em);
+  async findAllWithSimilarName(name: string, token: string): Promise<string[] | null> {
+    const userId = (this.jwtService.verify(token)).sub;
+    return await getSimilarNames(name, "ingredients", 3, this.em, userId);
   }
 
   async updateOne(id: number, data: Partial<Ingredient>): Promise<Ingredient> {
