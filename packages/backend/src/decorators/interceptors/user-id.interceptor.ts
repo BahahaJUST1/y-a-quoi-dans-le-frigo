@@ -3,9 +3,9 @@ import { Observable } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
 
 
-/************************************************************************************
- * This Interceptor is meant to automatically add the user ID to the database query *
- ************************************************************************************/
+/**********************************************************************************
+ * This Interceptor is meant to automatically add the user ID to the request body *
+ **********************************************************************************/
 
 
 @Injectable()

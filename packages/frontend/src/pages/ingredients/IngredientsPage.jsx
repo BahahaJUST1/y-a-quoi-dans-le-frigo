@@ -15,6 +15,9 @@ const IngredientsPage = () => {
   const [ingredients, setIngredients] = useState([]);
   const [loadingIngredients, setLoadingIngredients] = useState(true);
 
+  const [userRole, setUserRole] = useState(null);
+  const [loadingUserRole, setLoadingUserRole] = useState(true);
+
   const [selectedIngredients, setSelectedIngredients] = useState([]);
 
   const [displayFavourites, setDisplayFavourites] = useState(false);
@@ -60,6 +63,21 @@ const IngredientsPage = () => {
   }, []);
 
   useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const response = await $http.post('/user', {});
+        setUserRole(response.data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoadingUserRole(false);
+      }
+    };
+
+    fetchUserRole();
+  }, []);
+
+  useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setShowMenuForIngredient(null);
@@ -72,7 +90,7 @@ const IngredientsPage = () => {
     };
   }, []);
 
-  if (loadingIngredients || loadingLikedGlobalIngredients) {
+  if (loadingIngredients || loadingLikedGlobalIngredients || loadingUserRole) {
     return;
   }
 
@@ -404,7 +422,11 @@ const IngredientsPage = () => {
               <button
                 className={`
                   flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50
-                  ${ingredients.find(i => i.id === showMenuForIngredient).isGlobalItem ? 'hidden' : 'visible'}
+                  ${ingredients.find(i => i.id === showMenuForIngredient).isGlobalItem 
+                    ? userRole === "admin"
+                      ? 'visible'
+                      : 'hidden'
+                    : 'visible'}
                 `}
                 onClick={(e) => handleEditClick(e, ingredients.find(i => i.id === showMenuForIngredient))}
               >

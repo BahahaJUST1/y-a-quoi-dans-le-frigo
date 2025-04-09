@@ -27,6 +27,16 @@ export class UserService {
     }
   }
 
+  async getUserRole(body: any): Promise<UserRoleEnum> {
+    const user: User | null = await this.em.findOne(User, {
+      id: body.user
+    });
+    if (!user) {
+      throw new Error(`No user found with id ${body.user}`);
+    }
+    return user.role;
+  }
+
   async generatePassword(plainTextPwd: string): Promise<string> {
     const salt = bcrypt.genSaltSync(parseInt(process.env.BCRYPT_SALT_ROUND!));
     return bcrypt.hashSync(plainTextPwd, salt);
