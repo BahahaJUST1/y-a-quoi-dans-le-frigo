@@ -8,6 +8,7 @@ const ColorPicker = ({ bgColor = '#FAFAFA', handleInputChange }) => {
   const [selectedColor, setSelectedColor] = useState(bgColor);
   const [inputValue, setInputValue] = useState(bgColor);
   const [isDragging, setIsDragging] = useState(false);
+  const [isHueDragging, setIsHueDragging] = useState(false);
   const [colorPosition, setColorPosition] = useState({ x: 0, y: 0 });
   // Hue is stored separately from the color position to simplify calculations
   const [hue, setHue] = useState(0);
@@ -140,7 +141,7 @@ const ColorPicker = ({ bgColor = '#FAFAFA', handleInputChange }) => {
   }, [updateColor]);
 
   // Handle vertical hue slider interactions
-  const handleHueSliderInteraction = (e) => {
+  const handleHueSliderInteraction = useCallback((e) => {
     if (!hueSliderRef.current) return;
 
     const sliderRect = hueSliderRef.current.getBoundingClientRect();
@@ -151,7 +152,7 @@ const ColorPicker = ({ bgColor = '#FAFAFA', handleInputChange }) => {
 
     setHue(newHue);
     updateColor(colorPosition.x, colorPosition.y, newHue);
-  };
+  }, [updateColor, colorPosition]);
 
   const handleHexInputChange = (e) => {
     const newValue = e.target.value;
@@ -206,10 +207,14 @@ const ColorPicker = ({ bgColor = '#FAFAFA', handleInputChange }) => {
       if (isDragging) {
         handleColorPanelInteraction(e);
       }
+      if (isHueDragging) {
+        handleHueSliderInteraction(e);
+      }
     };
 
     const handleMouseUp = () => {
       setIsDragging(false);
+      setIsHueDragging(false);
     };
 
     document.addEventListener('mousemove', handleMouseMove);
@@ -219,7 +224,7 @@ const ColorPicker = ({ bgColor = '#FAFAFA', handleInputChange }) => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [handleColorPanelInteraction, isDragging]);
+  }, [handleColorPanelInteraction, handleHueSliderInteraction, isDragging, isHueDragging]);
 
   return (
     <div>
@@ -257,7 +262,10 @@ const ColorPicker = ({ bgColor = '#FAFAFA', handleInputChange }) => {
           ref={hueSliderRef}
           className="w-7 h-48 relative cursor-pointer rounded-md overflow-hidden"
           onClick={handleHueSliderInteraction}
-          onMouseDown={handleHueSliderInteraction}
+          onMouseDown={(e) => {
+            setIsHueDragging(true);
+            handleHueSliderInteraction(e);
+          }}
           style={{
             background: 'linear-gradient(to bottom, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00)'
           }}
