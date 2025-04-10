@@ -321,7 +321,7 @@ const EditIngredientPage = () => {
                       handleImageChange={handleImageChange}
                       imageDisplayed={previewImage}
                     />
-                    <div className="mt-0.5">
+                    <div className="mt-0.5 md:mt-1.5">
                       <UndoButton
                         handleUndo={() => {
                           // remove preview image

@@ -22,9 +22,11 @@ const ItemImage = ({ handleImageChange, imageDisplayed }) => {
   };
 
   return (
-    <div className="mb-2">
+    <div className="mb-6">
       <label className="block mb-1 text-md max-[768px]:text-sm">Image</label>
-      <div className="flex items-center gap-1">
+
+      {/* Container with relative positioning */}
+      <div className="relative flex items-center gap-1">
         <div className="relative">
           <label
             htmlFor="image"
@@ -41,6 +43,7 @@ const ItemImage = ({ handleImageChange, imageDisplayed }) => {
             className="hidden"
           />
         </div>
+
         <button
           onClick={handleClearImage}
           type="button"
@@ -66,8 +69,14 @@ const ItemImage = ({ handleImageChange, imageDisplayed }) => {
             <path d="M15 10v8"></path>
           </svg>
         </button>
+
+        {/* File name displayed above */}
+        <div className="absolute left-0 top-full mt-0.5">
+          <p className="text-sm max-[768px]:text-xs text-gray-600 rounded whitespace-nowrap z-10">
+            {imageDisplayed.length ? selectedFileName : "Aucun fichier choisi"}
+          </p>
+        </div>
       </div>
-      <p className="mt-0.5 ml-0.5 text-sm max-[768px]:text-xs text-gray-600">{imageDisplayed.length ? selectedFileName : "Aucun fichier choisi"}</p>
     </div>
   );
 };
