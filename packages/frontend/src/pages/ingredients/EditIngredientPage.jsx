@@ -209,11 +209,11 @@ const EditIngredientPage = () => {
           <div className="flex justify-center">
 
             {/* FORMULA INPUTS */}
-            <form className="w-full py-4 bg-gray-100 rounded-md">
+            <form className="w-full py-4 bg-gray-100 rounded-md max-[768px]:p-4">
 
               {/* PREVISUALISATION */}
-              <div className="text-sm md:text-md lg:text-lg text-black ml-6 mb-8">
-                <h2 className="mb-1">
+              <div className="text-sm md:text-md lg:text-lg text-black ml-6 mb-6 max-[768px]:ml-0 max-[768px]:mb-4">
+                <h2 className="mb-1 text-md max-[768px]:text-sm">
                   Prévisualisation
                 </h2>
                 <div className="rounded-md mb-2 md:mb-3">
@@ -262,7 +262,7 @@ const EditIngredientPage = () => {
               <div className="md:flex md:gap-4 md:space-y-0 space-y-2 md:px-4">
                 {/* Left column: Name, Category, Image */}
                 <div className="md:w-2/3 md:pl-2">
-                  <div className="mb-3 flex items-center gap-0.5">
+                  <div className="mb-4 flex items-center gap-0.5">
                     <ItemName
                       name={formData.name}
                       placeholder={ingredient?.name}
@@ -283,36 +283,36 @@ const EditIngredientPage = () => {
                     </div>
                   </div>
 
-                  <div className="mb-3">
-                    <div className="flex justify-between items-center mb-1">
-                      <label className="block text-sm md:text-base">
-                        Catégorie
-                        <span className="error-text"> * </span>
-                      </label>
-                      <span
-                        className={`${displayCategoryError ? 'visible' : 'invisible'} error-text md:text-sm text-xs`}>
-                        Veuillez saisir une catégorie !
-                      </span>
-                    </div>
+                  <div className="mb-4 flex items-center gap-0.5">
+                    <div className="flex-1">
+                      <div className="flex justify-between items-center mb-1">
+                        <label className="block text-md max-[768px]:text-sm">
+                          Catégorie
+                          <span className="error-text"> * </span>
+                        </label>
+                        <span
+                          className={`${displayCategoryError ? 'visible' : 'invisible'} error-text md:text-sm text-xs`}>
+                          Veuillez saisir une catégorie !
+                        </span>
+                      </div>
 
-                    <div className="flex items-center gap-0.5">
                       <CategorySelect
                         defaultCategoryName={'Choisir une catégorie'}
                         selectedCategory={formData.category}
                         onCategoryChange={handleCategoryChange}
                       />
-                      <div className="ml-1">
-                        <UndoButton
-                          handleUndo={() => {
-                            // recover current category
-                            const updatedFormData = {
-                              ...formData,
-                              category: ingredient?.category.id || 0,
-                            };
-                            setFormData(updatedFormData);
-                          }}
-                        />
-                      </div>
+                    </div>
+                    <div className="ml-1 mt-7">
+                      <UndoButton
+                        handleUndo={() => {
+                          // recover current category
+                          const updatedFormData = {
+                            ...formData,
+                            category: ingredient?.category.id || 0,
+                          };
+                          setFormData(updatedFormData);
+                        }}
+                      />
                     </div>
                   </div>
 
@@ -321,7 +321,7 @@ const EditIngredientPage = () => {
                       handleImageChange={handleImageChange}
                       imageDisplayed={previewImage}
                     />
-                    <div className="mt-1.5">
+                    <div className="mt-0.5">
                       <UndoButton
                         handleUndo={() => {
                           // remove preview image
@@ -348,7 +348,7 @@ const EditIngredientPage = () => {
                   />
                 </div>
               </div>
-              <div className="w-full mt-4 px-6">
+              <div className="w-full mt-4 px-6 max-[768px]:px-0">
                 <p className="text-xs md:text-sm text-gray-400 font-normal italic text-right">
                   Les champs marqués d'une <span className="error-text">*</span> sont obligatoires
                 </p>

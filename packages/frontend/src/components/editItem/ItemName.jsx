@@ -2,7 +2,7 @@ const ItemName = ({ name, placeholder, handleInputChange, displayNameError }) =>
   return (
     <div className="flex-1">
       <div className="flex justify-between items-center mb-1">
-        <label htmlFor="name" className="block">
+        <label htmlFor="name" className="block text-md max-[768px]:text-sm">
           Nom <span className="error-text">*</span>
         </label>
         <span className={`${displayNameError ? 'visible' : 'invisible'} error-text md:text-sm text-xs`}>
