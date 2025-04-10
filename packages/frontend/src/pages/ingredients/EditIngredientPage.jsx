@@ -233,7 +233,7 @@ const EditIngredientPage = () => {
                         w-12 h-12 md:w-16 md:h-16 object-cover mr-4
                         ${formData.image 
                           ? 'rounded-md' 
-                          : backgroundTextColor(formData.bgColor) === "#000000" ? "" : "invert"}
+                          : backgroundTextColor(formData.bgColor) === "#FFFFFF" && !imageFile ? "invert" : "rounded-md"}
                       `}
                     />
                     <h2 className="font-semibold flex items-center justify-between w-full">
