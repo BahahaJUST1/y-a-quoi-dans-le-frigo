@@ -319,7 +319,7 @@ const IngredientsPage = () => {
                   );
                 }).map((ingredient) => {
                   const isSelected = selectedIngredients.some(selectedIngredient => ingredient.id === selectedIngredient.id);
-                  if (displayFavourites && !ingredient.favourite) {
+                  if (displayFavourites && !isIngredientLiked(ingredient)) {
                     return null;
                   }
                   if (displayIngredientsCategory && ingredient.category.id !== displayIngredientsCategory) {
