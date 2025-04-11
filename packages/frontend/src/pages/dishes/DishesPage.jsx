@@ -6,6 +6,7 @@ import FavouritesDisplayBtn from '../../components/toolboxHeader/FavouritesDispl
 import SearchBar from '../../components/toolboxHeader/SearchBar';
 import CreateItem from '../../components/toolboxHeader/EditItem';
 import PreparationTimeInput from '../../components/toolboxHeader/PreparationTimeInput';
+import Time from '../../components/svgs/Time';
 
 const DishesPage = () => {
   const [dishes, setDishes] = useState([]);
@@ -193,22 +194,8 @@ const DishesPage = () => {
                           <div className="flex flex-col">
                             <h2 className="text-xl max-[768px]:text-lg font-semibold">{dish.name}</h2>
                             <div className={`flex items-center mt-1 ${dish.preparationTime ? '' : 'hidden' } `}>
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth="1.5"
-                                stroke="black"
-                                className="w-5 h-5 mr-1"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  d="M12 6v6l4 2"
-                                />
-                                <circle cx="12" cy="12" r="9" />
-                              </svg>
-                              <span>{dish.preparationTime} min</span>
+                              <Time />
+                              <span className="ml-[-2px]" >{dish.preparationTime} min</span>
                             </div>
                           </div>
                           <svg
