@@ -4,6 +4,8 @@ import { useParams } from 'react-router-dom';
 import GoBackArrow from '../../components/GoBackArrow';
 import { getNoRecipeText } from '../../utils/noRecipeText.ts';
 import CustomCheckbox from '../../components/CustomCheckbox';
+import Time from '../../components/svgs/Time';
+import Person from '../../components/svgs/Person';
 
 const RecipePage = () => {
   const { id } = useParams();
@@ -64,21 +66,7 @@ const RecipePage = () => {
 
           <h2 className="text-1xl font-bold mb-6">
             <div className={`${dish.preparationTime ? '' : 'hidden' } flex items-center mt-1`}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-5 h-5 mr-2"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 6v6l4 2"
-                />
-                <circle cx="12" cy="12" r="9" />
-              </svg>
+              <Time />
               <span>Temps de préparation : {dish.preparationTime}min</span>
             </div>
           </h2>
@@ -86,16 +74,7 @@ const RecipePage = () => {
           <h2 className="text-3xl font-bold mb-6">Ingrédients</h2>
           <div className="text-1xl font-bold mb-6" >
             <div className="flex items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-6 h-6 mr-1"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 14.5c-3.5 0-6.5 2.5-6.5 5.5v1h13v-1c0-3-3-5.5-6.5-5.5zM12 12a3 3 0 100-6 3 3 0 000 6z" />
-              </svg>
+              <Person />
               Recette pour {dish.numberOfPeople} {dish.numberOfPeople === 1 ? "personne" : "personnes"}
             </div>
           </div>

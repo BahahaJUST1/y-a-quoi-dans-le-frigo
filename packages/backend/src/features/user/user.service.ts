@@ -27,6 +27,14 @@ export class UserService {
     }
   }
 
+  async findOneById(id: number): Promise<User | null> {
+    try {
+      return await this.em.findOne(User, { id });
+    } catch (e) {
+      throw e;
+    }
+  }
+
   async getUserRole(body: any): Promise<UserRoleEnum> {
     const user: User | null = await this.em.findOne(User, {
       id: body.user

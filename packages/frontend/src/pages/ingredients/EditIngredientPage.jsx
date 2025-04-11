@@ -201,7 +201,7 @@ const EditIngredientPage = () => {
         <GoBackArrow to={'/ingredients'} />
 
         <h1 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4 max-[768px]:mt-1 text-center">
-          {ingredient ? 'Modifier l\'ingrédient' : 'Nouvel Ingrédient'}
+          {ingredient ? 'Modifier l\'ingrédient' : 'Nouvel ingrédient'}
         </h1>
 
         {/* Scrollable Content */}

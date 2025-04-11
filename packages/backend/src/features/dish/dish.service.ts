@@ -3,11 +3,15 @@ import { Dish } from '../../database/models/dish.entity';
 import { EntityManager } from '@mikro-orm/mysql';
 import { DishIngredientService } from '../dish_ingredient/dish_ingredient.service';
 import { RawDishIngredientType } from '../../utils/types/raw_dish_ingredient.type';
+import { DishIngredient } from '../../database/models/dish_ingredient.entity';
+import { getSimilarNames } from '../../utils/filters/similaritySearch';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class DishService {
   constructor(
     private readonly em: EntityManager,
+    private readonly jwtService: JwtService,
     private readonly dishIngredientService: DishIngredientService,
   ) {}
 
@@ -23,18 +27,6 @@ export class DishService {
   async findOne(id: number): Promise<Dish | null> {
     try {
       return await this.em.findOne(Dish, { id });
-    }
-    catch (e) {
-      throw e;
-    }
-  }
-
-  async findRandomDish(): Promise<Dish> {
-    try {
-      const activeDishes = await this.findAll();
-      const numberOfDishes = activeDishes.length;
-      const randomIndex = Math.floor(Math.random() * numberOfDishes);
-      return activeDishes[randomIndex];
     }
     catch (e) {
       throw e;
@@ -68,21 +60,15 @@ export class DishService {
     }
   }
 
-  async findAllByCookingTime(time: number): Promise<Dish[] | null> {
-    try {
-      return await this.em.find(Dish, {
-        preparationTime: { $lte: time },
-      });
-    }
-    catch (e) {
-      throw e;
-    }
+  async findAllWithSimilarName(name: string, token: string): Promise<string[] | null> {
+    const userId = (this.jwtService.verify(token)).sub;
+    return await getSimilarNames(name, "dishes", 3, this.em, userId);
   }
 
   async likeOrUnlikeDish(id: number): Promise<void> {
     const dish: Dish | null = await this.findOne(id);
     if (!dish) {
-      throw Error(`Error, no dish found in database with id ${id} !`);
+      throw Error(`No dish found in database with id ${id} !`);
     }
 
     dish.favourite = !dish.favourite;
@@ -93,5 +79,22 @@ export class DishService {
     const newDish = this.em.create(Dish, dish);
     await this.em.flush();
     return newDish;
+  }
+
+  async createRecipe(dishData: Dish, dishIngredientsData: Partial<DishIngredient>[]): Promise<void> {
+    if (!dishIngredientsData.length) {
+      throw new Error("Error, no dish-ingredients provided while creating this dish recipe !")
+    }
+
+    // first, create dish
+    const newDish: Dish = await this.createOne(dishData);
+
+    // then create all the dish_ingredients
+    for (const dishIngredient of dishIngredientsData) {
+      await this.dishIngredientService.createOne({
+        ...dishIngredient,
+        dish: newDish
+      } as DishIngredient);
+    }
   }
 }

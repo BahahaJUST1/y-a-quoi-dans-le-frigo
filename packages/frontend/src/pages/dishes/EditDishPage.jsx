@@ -1,0 +1,374 @@
+import { useCallback, useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import $http from '../../axiosInstance';
+import GoBackArrow from '../../components/GoBackArrow';
+import WarningSimilarItems from '../../components/WarningSimilarItems';
+import ItemName from '../../components/editItem/ItemName';
+import ItemImage from '../../components/editItem/ItemImage';
+import UndoButton from '../../components/editItem/UndoButton';
+import Time from '../../components/svgs/Time';
+import Person from '../../components/svgs/Person';
+import PreparationTimeInput from '../../components/toolboxHeader/PreparationTimeInput';
+import NumberOfPeopleInput from '../../components/editItem/NumberOfPeopleInput';
+import DishRecipe from '../../components/editItem/DishRecipe';
+
+const EditDishPage = () => {
+  const location = useLocation();
+  const dishToEdit = location.state?.dish;
+
+  const [dishData, setDishData] = useState({
+    name: dishToEdit?.name || '',
+    preparationTime: dishToEdit?.preparationTime || null,
+    numberOfPeople: dishToEdit?.numberOfPeople || 2,
+    recipe: dishToEdit?.recipe || null,
+    image: dishToEdit?.image || null,
+  });
+  const [dishIngredientsData, setDishIngredientsData] = useState([]);
+
+  const [imageFile, setImageFile] = useState(null);
+  const [previewImage, setPreviewImage] = useState('');
+
+  const [displayNameError, setDisplayNameError] = useState(false);
+
+  const [similarDishes, setSimilarDishes] = useState([]);
+  const [displaySimilarWarning, setDisplaySimilarWarning] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleNameChange = (e) => {
+    const updatedDishData = {
+      ...dishData,
+      name: e.target.value
+    };
+    setDishData(updatedDishData);
+    setDisplayNameError(false);
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // store image for cloudinary upload
+      setImageFile(file);
+
+      // store local link for dish image preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+    else {
+      // remove preview image
+      setImageFile(null);
+      setPreviewImage('');
+
+      // remove current image
+      const updatedDishData = {
+        ...dishData,
+        image: null,
+      }
+      setDishData(updatedDishData);
+    }
+  };
+
+  const getImageSource = () => {
+    const baseSource = "https://res.cloudinary.com/dd50khgyk/image/upload/";
+
+    // if preview image uploaded, use it
+    if (previewImage && previewImage.length) {
+      return previewImage;
+    }
+    // if it's a dish update, and we have an image, use it
+    if (dishData.image && dishData.image.length) {
+      return baseSource + dishData.image;
+    }
+    // default, recover placeholder
+    return baseSource + "placeholders/g2dkz5ae3ce3u5gde5cz";
+  }
+
+  const handleTimeChange = useCallback((increment) => {
+    setDishData((prev) => {
+      const newValue = prev.preparationTime + increment;
+      return {
+        ...prev,
+        preparationTime: Math.min(Math.max(newValue, 5), 180),
+      };
+    });
+  }, []);
+
+  const handleNumberOfPeopleChange = (value) => {
+    const futureNewValue = dishData.numberOfPeople + value;
+    if (futureNewValue > 0 && futureNewValue <= 20) {
+      const updatedDishData = {
+        ...dishData,
+        numberOfPeople: futureNewValue,
+      }
+      setDishData(updatedDishData);
+    }
+  }
+
+  const handleRecipeChange = (e) => {
+    const updatedDishData = {
+      ...dishData,
+      recipe: e.target.value
+    };
+    setDishData(updatedDishData);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (dishData.name.trim().length === 0) {
+      setDisplayNameError(true);
+      return;
+    }
+    setDisplayNameError(false);
+
+    // ONLY FOR NEW DISH
+    if (!dishToEdit) {
+      // check if there is no similar names
+      try {
+        const result = await $http.post(`/dish/similar/${dishData.name}`, {
+          bearer: localStorage.getItem('authToken')
+        });
+        if (!result.data || !result.data.length) {
+          await editDish();
+        }
+        // if there are similar dishes, show warning message
+        else {
+          setSimilarDishes(result.data);
+          setDisplaySimilarWarning(true);
+        }
+      }
+      catch (e) {
+        throw e;
+      }
+    }
+    // FOR DISH EDITION
+    else {
+      await editDish();
+    }
+  };
+
+  const editDish = async () => {
+    try {
+      let dataToSubmit = { ...dishData };
+
+      // create cloudinary image if needed
+      if (imageFile) {
+        const imageFormData = new FormData();
+        imageFormData.append('file', imageFile);
+        const result = await $http.post('/cloudinary/dishes', imageFormData);
+        dataToSubmit = { ...dataToSubmit, image: result.data };
+      }
+
+      if (dishToEdit) {
+        await $http.put(`/dish/${dishToEdit.id}`, {
+          dishData: dataToSubmit,
+          dishIngredientsData: []
+        });
+      } else {
+        await $http.post('/dish/recipe', {
+          dishData: dataToSubmit,
+          dishIngredientsData: []
+        });
+      }
+      navigate('/dishes');
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  return (
+    <div className="flex items-center justify-center h-screen overflow-hidden max-[768px]:mx-8">
+      <div className="max-w-3xl w-full p-6 py-4 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col h-[90vh] max-[768px]:h-[92vh] relative">
+
+        <WarningSimilarItems
+          newItemName={dishData.name}
+          displayWarning={displaySimilarWarning}
+          setDisplayWarning={setDisplaySimilarWarning}
+          createItem={editDish}
+          similarItems={similarDishes}
+        />
+
+        <GoBackArrow to={'/dishes'} />
+
+        <h1 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4 max-[768px]:mt-1 text-center">
+          {dishToEdit ? 'Modifier le plat' : 'Nouveau plat'}
+        </h1>
+
+        {/* ******* SCROLLABLE CONTENT ******* */}
+        <div className="flex-1 overflow-y-auto custom-scrollbar">
+          <div className="flex justify-center">
+
+            {/* *** FORMULA INPUTS *** */}
+            <form className="w-full pb-4 bg-gray-100 rounded-md max-[768px]:p-4">
+
+              <div className="flex flex-col p-6">
+
+                {/* ***** DISH NAME ***** */}
+                <div className="mb-6 flex items-center gap-0.5">
+                  <ItemName
+                    name={dishData.name}
+                    placeholder={dishToEdit?.name || "Nouveau plat"}
+                    handleInputChange={handleNameChange}
+                    displayNameError={displayNameError}
+                  />
+                  <div className="ml-1 mt-7">
+                    <UndoButton
+                      handleUndo={() => {
+                        // recover current category
+                        const updatedDishData = {
+                          ...dishData,
+                          name: dishToEdit?.name || '',
+                        };
+                        setDishData(updatedDishData);
+                      }}
+                    />
+                  </div>
+                </div>
+                {/* ***** END OF DISH NAME ***** */}
+
+                {/* ***** DISH IMAGE ***** */}
+                <div className="flex items-center mb-6">
+                  <img
+                    src={getImageSource()} alt={"plat"}
+                    className="w-20 h-20 rounded-md mr-3.5 border"
+                  />
+                  <ItemImage
+                    handleImageChange={handleImageChange}
+                    imageDisplayed={previewImage}
+                  />
+                  <div className="mt-0.5 md:mt-1.5">
+                    <UndoButton
+                      handleUndo={() => {
+                        // remove preview image
+                        setImageFile(null);
+                        setPreviewImage('');
+
+                        // recover current image
+                        const updatedDishData = {
+                          ...dishData,
+                          image: dishToEdit?.image || null,
+                        };
+                        setDishData(updatedDishData);
+                      }}
+                    />
+                  </div>
+                </div>
+                {/* ***** END OF DISH IMAGE ***** */}
+
+                {/* ***** DISH INPUTS NUMBER ***** */}
+                <div className="flex justify-between mb-6">
+
+                  {/* *** DISH PREPARATION TIME *** */}
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-center">
+                      <Time />
+                      <span>Temps de préparation</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <PreparationTimeInput
+                        timeValue={dishData.preparationTime}
+                        handleTimeChange={handleTimeChange}
+                      />
+                      <UndoButton
+                        handleUndo={() => {
+                          // recover current preparation time
+                          const updatedDishData = {
+                            ...dishData,
+                            preparationTime: dishToEdit?.preparationTime || null,
+                          };
+                          setDishData(updatedDishData);
+                        }}
+                      />
+                    </div>
+                  </div>
+                  {/* *** END OF DISH PREPARATION TIME *** */}
+
+                  {/* *** DISH NUMBER OF PEOPLE *** */}
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-center gap-2">
+                      <span>Nombre de personnes</span>
+                      <Person />
+                    </div>
+                    <div className="flex items-center">
+                      <NumberOfPeopleInput
+                        numberOfPeople={dishData.numberOfPeople}
+                        handleNumberChange={handleNumberOfPeopleChange}
+                      />
+                      <UndoButton
+                        handleUndo={() => {
+                          // recover current number of people
+                          const updatedDishData = {
+                            ...dishData,
+                            numberOfPeople: dishToEdit?.numberOfPeople || 2,
+                          };
+                          setDishData(updatedDishData);
+                        }}
+                      />
+                    </div>
+                  </div>
+                  {/* *** END OF DISH NUMBER OF PEOPLE *** */}
+                </div>
+                {/* ***** END OF DISH INPUTS NUMBER ***** */}
+
+                {/* *** DISH RECIPE *** */}
+                <div className="relative">
+                  <DishRecipe
+                    recipe={dishData.recipe}
+                    handleRecipeChange={handleRecipeChange}
+                  />
+                  <div className="absolute bottom-2 right-1">
+                    <UndoButton
+                      handleUndo={() => {
+                        // recover current number of people
+                        const updatedDishData = {
+                          ...dishData,
+                          recipe: dishToEdit?.recipe || null,
+                        };
+                        setDishData(updatedDishData);
+                      }}
+                    />
+                  </div>
+                </div>
+                {/* *** END OF DISH RECIPE *** */}
+              </div>
+
+              {/* *** REQUIRED INPUTS MESSAGE *** */}
+              <div className="w-full mt-4 px-6 max-[768px]:px-0">
+                <p className="text-xs md:text-sm text-gray-400 font-normal italic text-right">
+                  Les champs marqués d'une <span className="error-text">*</span> sont obligatoires
+                </p>
+              </div>
+            </form>
+            {/* *** END OF FORMULA INPUTS *** */}
+          </div>
+        </div>
+        {/* ******* END OF SCROLLABLE CONTENT ******* */}
+
+        {/* ******* FIXED FOOTER WITH BUTTONS ******* */}
+        <div className="sticky bottom-0 bg-white pt-2 pb-1">
+          <div className="flex gap-4 mt-2">
+            <button
+              type="button"
+              onClick={() => navigate('/dishes')}
+              className="flex-1 py-1 md:py-2 px-4 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={handleSubmit}
+              className="flex-1 py-1 md:py-2 px-4 rounded-md transition max-[768px]:bg-[#ffe394] bg-[#FFEBB3] text-black hover:bg-[#FFE394]"
+            >
+              {dishToEdit ? "Modifier" : "Créer"}
+            </button>
+          </div>
+        </div>
+        {/* ******* END OF FIXED FOOTER WITH BUTTONS ******* */}
+      </div>
+    </div>
+  );
+};
+
+export default EditDishPage;
