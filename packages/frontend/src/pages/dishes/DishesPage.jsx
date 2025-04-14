@@ -109,7 +109,7 @@ const DishesPage = () => {
               onTextTypingHandler={handleTextTyping}
             />
 
-            <CreateItem />
+            <CreateItem itemToUpdate={dishes[0]} />
           </div>
 
           {/* MOBILE VERSION */}

@@ -11,6 +11,8 @@ import Person from '../../components/svgs/Person';
 import PreparationTimeInput from '../../components/toolboxHeader/PreparationTimeInput';
 import NumberOfPeopleInput from '../../components/editItem/NumberOfPeopleInput';
 import DishRecipe from '../../components/editItem/DishRecipe';
+import FindIngredients from '../../components/editItem/FindIngredients';
+import DishIngredientsList from '../../components/editItem/DishIngredientsList';
 
 const EditDishPage = () => {
   const location = useLocation();
@@ -23,7 +25,6 @@ const EditDishPage = () => {
     recipe: dishToEdit?.recipe || null,
     image: dishToEdit?.image || null,
   });
-  const [dishIngredientsData, setDishIngredientsData] = useState([]);
 
   const [imageFile, setImageFile] = useState(null);
   const [previewImage, setPreviewImage] = useState('');
@@ -33,7 +34,45 @@ const EditDishPage = () => {
   const [similarDishes, setSimilarDishes] = useState([]);
   const [displaySimilarWarning, setDisplaySimilarWarning] = useState(false);
 
+  const [ingredients, setIngredients] = useState([]);
+  const [loadingIngredients, setLoadingIngredients] = useState(true);
+
+  const [dishIngredients, setDishIngredients] = useState([]);
+  const [loadingDishIngredients, setLoadingDishIngredients] = useState(true);
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchIngredients = async () => {
+      try {
+        const response = await $http.get('/ingredient');
+        setIngredients(response.data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoadingIngredients(false);
+      }
+    };
+
+    fetchIngredients();
+  }, []);
+
+  useEffect(() => {
+    const fetchDishIngredients = async () => {
+      try {
+        if (dishToEdit) {
+          const response = await $http.get(`/dish-ingredient/dish/${dishToEdit.id}`);
+          setDishIngredients(response.data);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoadingDishIngredients(false);
+      }
+    };
+
+    fetchDishIngredients();
+  }, [dishToEdit]);
 
   const handleNameChange = (e) => {
     const updatedDishData = {
@@ -107,6 +146,11 @@ const EditDishPage = () => {
     }
   }
 
+  const handleRemoveDishIngredient = (dishIngredient) => {
+    const updatedDishIngredients = dishIngredients.filter((di) => di.ingredient.id !== dishIngredient.ingredient.id);
+    setDishIngredients(updatedDishIngredients);
+  }
+
   const handleRecipeChange = (e) => {
     const updatedDishData = {
       ...dishData,
@@ -177,6 +221,10 @@ const EditDishPage = () => {
     } catch (e) {
       throw e;
     }
+  }
+
+  if (loadingIngredients || loadingDishIngredients) {
+    return;
   }
 
   return (
@@ -312,6 +360,16 @@ const EditDishPage = () => {
                   {/* *** END OF DISH NUMBER OF PEOPLE *** */}
                 </div>
                 {/* ***** END OF DISH INPUTS NUMBER ***** */}
+
+                {/* ***** DISH INGREDIENTS ZONE ***** */}
+                <FindIngredients
+                  ingredients={ingredients}
+                />
+                <DishIngredientsList
+                  dishIngredients={dishIngredients}
+                  removeDIshIngredient={handleRemoveDishIngredient}
+                />
+                {/* ***** END OF DISH INGREDIENTS ZONE ***** */}
 
                 {/* *** DISH RECIPE *** */}
                 <div className="relative">
