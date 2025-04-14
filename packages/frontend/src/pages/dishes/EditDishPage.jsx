@@ -38,6 +38,7 @@ const EditDishPage = () => {
   const [loadingIngredients, setLoadingIngredients] = useState(true);
 
   const [dishIngredients, setDishIngredients] = useState([]);
+  const [initialDishIngredients, setInitialDishIngredients] = useState([]);
   const [loadingDishIngredients, setLoadingDishIngredients] = useState(true);
 
   const navigate = useNavigate();
@@ -63,6 +64,7 @@ const EditDishPage = () => {
         if (dishToEdit) {
           const response = await $http.get(`/dish-ingredient/dish/${dishToEdit.id}`);
           setDishIngredients(response.data);
+          setInitialDishIngredients(response.data);
         }
       } catch (err) {
         console.error(err);
@@ -146,9 +148,35 @@ const EditDishPage = () => {
     }
   }
 
+  const handleUpdateDishIngredientQuantity = (ingredientId, newQuantity) => {
+    const updatedDishIngredients = dishIngredients.map((di) => {
+      if (di.ingredient.id === ingredientId) {
+        return {
+          ...di,
+          quantity: newQuantity,
+        }
+      }
+      return di;
+    });
+    setDishIngredients(updatedDishIngredients);
+  }
+
   const handleRemoveDishIngredient = (dishIngredient) => {
     const updatedDishIngredients = dishIngredients.filter((di) => di.ingredient.id !== dishIngredient.ingredient.id);
     setDishIngredients(updatedDishIngredients);
+  }
+
+  const handleUndoDishIngredient = (dishIngredient) => {
+    const initialDishIngredient = initialDishIngredients.find((di) => di.ingredient.id === dishIngredient.ingredient.id);
+    if (initialDishIngredient) {
+      const updatedDishIngredients = dishIngredients.map((di) => {
+        if (di.ingredient.id === initialDishIngredient.ingredient.id) {
+          return initialDishIngredient;
+        }
+        return di;
+      });
+      setDishIngredients(updatedDishIngredients);
+    }
   }
 
   const handleRecipeChange = (e) => {
@@ -367,7 +395,9 @@ const EditDishPage = () => {
                 />
                 <DishIngredientsList
                   dishIngredients={dishIngredients}
-                  removeDIshIngredient={handleRemoveDishIngredient}
+                  updateQuantity={handleUpdateDishIngredientQuantity}
+                  removeDishIngredient={handleRemoveDishIngredient}
+                  undoDishIngredient={handleUndoDishIngredient}
                 />
                 {/* ***** END OF DISH INGREDIENTS ZONE ***** */}
 
