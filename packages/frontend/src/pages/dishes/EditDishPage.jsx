@@ -161,6 +161,19 @@ const EditDishPage = () => {
     setDishIngredients(updatedDishIngredients);
   }
 
+  const handleUpdateDishIngredientUnit = (ingredientId, newUnit) => {
+    const updatedDishIngredients = dishIngredients.map((di) => {
+      if (di.ingredient.id === ingredientId) {
+        return {
+          ...di,
+          unit: newUnit,
+        }
+      }
+      return di;
+    });
+    setDishIngredients(updatedDishIngredients);
+  }
+
   const handleRemoveDishIngredient = (dishIngredient) => {
     const updatedDishIngredients = dishIngredients.filter((di) => di.ingredient.id !== dishIngredient.ingredient.id);
     setDishIngredients(updatedDishIngredients);
@@ -396,6 +409,7 @@ const EditDishPage = () => {
                 <DishIngredientsList
                   dishIngredients={dishIngredients}
                   updateQuantity={handleUpdateDishIngredientQuantity}
+                  updateUnit={handleUpdateDishIngredientUnit}
                   removeDishIngredient={handleRemoveDishIngredient}
                   undoDishIngredient={handleUndoDishIngredient}
                 />

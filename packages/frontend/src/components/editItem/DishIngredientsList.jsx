@@ -1,5 +1,6 @@
 import Delete from '../svgs/Delete';
 import Undo from '../svgs/Undo';
+import UnitSelect from './UnitSelect';
 
 const DishIngredientsList = ({ dishIngredients, updateQuantity, updateUnit, removeDishIngredient, undoDishIngredient }) => {
   return (
@@ -39,7 +40,7 @@ const DishIngredientsList = ({ dishIngredients, updateQuantity, updateUnit, remo
               </span>
 
               <input
-                className="w-[10%] flex justify-center"
+                className="w-[10%] flex justify-center text-center outline-none custom-arrows"
                 type="number"
                 value={dishIngredient.quantity}
                 min={0}
@@ -51,7 +52,12 @@ const DishIngredientsList = ({ dishIngredients, updateQuantity, updateUnit, remo
               />
 
               <span className="w-[20%] flex justify-center">
-                {dishIngredient.unit.name}
+                <UnitSelect
+                  selectedUnit={dishIngredient.unit.id}
+                  onUnitChange={(newUnit) => {
+                    updateUnit(dishIngredient.ingredient.id, newUnit)
+                  }}
+                />
               </span>
 
               <span

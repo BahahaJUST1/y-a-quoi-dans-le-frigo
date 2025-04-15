@@ -1,5 +1,5 @@
 import Select from 'react-select';
-import { reactSelectCustomStyle } from '../../styles/react-select';
+import { reactCategorySelectCustomStyle } from '../../styles/react-select';
 import $http from '../../axiosInstance';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -42,7 +42,7 @@ const CategorySelect = ({ defaultCategoryName, selectedCategory, onCategoryChang
     <div className={`${location.pathname.includes("/edit") ? "w-full" : "w-1/4"} max-[768px]:w-full`}>
       <Select
         classNames="focus:outline-0"
-        styles={reactSelectCustomStyle}
+        styles={reactCategorySelectCustomStyle}
         options={categoryOptions}
         value={categoryOptions.find(option => option.value === selectedCategory) || categoryOptions[0]}
         onChange={(option) => onCategoryChange(option.value ? parseInt(option.value) : 0)}

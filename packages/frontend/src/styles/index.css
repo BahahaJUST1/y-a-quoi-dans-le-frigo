@@ -113,3 +113,9 @@ body::before {
 .custom-scrollbar::-webkit-scrollbar-button {
     display: none;
 }
+
+/* Custom input number arrows */
+.custom-arrows::-webkit-inner-spin-button,
+.custom-arrows::-webkit-outer-spin-button {
+    display: none;
+}
