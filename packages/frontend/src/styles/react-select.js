@@ -54,16 +54,16 @@ export const reactCategorySelectCustomStyle = {
 export const reactUnitSelectCustomStyle = {
   control: (baseStyles) => ({
     ...baseStyles,
-    minHeight: '24px',
-    height: '24px',
-    borderColor: '#D1D5DB',
+    minHeight: '26px',
+    height: '26px',
+    borderColor: '#E5E7EB',
     '&:hover': {
-      borderColor: '#D1D5DB'
+      borderColor: '#E5E7EB'
     },
     boxShadow: 'none',
     display: 'flex',
     alignItems: 'center',
-    borderRadius: '2px',
+    borderRadius: '0px',
   }),
   option: (baseStyles, { isFocused, isSelected }) => ({
     ...baseStyles,
@@ -73,23 +73,24 @@ export const reactUnitSelectCustomStyle = {
     alignItems: 'center',
     borderBottom: '1px solid #E5E7EB',
     backgroundColor: isSelected
-      ? '#D1D5DB' // color when option is currently selected
+      ? '#E5E7EB' // color when option is currently selected
       : isFocused
         ? '#F3F4F6' // hover color
         : 'white',
     color: 'black',
     '&:active': {
-      backgroundColor: '#E5E7EB' // color on option click
+      backgroundColor: '#D1D5DB' // color on option click
     }
   }),
   menu: (baseStyles) => ({
     ...baseStyles,
     zIndex: 50,
-    marginTop: '2px'
+    marginTop: '2px',
+    borderRadius: '0px',
   }),
   menuList: (baseStyles) => ({
     ...baseStyles,
-    borderRadius: '4px',
+    borderRadius: '0px',
     padding: '0',
     '&::-webkit-scrollbar': {
       width: '4px'
@@ -99,7 +100,7 @@ export const reactUnitSelectCustomStyle = {
     },
     '&::-webkit-scrollbar-thumb': {
       background: '#D1D5DB',
-      borderRadius: '20px'
+      borderRadius: '0px'
     },
     '&::-webkit-scrollbar-thumb:hover': {
       background: '#9CA3AF'
@@ -115,14 +116,14 @@ export const reactUnitSelectCustomStyle = {
   }),
   indicatorSeparator: (baseStyles) => ({
     ...baseStyles,
-    height: '92%',
+    height: '100%',
     margin: 0,
-    backgroundColor: '#D1D5DB'
+    backgroundColor: '#E5E7EB'
   }),
   dropdownIndicator: (baseStyles) => ({
     ...baseStyles,
     padding: '0',
-    color: '#D1D5DB',
+    color: '#E5E7EB',
     display: 'flex',
     alignItems: 'center',
   }),

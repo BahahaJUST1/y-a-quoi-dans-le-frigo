@@ -5,7 +5,7 @@ import { backgroundTextColor } from '../../utils/backgroundTextColor.ts';
 import CategorySelect from '../../components/toolboxHeader/CategorySelect';
 import FavouritesDisplayBtn from '../../components/toolboxHeader/FavouritesDisplayBtn';
 import SearchBar from '../../components/toolboxHeader/SearchBar';
-import EditItem from '../../components/toolboxHeader/EditItem';
+import AddItemButton from '../../components/toolboxHeader/AddItemButton';
 import OwnerBubbleIcon from '../../components/OwnerBubbleIcon';
 import Delete from '../../components/svgs/Delete';
 import Edit from '../../components/svgs/Edit';
@@ -265,7 +265,7 @@ const IngredientsPage = () => {
               onTextTypingHandler={handleTextTyping}
             />
 
-            <EditItem />
+            <AddItemButton />
           </div>
 
           {/* MOBILE VERSION */}
@@ -291,7 +291,7 @@ const IngredientsPage = () => {
                   onTextTypingHandler={handleTextTyping}
                 />
 
-                <EditItem />
+                <AddItemButton />
               </div>
             </div>
           </div>

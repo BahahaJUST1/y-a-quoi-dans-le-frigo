@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import GoBackArrow from '../../components/GoBackArrow';
 import FavouritesDisplayBtn from '../../components/toolboxHeader/FavouritesDisplayBtn';
 import SearchBar from '../../components/toolboxHeader/SearchBar';
-import CreateItem from '../../components/toolboxHeader/EditItem';
+import CreateItem from '../../components/toolboxHeader/AddItemButton';
 import PreparationTimeInput from '../../components/toolboxHeader/PreparationTimeInput';
 import Time from '../../components/svgs/Time';
 

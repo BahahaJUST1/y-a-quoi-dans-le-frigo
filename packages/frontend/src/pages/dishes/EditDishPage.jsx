@@ -11,7 +11,6 @@ import Person from '../../components/svgs/Person';
 import PreparationTimeInput from '../../components/toolboxHeader/PreparationTimeInput';
 import NumberOfPeopleInput from '../../components/editItem/NumberOfPeopleInput';
 import DishRecipe from '../../components/editItem/DishRecipe';
-import FindIngredients from '../../components/editItem/FindIngredients';
 import DishIngredientsList from '../../components/editItem/DishIngredientsList';
 
 const EditDishPage = () => {
@@ -40,6 +39,11 @@ const EditDishPage = () => {
   const [dishIngredients, setDishIngredients] = useState([]);
   const [initialDishIngredients, setInitialDishIngredients] = useState([]);
   const [loadingDishIngredients, setLoadingDishIngredients] = useState(true);
+  const [newDishIngredientsNumber, setNewDishIngredientsNumber] = useState(0);
+
+  const [dishIngredientsErrorText, setDishIngredientsErrorText] = useState('');
+  const [displayNotEnoughIngredientsError, setDisplayNotEnoughIngredientsError] = useState(false);
+  const [displayInvalidIngredients, setDisplayInvalidIngredients] = useState(false);
 
   const navigate = useNavigate();
 
@@ -149,6 +153,9 @@ const EditDishPage = () => {
   }
 
   const handleUpdateDishIngredientQuantity = (ingredientId, newQuantity) => {
+    if (displayInvalidIngredients) {
+      setDisplayInvalidIngredients(false);
+    }
     const updatedDishIngredients = dishIngredients.map((di) => {
       if (di.ingredient.id === ingredientId) {
         return {
@@ -172,6 +179,19 @@ const EditDishPage = () => {
       return di;
     });
     setDishIngredients(updatedDishIngredients);
+  }
+
+  const handleAddDishIngredient = () => {
+    if (displayNotEnoughIngredientsError) {
+      setDisplayNotEnoughIngredientsError(false);
+    }
+    setNewDishIngredientsNumber(newDishIngredientsNumber +1);
+
+    setDishIngredients(dishIngredients.concat({
+      ingredient: { id: `ndi-${newDishIngredientsNumber}`, name: '' },
+      quantity: 0,
+      unit: { id: 0 }
+    }));
   }
 
   const handleRemoveDishIngredient = (dishIngredient) => {
@@ -208,6 +228,29 @@ const EditDishPage = () => {
       return;
     }
     setDisplayNameError(false);
+
+    if (!dishIngredients.length) {
+      setDishIngredientsErrorText("Veuillez saisir au moins 1 ingrédient !");
+      setDisplayNotEnoughIngredientsError(true);
+      return;
+    }
+    setDisplayNotEnoughIngredientsError(false);
+
+    for (const di of dishIngredients) {
+      let raiseError = false;
+      if (!di.ingredient.name || !di.ingredient.name.length) {
+        raiseError = true;
+      }
+      if (!di.quantity > 0) {
+        raiseError = true;
+      }
+      if (raiseError) {
+        setDishIngredientsErrorText("Au moins 1 ingrédient n'a pas correctement été saisi !");
+        setDisplayInvalidIngredients(true);
+        return;
+      }
+    }
+    setDisplayInvalidIngredients(false);
 
     // ONLY FOR NEW DISH
     if (!dishToEdit) {
@@ -403,15 +446,16 @@ const EditDishPage = () => {
                 {/* ***** END OF DISH INPUTS NUMBER ***** */}
 
                 {/* ***** DISH INGREDIENTS ZONE ***** */}
-                <FindIngredients
-                  ingredients={ingredients}
-                />
                 <DishIngredientsList
+                  ingredientsList={ingredients}
                   dishIngredients={dishIngredients}
                   updateQuantity={handleUpdateDishIngredientQuantity}
                   updateUnit={handleUpdateDishIngredientUnit}
+                  addDishIngredient={handleAddDishIngredient}
                   removeDishIngredient={handleRemoveDishIngredient}
                   undoDishIngredient={handleUndoDishIngredient}
+                  errorText={dishIngredientsErrorText}
+                  displayError={displayNotEnoughIngredientsError || displayInvalidIngredients}
                 />
                 {/* ***** END OF DISH INGREDIENTS ZONE ***** */}
 
