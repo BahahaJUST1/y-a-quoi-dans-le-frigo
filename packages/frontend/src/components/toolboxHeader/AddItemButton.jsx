@@ -10,7 +10,6 @@ const AddItemButton = ({ itemToUpdate }) => {
       navigate("/ingredients/edit", { state: { ingredient: itemToUpdate ?? null } });
     }
     else if (location.pathname.includes("dishes")) {
-      console.log("item", itemToUpdate);
       navigate("/dishes/edit", { state: { dish: itemToUpdate ?? null } });
     }
   }

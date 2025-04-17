@@ -1,14 +1,22 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import $http from '../../axiosInstance';
 import { useLocation, useNavigate } from 'react-router-dom';
 import GoBackArrow from '../../components/GoBackArrow';
 import FavouritesDisplayBtn from '../../components/toolboxHeader/FavouritesDisplayBtn';
 import SearchBar from '../../components/toolboxHeader/SearchBar';
-import CreateItem from '../../components/toolboxHeader/AddItemButton';
+import AddItemButton from '../../components/toolboxHeader/AddItemButton';
 import PreparationTimeInput from '../../components/toolboxHeader/PreparationTimeInput';
 import Time from '../../components/svgs/Time';
+import Favourite from '../../components/svgs/Favourite';
+import ThreeDots from '../../components/svgs/ThreeDots';
+import OwnerBubbleIcon from '../../components/OwnerBubbleIcon';
+import Edit from '../../components/svgs/Edit';
+import Delete from '../../components/svgs/Delete';
 
 const DishesPage = () => {
+  const [userRole, setUserRole] = useState(null);
+  const [loadingUserRole, setLoadingUserRole] = useState(true);
+
   const [dishes, setDishes] = useState([]);
   const [loadingDishes, setLoadingDishes] = useState(true);
 
@@ -17,6 +25,11 @@ const DishesPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const [timeValue, setTimeValue] = useState(180);
+
+  const [showMenuForDish, setShowMenuForDish] = useState(null);
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+  const menuRef = useRef(null);
+  const scrollContainerRef = useRef(null);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -42,7 +55,67 @@ const DishesPage = () => {
     fetchDishes();
   }, [location.state?.selectedIngredients]);
 
-  if (loadingDishes) {
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const response = await $http.post('/user', {});
+        setUserRole(response.data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoadingUserRole(false);
+      }
+    };
+
+    fetchUserRole();
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setShowMenuForDish(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    // Gestionnaire d'événement pour fermer le menu lors du défilement du document
+    const handleDocumentScroll = () => {
+      if (showMenuForDish !== null) {
+        setShowMenuForDish(null);
+      }
+    };
+
+    // Gestionnaire d'événement pour fermer le menu lors du défilement du conteneur
+    const handleContainerScroll = () => {
+      if (showMenuForDish !== null) {
+        setShowMenuForDish(null);
+      }
+    };
+
+    // Ajouter les écouteurs d'événements
+    document.addEventListener('scroll', handleDocumentScroll, { passive: true });
+
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.addEventListener('scroll', handleContainerScroll, { passive: true });
+    }
+
+    // Supprimer les écouteurs d'événements lors du démontage du composant
+    return () => {
+      document.removeEventListener('scroll', handleDocumentScroll);
+
+      if (scrollContainerRef.current) {
+        scrollContainerRef.current.removeEventListener('scroll', handleContainerScroll);
+      }
+    };
+  }, [showMenuForDish]);
+
+  if (loadingDishes || loadingUserRole) {
     return;
   }
 
@@ -64,6 +137,17 @@ const DishesPage = () => {
     setDisplayFavourites(!displayFavourites);
   }
 
+  const handleMenuClick = (e, dishId, element) => {
+    e.stopPropagation();
+    const fullDish = dishes.find(i => i.id === dishId);
+    const rect = element.getBoundingClientRect();
+    setMenuPosition({
+      x: rect.right - 192, // 192px = width of menu (48 * 4)
+      y: fullDish.isGlobalItem && userRole === "user" ? rect.top -60 : rect.top - 100 // 100px = approximate height of menu
+    });
+    setShowMenuForDish(showMenuForDish === dishId ? null : dishId);
+  };
+
   const handleTimeChange = (increment) => {
     setTimeValue(prev => {
       const newValue = prev + increment;
@@ -78,6 +162,35 @@ const DishesPage = () => {
   const openDishRecipe = (dishId) => {
     navigate(`/dish/${dishId}`)
   }
+
+  const handleEditClick = (e, dish) => {
+    e.stopPropagation();
+    navigate("/dishes/edit", { state: { dish } })
+  };
+
+  const handleDeleteClick = async (e, dishIdToDelete) => {
+    e.stopPropagation();
+    try {
+      // recover ingredient from its id
+      const dishToDelete = dishes.find((ing) => ing.id === dishIdToDelete);
+
+      // remove ingredient from db
+      if (dishToDelete.isGlobalItem) {
+        await $http.post(`/deleted-global-item`, {
+          itemType: "dish",
+          itemId: dishToDelete.id
+        });
+      }
+      else {
+        await $http.delete(`/dish/${dishToDelete.id}`);
+      }
+      // remove it from current ingredients list
+      setDishes(dishes.filter(d => d.id !== dishToDelete.id));
+    } catch (err) {
+      console.error(err);
+    }
+    setShowMenuForDish(null);
+  };
 
   return (
     <div className="flex items-center justify-center h-screen overflow-hidden max-[768px]:mx-8">
@@ -109,7 +222,7 @@ const DishesPage = () => {
               onTextTypingHandler={handleTextTyping}
             />
 
-            <CreateItem itemToUpdate={dishes[0]} />
+            <AddItemButton />
           </div>
 
           {/* MOBILE VERSION */}
@@ -133,7 +246,7 @@ const DishesPage = () => {
                   searchTerm={searchTerm}
                   onTextTypingHandler={handleTextTyping}
                 />
-                <CreateItem />
+                <AddItemButton />
               </div>
 
             </div>
@@ -159,6 +272,7 @@ const DishesPage = () => {
             )
             : (
               <div
+                ref={scrollContainerRef}
                 className="grid grid-cols-1 md:grid-cols-3 gap-4 pb-3 mb-2 max-[768px]:my-1 overflow-y-auto flex-grow scrollbar-hide content-start">
                 {
                   dishes.filter((dish) => {
@@ -193,29 +307,23 @@ const DishesPage = () => {
                         <div className="flex justify-between items-center mt-2 mx-1">
                           <div className="flex flex-col">
                             <h2 className="text-xl max-[768px]:text-lg font-semibold">{dish.name}</h2>
-                            <div className={`flex items-center mt-1 ${dish.preparationTime ? '' : 'hidden' } `}>
+                            <div className={`flex items-center mt-1 ${dish.preparationTime ? '' : 'hidden'} `}>
                               <Time />
-                              <span className="ml-[-2px]" >{dish.preparationTime} min</span>
+                              <span className="ml-[-2px]">{dish.preparationTime} min</span>
                             </div>
                           </div>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill={dish.favourite ? "currentColor" : "none"}
-                            viewBox="0 0 24 24"
-                            strokeWidth="1"
-                            stroke="currentColor"
-                            className="w-7 h-7 text-red-500 hover:scale-110"
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              likeDish(dish.id);
-                            }}
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                          <span className="flex">
+                          <Favourite
+                            isItemLiked={dish.favourite}
+                            handleLike={() => likeDish(dish.id)}
+                          />
+                          <div className="relative ml-[-0.5rem] mb-1">
+                            <ThreeDots
+                              handleClick={handleMenuClick}
+                              itemId={dish.id}
                             />
-                          </svg>
+                          </div>
+                          </span>
                         </div>
                       </div>
                     );
@@ -224,6 +332,46 @@ const DishesPage = () => {
               </div>
             )
         }
+
+        {showMenuForDish && (
+          <div
+            ref={menuRef}
+            className="fixed bg-white rounded-md shadow-lg border z-[9999]"
+            style={{
+              top: menuPosition.y,
+              left: menuPosition.x,
+              width: '192px'
+            }}
+          >
+            <div className="py-1 relative">
+              <OwnerBubbleIcon
+                item={dishes.find(i => i.id === showMenuForDish)}
+                itemType="ingredient"
+              />
+              <button
+                className={`
+                  flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50
+                  ${dishes.find(i => i.id === showMenuForDish).isGlobalItem
+                  ? userRole === "admin"
+                    ? 'visible'
+                    : 'hidden'
+                  : 'visible'}
+                `}
+                onClick={(e) => handleEditClick(e, dishes.find(i => i.id === showMenuForDish))}
+              >
+                <Edit />
+                Modifier
+              </button>
+              <button
+                className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-50"
+                onClick={(e) => handleDeleteClick(e, showMenuForDish)}
+              >
+                <Delete />
+                Supprimer
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

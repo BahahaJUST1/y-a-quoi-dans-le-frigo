@@ -9,6 +9,8 @@ import AddItemButton from '../../components/toolboxHeader/AddItemButton';
 import OwnerBubbleIcon from '../../components/OwnerBubbleIcon';
 import Delete from '../../components/svgs/Delete';
 import Edit from '../../components/svgs/Edit';
+import ThreeDots from '../../components/svgs/ThreeDots';
+import Favourite from '../../components/svgs/Favourite';
 
 const IngredientsPage = () => {
   const [likedGlobalIngredients, setLikedGlobalIngredients] = useState([]);
@@ -29,6 +31,7 @@ const IngredientsPage = () => {
   const [showMenuForIngredient, setShowMenuForIngredient] = useState(null);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const menuRef = useRef(null);
+  const scrollContainerRef = useRef(null);
 
   const navigate = useNavigate();
 
@@ -91,6 +94,38 @@ const IngredientsPage = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    // Gestionnaire d'événement pour fermer le menu lors du défilement du document
+    const handleDocumentScroll = () => {
+      if (showMenuForIngredient !== null) {
+        setShowMenuForIngredient(null);
+      }
+    };
+
+    // Gestionnaire d'événement pour fermer le menu lors du défilement du conteneur
+    const handleContainerScroll = () => {
+      if (showMenuForIngredient !== null) {
+        setShowMenuForIngredient(null);
+      }
+    };
+
+    // Ajouter les écouteurs d'événements
+    document.addEventListener('scroll', handleDocumentScroll, { passive: true });
+
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.addEventListener('scroll', handleContainerScroll, { passive: true });
+    }
+
+    // Supprimer les écouteurs d'événements lors du démontage du composant
+    return () => {
+      document.removeEventListener('scroll', handleDocumentScroll);
+
+      if (scrollContainerRef.current) {
+        scrollContainerRef.current.removeEventListener('scroll', handleContainerScroll);
+      }
+    };
+  }, [showMenuForIngredient]);
 
   if (loadingIngredients || loadingLikedGlobalIngredients || loadingUserRole) {
     return;
@@ -202,7 +237,7 @@ const IngredientsPage = () => {
     const rect = element.getBoundingClientRect();
     setMenuPosition({
       x: rect.right - 192, // 192px = width of menu (48 * 4)
-      y: fullIngredient.isGlobalItem ? rect.top -60 : rect.top - 100 // 100px = approximate height of menu
+      y: fullIngredient.isGlobalItem && userRole === "user" ? rect.top -60 : rect.top - 100 // 100px = approximate height of menu
     });
     setShowMenuForIngredient(showMenuForIngredient === ingredientId ? null : ingredientId);
   };
@@ -297,7 +332,9 @@ const IngredientsPage = () => {
           </div>
         </div>
 
-        <div className="pb-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-[768px]:gap-2 overflow-y-auto flex-grow scrollbar-hide content-start">
+        <div
+          ref={scrollContainerRef}
+          className="pb-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-[768px]:gap-2 overflow-y-auto flex-grow scrollbar-hide content-start">
           {
             ingredients.length === 0
               ? (
@@ -357,45 +394,16 @@ const IngredientsPage = () => {
                       <h2 className="text-xl max-[768px]:text-lg font-semibold flex items-center justify-between w-full">
                         {ingredient.name}
                         <span className="ml-2 flex">
-                          <svg
-                            width="35"
-                            height="35"
-                            viewBox="0 0 32 32"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill={isIngredientLiked(ingredient) ? "#EF4444" : "none"}
-                            stroke={
-                              isSelected
-                                ? isIngredientLiked(ingredient) ? "#EF4444" : "red"
-                                : "red"
-                            }
-                            strokeWidth={isSelected ? '1' : '0.5'}
-                            className="transition-transform duration-200 hover:scale-110 mt-2"
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              likeIngredient(ingredient.id);
-                            }}
-                          >
-                            <path
-                              d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                          </svg>
+                          <Favourite
+                            isItemSelected={isSelected}
+                            isItemLiked={isIngredientLiked(ingredient)}
+                            handleLike={() => likeIngredient(ingredient.id)}
+                          />
                           <div className="relative ml-[-0.5rem] mb-1">
-                            <svg
-                              width="30"
-                              height="30"
-                              viewBox="0 0 24 24"
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="gray"
-                              stroke="gray"
-                              strokeWidth="1"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              className="transition-transform duration-200 hover:scale-110 mt-2 cursor-pointer"
-                              onClick={(e) => handleMenuClick(e, ingredient.id, e.currentTarget)}
-                            >
-                              <circle cx="12" cy="7" r="1" />
-                              <circle cx="12" cy="12" r="1" />
-                              <circle cx="12" cy="17" r="1" />
-                            </svg>
+                            <ThreeDots
+                              handleClick={handleMenuClick}
+                              itemId={ingredient.id}
+                            />
                           </div>
                         </span>
                       </h2>
