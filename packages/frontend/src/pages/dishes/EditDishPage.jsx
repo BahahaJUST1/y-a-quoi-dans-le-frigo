@@ -293,12 +293,12 @@ const EditDishPage = () => {
       if (dishToEdit) {
         await $http.put(`/dish/${dishToEdit.id}`, {
           dishData: dataToSubmit,
-          dishIngredientsData: []
+          dishIngredientsData: dishIngredients
         });
       } else {
         await $http.post('/dish/recipe', {
           dishData: dataToSubmit,
-          dishIngredientsData: []
+          dishIngredientsData: dishIngredients
         });
       }
       navigate('/dishes');

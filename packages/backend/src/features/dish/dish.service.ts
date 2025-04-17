@@ -6,6 +6,7 @@ import { RawDishIngredientType } from '../../utils/types/raw_dish_ingredient.typ
 import { DishIngredient } from '../../database/models/dish_ingredient.entity';
 import { getSimilarNames } from '../../utils/filters/similaritySearch';
 import { JwtService } from '@nestjs/jwt';
+import { Ingredient } from '../../database/models/ingredient.entity';
 
 @Injectable()
 export class DishService {
@@ -96,5 +97,39 @@ export class DishService {
         dish: newDish
       } as DishIngredient);
     }
+  }
+
+  async updateOne(
+    id: number,
+    data: {
+      dishData: Partial<Dish>,
+      dishIngredientsData: Partial<DishIngredient>[]
+      userId: number
+    }
+  ) {
+    // recover current dish in db
+
+      // update the dish data (name, image, preparationTime, numberOfPeople, recipe)
+
+    // recover current dish-ingredients in db
+
+      // check if ingredient is still required in the recipe
+
+        // if still required -> update the dish-ingredient in db if values has changed (quantity, unit)
+
+        // if not required -> set its deleted_at value to new Date()
+
+        // if not already in db -> create it
+  }
+
+  async deleteOne(id: number): Promise<Dish> {
+    // recover dish to mark as deleted
+    let dishToDelete: Dish | null = await this.findOne(id);
+    if (!dishToDelete) {
+      throw Error(`No dish found in database with id ${id} !`);
+    }
+    dishToDelete.deletedAt = new Date();
+    await this.em.flush();
+    return dishToDelete;
   }
 }

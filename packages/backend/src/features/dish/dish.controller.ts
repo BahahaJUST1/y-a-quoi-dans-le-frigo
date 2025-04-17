@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UseInterceptors } from '@nestjs/common';
 import { DishService } from './dish.service';
 import { Dish } from '../../database/models/dish.entity';
 import { JwtAuthGuard } from '../../decorators/guards/jwt-auth.guard';
@@ -6,6 +6,7 @@ import { DatabaseResponseUserInterceptor } from '../../decorators/interceptors/d
 import { DishIngredient } from '../../database/models/dish_ingredient.entity';
 import { UserIdInterceptor } from '../../decorators/interceptors/user-id.interceptor';
 import { User } from '../../database/models/user.entity';
+import { Ingredient } from '../../database/models/ingredient.entity';
 
 @Controller('dish')
 @UseGuards(JwtAuthGuard)
@@ -30,6 +31,19 @@ export class DishController {
   @UseInterceptors(DatabaseResponseUserInterceptor)
   async findOne(@Param('id') id: number): Promise<Dish | null> {
     return await this.dishService.findOne(id);
+  }
+
+  @Put("/:id")
+  @UseInterceptors(UserIdInterceptor)
+  async updateOne(
+    @Param('id') id: number,
+    @Body() body: {
+      dishData: Partial<Dish>,
+      dishIngredientsData: Partial<DishIngredient>[]
+      userId: number
+    }
+  ) {
+    return await this.dishService.updateOne(id, body);
   }
 
   @Put("/like/:id")
@@ -59,5 +73,10 @@ export class DishController {
     @Body() body: { bearer: string }
   ): Promise<string[] | null> {
     return await this.dishService.findAllWithSimilarName(name, body.bearer);
+  }
+
+  @Delete("/:id")
+  async deleteOne(@Param('id') id: number): Promise<Dish> {
+    return await this.dishService.deleteOne(id);
   }
 }
