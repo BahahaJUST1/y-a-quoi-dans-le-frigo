@@ -1,15 +1,14 @@
-const Delete = () => {
+const Delete = ({ width }) => {
   return (
     <svg
-      width="20"
-      height="20"
+      width={`${width ?? "22"}`}
+      height={`${width ?? "22"}`}
       viewBox="0 0 24 24"
       fill="none"
       stroke="#EF4444"
       strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="mr-2"
     >
       <path d="M3 6h18"></path>
       <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>

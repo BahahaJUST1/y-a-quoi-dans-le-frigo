@@ -86,7 +86,9 @@ const DishIngredientsList = ({
                   removeDishIngredient(dishIngredient);
                 }}
               >
-                <Delete />
+                <Delete
+                  width={20}
+                />
               </span>
 
               <span

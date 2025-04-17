@@ -12,10 +12,12 @@ const Favourite = ({ isItemLiked, isItemSelected, handleLike }) => {
           : "red"
       }
       strokeWidth={isItemSelected ? '1' : '0.5'}
-      className="transition-transform duration-200 hover:scale-110 mt-2"
+      className="cursor-pointer transition-transform duration-200 hover:scale-110 mt-2"
       onClick={(event) => {
         event.stopPropagation();
-        handleLike()
+        if (handleLike) {
+          handleLike()
+        }
       }}
     >
       <path

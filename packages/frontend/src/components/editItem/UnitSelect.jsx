@@ -2,6 +2,7 @@ import Select from 'react-select';
 import { useEffect, useState } from 'react';
 import $http from '../../axiosInstance';
 import { reactUnitSelectCustomStyle } from '../../styles/react-select';
+import DropDown from '../svgs/DropDown';
 
 const UnitSelect = ({ selectedUnit, onUnitChange }) => {
   const [units, setUnits] = useState([]);
@@ -39,9 +40,7 @@ const UnitSelect = ({ selectedUnit, onUnitChange }) => {
 
   const DropdownIndicator = () => (
     <div style={{ width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M6 9l6 6 6-6" />
-      </svg>
+      <DropDown />
     </div>
   );
 

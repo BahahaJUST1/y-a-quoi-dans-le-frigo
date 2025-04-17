@@ -9,6 +9,8 @@ import ItemName from '../../components/editItem/ItemName';
 import ItemImage from '../../components/editItem/ItemImage';
 import ItemBgColor from '../../components/editItem/ItemBgColor';
 import UndoButton from '../../components/editItem/UndoButton';
+import Favourite from '../../components/svgs/Favourite';
+import ThreeDots from '../../components/svgs/ThreeDots';
 
 const EditIngredientPage = () => {
   const location = useLocation();
@@ -238,21 +240,14 @@ const EditIngredientPage = () => {
                     />
                     <h2 className="font-semibold flex items-center justify-between w-full">
                       {formData.name.length ? formData.name : 'Nouvel ingrédient'}
-                      <span className="ml-2">
-                      <svg
-                        width="30"
-                        height="30"
-                        viewBox="0 0 32 32"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="#EF4444"
-                        stroke="#EF4444"
-                        strokeWidth="1"
-                        className="mt-1"
-                      >
-                        <path
-                          d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                      </svg>
-                    </span>
+                      <span className="flex">
+                        <Favourite
+                          isItemLiked={true}
+                        />
+                        <div className="relative ml-[-0.5rem] mb-1">
+                            <ThreeDots />
+                          </div>
+                      </span>
                     </h2>
                   </div>
                 </div>

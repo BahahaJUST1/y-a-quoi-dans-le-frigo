@@ -1,5 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
+import Quit from './svgs/Quit';
 
 const WarningSimilarItems = ({ newItemName, displayWarning, setDisplayWarning, createItem, similarItems }) => {
   const location = useLocation();
@@ -40,9 +41,7 @@ const WarningSimilarItems = ({ newItemName, displayWarning, setDisplayWarning, c
             className="absolute top-1.5 right-1.5 text-gray-500 hover:text-gray-700"
             aria-label="Fermer"
           >
-            <svg className="md:w-6 md:h-6 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <Quit />
           </button>
           <div className="text-center mt-3 mb-6 md:text-lg text-md font-semibold">{getItemType()}</div>
             {similarItems.map((item, index) => (

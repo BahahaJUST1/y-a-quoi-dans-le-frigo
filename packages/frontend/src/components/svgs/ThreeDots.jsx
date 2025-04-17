@@ -11,7 +11,11 @@ const ThreeDots = ({ handleClick, itemId }) => {
       strokeLinecap="round"
       strokeLinejoin="round"
       className="transition-transform duration-200 hover:scale-110 mt-2 cursor-pointer"
-      onClick={(e) => handleClick(e, itemId, e.currentTarget)}
+      onClick={(e) => {
+        if (handleClick) {
+          handleClick(e, itemId, e.currentTarget);
+        }
+      }}
     >
       <circle cx="12" cy="7" r="1" />
       <circle cx="12" cy="12" r="1" />
