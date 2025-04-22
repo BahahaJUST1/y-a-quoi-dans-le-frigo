@@ -1,5 +1,5 @@
 import { CallHandler, ExecutionContext, Inject, Injectable, NestInterceptor } from '@nestjs/common';
-import { Observable, mergeMap } from 'rxjs';
+import { mergeMap, Observable } from 'rxjs';
 import { DeletedGlobalItemService } from '../../features/deleted_global_item/deleted_global_item.service';
 import { DeletedGlobalItem } from '../../database/models/deleted_global_item';
 import { GlobalItemType } from '../../utils/enums/global_item.type';
@@ -31,7 +31,9 @@ export class DatabaseResponseUserInterceptor implements NestInterceptor {
               const potentialGlobalItem: DeletedGlobalItem | null =
                 await this.deletedGlobalItemService.findOne(
                   user.sub,
-                  GlobalItemType.INGREDIENT,
+                  item.constructor.name === "Dish"
+                    ? GlobalItemType.DISH
+                    : GlobalItemType.INGREDIENT,
                   item.id
                 );
               if (!potentialGlobalItem) {

@@ -367,7 +367,7 @@ const DishesPage = () => {
                 onClick={(e) => handleDeleteClick(e, showMenuForDish)}
               >
                 <Delete />
-                Supprimer
+                <span className="ml-1.5">Supprimer</span>
               </button>
             </div>
           </div>

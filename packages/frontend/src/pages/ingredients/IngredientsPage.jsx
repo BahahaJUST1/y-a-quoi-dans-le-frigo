@@ -448,7 +448,7 @@ const IngredientsPage = () => {
                 onClick={(e) => handleDeleteClick(e, showMenuForIngredient)}
               >
                 <Delete />
-                Supprimer
+                <span className="ml-1.5">Supprimer</span>
               </button>
             </div>
           </div>

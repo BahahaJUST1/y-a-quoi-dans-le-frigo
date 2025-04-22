@@ -6,7 +6,6 @@ import { DatabaseResponseUserInterceptor } from '../../decorators/interceptors/d
 import { DishIngredient } from '../../database/models/dish_ingredient.entity';
 import { UserIdInterceptor } from '../../decorators/interceptors/user-id.interceptor';
 import { User } from '../../database/models/user.entity';
-import { Ingredient } from '../../database/models/ingredient.entity';
 
 @Controller('dish')
 @UseGuards(JwtAuthGuard)
