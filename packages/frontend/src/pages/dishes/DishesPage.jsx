@@ -12,6 +12,7 @@ import ThreeDots from '../../components/svgs/ThreeDots';
 import OwnerBubbleIcon from '../../components/global/OwnerBubbleIcon';
 import Edit from '../../components/svgs/Edit';
 import Delete from '../../components/svgs/Delete';
+import DeleteConfirmation from '../../components/global/DeleteConfirmation';
 
 const DishesPage = () => {
   const [userRole, setUserRole] = useState(null);
@@ -25,6 +26,9 @@ const DishesPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const [timeValue, setTimeValue] = useState(180);
+
+  const [displayDeleteConfirmation, setDisplayDeleteConfirmation] = useState(false);
+  const [dishToDelete, setDishToDelete] = useState(null);
 
   const [showMenuForDish, setShowMenuForDish] = useState(null);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
@@ -168,12 +172,21 @@ const DishesPage = () => {
     navigate("/dishes/edit", { state: { dish } })
   };
 
-  const handleDeleteClick = async (e, dishIdToDelete) => {
+  const handleDeleteBeforeConfirmation = (e, dishIdToDelete) => {
     e.stopPropagation();
-    try {
-      // recover ingredient from its id
-      const dishToDelete = dishes.find((ing) => ing.id === dishIdToDelete);
 
+    // recover dish from its id
+    const dishToDeleteRecovered = dishes.find((dish) => dish.id === dishIdToDelete);
+    setDishToDelete(dishToDeleteRecovered);
+
+    setShowMenuForDish(false);
+    setDisplayDeleteConfirmation(true);
+  }
+
+  const handleDeleteSubmission = async () => {
+    setDisplayDeleteConfirmation(false);
+
+    try {
       // remove ingredient from db
       if (dishToDelete.isGlobalItem) {
         await $http.post(`/deleted-global-item`, {
@@ -197,6 +210,13 @@ const DishesPage = () => {
       <div className="relative max-w-6xl w-full p-6 py-4 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col h-[90vh] max-[768px]:h-[92vh]">
 
         <GoBackArrow to={"/ingredients"} />
+
+        <DeleteConfirmation
+          itemToDelete={dishToDelete}
+          displayDeleteConfirmation={displayDeleteConfirmation}
+          setDisplayDeleteConfirmation={setDisplayDeleteConfirmation}
+          deleteItem={handleDeleteSubmission}
+        />
 
         <h1 className="text-3xl font-bold mb-3 max-[768px]:mt-1 text-center">
           Mes Plats
@@ -364,7 +384,7 @@ const DishesPage = () => {
               </button>
               <button
                 className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-50"
-                onClick={(e) => handleDeleteClick(e, showMenuForDish)}
+                onClick={(e) => handleDeleteBeforeConfirmation(e, showMenuForDish)}
               >
                 <Delete />
                 <span className="ml-1.5">Supprimer</span>

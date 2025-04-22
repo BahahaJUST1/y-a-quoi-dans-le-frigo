@@ -11,6 +11,7 @@ import Delete from '../../components/svgs/Delete';
 import Edit from '../../components/svgs/Edit';
 import ThreeDots from '../../components/svgs/ThreeDots';
 import Favourite from '../../components/svgs/Favourite';
+import DeleteConfirmation from '../../components/global/DeleteConfirmation';
 
 const IngredientsPage = () => {
   const [likedGlobalIngredients, setLikedGlobalIngredients] = useState([]);
@@ -27,6 +28,9 @@ const IngredientsPage = () => {
   const [displayFavourites, setDisplayFavourites] = useState(false);
   const [displayIngredientsCategory, setDisplayIngredientsCategory] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
+
+  const [displayDeleteConfirmation, setDisplayDeleteConfirmation] = useState(false);
+  const [ingredientToDelete, setIngredientToDelete] = useState(null);
 
   const [showMenuForIngredient, setShowMenuForIngredient] = useState(null);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
@@ -247,12 +251,21 @@ const IngredientsPage = () => {
     navigate("/ingredients/edit", { state: { ingredient } })
   };
 
-  const handleDeleteClick = async (e, ingredientIdToDelete) => {
+  const handleDeleteBeforeConfirmation = (e, ingredientIdToDelete) => {
     e.stopPropagation();
-    try {
-      // recover ingredient from its id
-      const ingredientToDelete = ingredients.find((ing) => ing.id === ingredientIdToDelete);
 
+    // recover ingredient from its id
+    const ingredientToDeleteRecovered = ingredients.find((ing) => ing.id === ingredientIdToDelete);
+    setIngredientToDelete(ingredientToDeleteRecovered);
+
+    setShowMenuForIngredient(false);
+    setDisplayDeleteConfirmation(true);
+  }
+
+  const handleDeleteSubmission = async () => {
+    setDisplayDeleteConfirmation(false);
+
+    try {
       // remove ingredient from db
       if (ingredientToDelete.isGlobalItem) {
         await $http.post(`/deleted-global-item`, {
@@ -274,6 +287,13 @@ const IngredientsPage = () => {
   return (
     <div className="flex items-center justify-center h-screen overflow-hidden max-[768px]:mx-8">
       <div className="max-w-6xl w-full p-6 py-4 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col h-[90vh] max-[768px]:h-[92vh] relative">
+
+        <DeleteConfirmation
+          itemToDelete={ingredientToDelete}
+          displayDeleteConfirmation={displayDeleteConfirmation}
+          setDisplayDeleteConfirmation={setDisplayDeleteConfirmation}
+          deleteItem={handleDeleteSubmission}
+        />
 
         <h1 className="text-3xl font-bold mb-3 max-[768px]:mt-1 text-center">
           Mes Ingrédients
@@ -445,7 +465,7 @@ const IngredientsPage = () => {
               </button>
               <button
                 className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-50"
-                onClick={(e) => handleDeleteClick(e, showMenuForIngredient)}
+                onClick={(e) => handleDeleteBeforeConfirmation(e, showMenuForIngredient)}
               >
                 <Delete />
                 <span className="ml-1.5">Supprimer</span>
