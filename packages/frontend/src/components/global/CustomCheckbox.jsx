@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import CheckMark from './svgs/CheckMark';
+import CheckMark from '../svgs/CheckMark';
 
 const CustomCheckbox = ({ id, label }) => {
   const [isChecked, setIsChecked] = useState(false);

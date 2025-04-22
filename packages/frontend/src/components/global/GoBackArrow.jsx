@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import BackArrow from './svgs/BackArrow';
+import BackArrow from '../svgs/BackArrow';
 
 const GoBackArrow = ({ to = '/' }) => {
   const navigate = useNavigate();

@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
-import Quit from './svgs/Quit';
+import Quit from '../svgs/Quit';
 
 const WarningSimilarItems = ({ newItemName, displayWarning, setDisplayWarning, createItem, similarItems }) => {
   const location = useLocation();

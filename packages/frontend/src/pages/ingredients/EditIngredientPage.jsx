@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import $http from '../../axiosInstance';
-import GoBackArrow from '../../components/GoBackArrow';
+import GoBackArrow from '../../components/global/GoBackArrow';
 import CategorySelect from '../../components/toolboxHeader/CategorySelect';
 import { backgroundTextColor } from '../../utils/backgroundTextColor.ts';
-import WarningSimilarItems from '../../components/WarningSimilarItems';
+import WarningSimilarItems from '../../components/global/WarningSimilarItems';
 import ItemName from '../../components/editItem/ItemName';
 import ItemImage from '../../components/editItem/ItemImage';
 import ItemBgColor from '../../components/editItem/ItemBgColor';
 import UndoButton from '../../components/editItem/UndoButton';
 import Favourite from '../../components/svgs/Favourite';
 import ThreeDots from '../../components/svgs/ThreeDots';
+import LoadingSpinner from '../../components/global/LoadingSpinner';
 
 const EditIngredientPage = () => {
   const location = useLocation();
@@ -26,6 +27,7 @@ const EditIngredientPage = () => {
   const [categories, setCategories] = useState([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const [imageFile, setImageFile] = useState(null);
@@ -166,6 +168,8 @@ const EditIngredientPage = () => {
   };
 
   const editIngredient = async () => {
+    setDisplaySimilarWarning(false);
+    setIsSubmitting(true);
     try {
       let dataToSubmit = { ...formData };
 
@@ -183,15 +187,21 @@ const EditIngredientPage = () => {
         await $http.post('/ingredient', dataToSubmit);
       }
       navigate('/ingredients');
-    } catch (e) {
-      throw e;
+    }
+    catch (error) {
+      setIsSubmitting(false);
+      console.error("Erreur lors de la soumission du formulaire :", error);
     }
   }
 
   return (
     <div className="flex items-center justify-center h-screen overflow-hidden max-[768px]:mx-8">
       <div className="max-w-3xl w-full p-6 py-4 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col h-[90vh] max-[768px]:h-[92vh] relative">
-        {/* WARNING SIMILAR INGREDIENTS MESSAGE */}
+
+        <LoadingSpinner
+          isLoading={isSubmitting}
+        />
+
         <WarningSimilarItems
           newItemName={formData.name}
           displayWarning={displaySimilarWarning}
@@ -359,12 +369,14 @@ const EditIngredientPage = () => {
               type="button"
               onClick={() => navigate('/ingredients')}
               className="flex-1 py-1 md:py-2 px-4 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition"
+              disabled={isSubmitting}
             >
               Annuler
             </button>
             <button
               onClick={handleSubmit}
               className="flex-1 py-1 md:py-2 px-4 rounded-md transition max-[768px]:bg-[#ffe394] bg-[#FFEBB3] text-black hover:bg-[#FFE394]"
+              disabled={isSubmitting}
             >
               {ingredient ? "Modifier" : "Créer"}
             </button>

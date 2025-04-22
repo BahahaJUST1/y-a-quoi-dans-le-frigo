@@ -1,6 +1,6 @@
-import home from '../assets/images/home.png';
-import user from '../assets/images/user.png';
-import share from '../assets/images/share.png';
+import home from '../../assets/images/home.png';
+import user from '../../assets/images/user.png';
+import share from '../../assets/images/share.png';
 
 
 const OwnerBubbleIcon = ({ item, itemType }) => {

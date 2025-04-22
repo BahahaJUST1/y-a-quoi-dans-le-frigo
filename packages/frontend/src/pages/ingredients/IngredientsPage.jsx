@@ -6,7 +6,7 @@ import CategorySelect from '../../components/toolboxHeader/CategorySelect';
 import FavouritesDisplayBtn from '../../components/toolboxHeader/FavouritesDisplayBtn';
 import SearchBar from '../../components/toolboxHeader/SearchBar';
 import AddItemButton from '../../components/toolboxHeader/AddItemButton';
-import OwnerBubbleIcon from '../../components/OwnerBubbleIcon';
+import OwnerBubbleIcon from '../../components/global/OwnerBubbleIcon';
 import Delete from '../../components/svgs/Delete';
 import Edit from '../../components/svgs/Edit';
 import ThreeDots from '../../components/svgs/ThreeDots';

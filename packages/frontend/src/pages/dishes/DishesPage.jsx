@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import $http from '../../axiosInstance';
 import { useLocation, useNavigate } from 'react-router-dom';
-import GoBackArrow from '../../components/GoBackArrow';
+import GoBackArrow from '../../components/global/GoBackArrow';
 import FavouritesDisplayBtn from '../../components/toolboxHeader/FavouritesDisplayBtn';
 import SearchBar from '../../components/toolboxHeader/SearchBar';
 import AddItemButton from '../../components/toolboxHeader/AddItemButton';
@@ -9,7 +9,7 @@ import PreparationTimeInput from '../../components/toolboxHeader/PreparationTime
 import Time from '../../components/svgs/Time';
 import Favourite from '../../components/svgs/Favourite';
 import ThreeDots from '../../components/svgs/ThreeDots';
-import OwnerBubbleIcon from '../../components/OwnerBubbleIcon';
+import OwnerBubbleIcon from '../../components/global/OwnerBubbleIcon';
 import Edit from '../../components/svgs/Edit';
 import Delete from '../../components/svgs/Delete';
 

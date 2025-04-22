@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import $http from '../../axiosInstance';
-import GoBackArrow from '../../components/GoBackArrow';
-import WarningSimilarItems from '../../components/WarningSimilarItems';
+import GoBackArrow from '../../components/global/GoBackArrow';
+import WarningSimilarItems from '../../components/global/WarningSimilarItems';
 import ItemName from '../../components/editItem/ItemName';
 import ItemImage from '../../components/editItem/ItemImage';
 import UndoButton from '../../components/editItem/UndoButton';
@@ -12,6 +12,7 @@ import PreparationTimeInput from '../../components/toolboxHeader/PreparationTime
 import NumberOfPeopleInput from '../../components/editItem/NumberOfPeopleInput';
 import DishRecipe from '../../components/editItem/DishRecipe';
 import DishIngredientsList from '../../components/editItem/DishIngredientsList';
+import LoadingSpinner from '../../components/global/LoadingSpinner';
 
 const EditDishPage = () => {
   const location = useLocation();
@@ -45,6 +46,7 @@ const EditDishPage = () => {
   const [displayNotEnoughIngredientsError, setDisplayNotEnoughIngredientsError] = useState(false);
   const [displayInvalidIngredients, setDisplayInvalidIngredients] = useState(false);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -295,6 +297,8 @@ const EditDishPage = () => {
   };
 
   const editDish = async () => {
+    setDisplaySimilarWarning(false);
+    setIsSubmitting(true);
     try {
       let dataToSubmit = { ...dishData };
 
@@ -318,8 +322,10 @@ const EditDishPage = () => {
         });
       }
       navigate('/dishes');
-    } catch (e) {
-      throw e;
+    }
+    catch (error) {
+      setIsSubmitting(false);
+      console.error("Erreur lors de la soumission du formulaire :", error);
     }
   }
 
@@ -330,6 +336,10 @@ const EditDishPage = () => {
   return (
     <div className="flex items-center justify-center h-screen overflow-hidden max-[768px]:mx-8">
       <div className="max-w-3xl w-full p-6 py-4 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col h-[90vh] max-[768px]:h-[92vh] relative">
+
+        <LoadingSpinner
+          isLoading={isSubmitting}
+        />
 
         <WarningSimilarItems
           newItemName={dishData.name}
@@ -517,12 +527,14 @@ const EditDishPage = () => {
               type="button"
               onClick={() => navigate('/dishes')}
               className="flex-1 py-1 md:py-2 px-4 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition"
+              disabled={isSubmitting}
             >
               Annuler
             </button>
             <button
               onClick={handleSubmit}
               className="flex-1 py-1 md:py-2 px-4 rounded-md transition max-[768px]:bg-[#ffe394] bg-[#FFEBB3] text-black hover:bg-[#FFE394]"
+              disabled={isSubmitting}
             >
               {dishToEdit ? "Modifier" : "Créer"}
             </button>

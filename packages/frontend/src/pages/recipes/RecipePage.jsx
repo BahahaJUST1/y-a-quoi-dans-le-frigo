@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import $http from '../../axiosInstance';
 import { useParams } from 'react-router-dom';
-import GoBackArrow from '../../components/GoBackArrow';
+import GoBackArrow from '../../components/global/GoBackArrow';
 import { getNoRecipeText } from '../../utils/noRecipeText.ts';
-import CustomCheckbox from '../../components/CustomCheckbox';
+import CustomCheckbox from '../../components/global/CustomCheckbox';
 import Time from '../../components/svgs/Time';
 import Person from '../../components/svgs/Person';
 
