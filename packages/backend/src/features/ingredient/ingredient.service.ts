@@ -3,6 +3,7 @@ import { EntityManager } from '@mikro-orm/mysql';
 import { Ingredient } from '../../database/models/ingredient.entity';
 import { getSimilarNames } from '../../utils/filters/similaritySearch';
 import { JwtService } from '@nestjs/jwt';
+import { firstCase } from '../../utils/converters/first-case';
 
 @Injectable()
 export class IngredientService {
@@ -70,7 +71,10 @@ export class IngredientService {
   }
 
   async createOne(ingredient: Ingredient): Promise<Ingredient> {
-    const newIngredient = this.em.create(Ingredient, ingredient);
+    const newIngredient = this.em.create(Ingredient, {
+      ...ingredient,
+      name: firstCase(ingredient.name)
+    });
     await this.em.flush();
     return newIngredient;
   }

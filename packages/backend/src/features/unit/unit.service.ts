@@ -14,4 +14,13 @@ export class UnitService {
       throw e;
     }
   }
+
+  async findOne(id: number): Promise<Unit | null> {
+    try {
+      return await this.em.findOne(Unit, { id });
+    }
+    catch (e) {
+      throw e;
+    }
+  }
 }

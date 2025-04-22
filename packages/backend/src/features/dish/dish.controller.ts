@@ -63,8 +63,7 @@ export class DishController {
     dishIngredientsData: Partial<DishIngredient>[]
     user: User
   }): Promise<void> {
-    body.dishData.user = body.user;
-    return await this.dishService.createRecipe(body.dishData, body.dishIngredientsData);
+    return await this.dishService.createRecipe(body.dishData, body.dishIngredientsData, body.user);
   }
 
   @Post("/similar/:name")

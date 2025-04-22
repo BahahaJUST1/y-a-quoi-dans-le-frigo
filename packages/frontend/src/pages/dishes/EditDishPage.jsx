@@ -208,7 +208,7 @@ const EditDishPage = () => {
     setDishIngredients(dishIngredients.concat({
       ingredient: { id: `ndi-${newDishIngredientsNumber}`, name: '' },
       quantity: 0,
-      unit: { id: 0 }
+      unit: { id: 1 }
     }));
   }
 

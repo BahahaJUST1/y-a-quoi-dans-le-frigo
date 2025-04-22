@@ -7,6 +7,10 @@ import { DishIngredient } from '../../database/models/dish_ingredient.entity';
 import { getSimilarNames } from '../../utils/filters/similaritySearch';
 import { JwtService } from '@nestjs/jwt';
 import { Ingredient } from '../../database/models/ingredient.entity';
+import { Unit } from '../../database/models/unit.entity';
+import { UnitService } from '../unit/unit.service';
+import { User } from '../../database/models/user.entity';
+import { firstCase } from '../../utils/converters/first-case';
 
 @Injectable()
 export class DishService {
@@ -77,24 +81,44 @@ export class DishService {
   }
 
   async createOne(dish: Dish): Promise<Dish> {
-    const newDish = this.em.create(Dish, dish);
+    const newDish = this.em.create(Dish, {
+      ...dish,
+      name: firstCase(dish.name)
+    });
     await this.em.flush();
     return newDish;
   }
 
-  async createRecipe(dishData: Dish, dishIngredientsData: Partial<DishIngredient>[]): Promise<void> {
+  async createRecipe(
+    dishData: Partial<Dish>,
+    dishIngredientsData: Partial<DishIngredient>[],
+    user: User
+  ): Promise<void> {
     if (!dishIngredientsData.length) {
       throw new Error("Error, no dish-ingredients provided while creating this dish recipe !")
     }
 
     // first, create dish
-    const newDish: Dish = await this.createOne(dishData);
+    const newDish: Dish = await this.createOne({
+      ...dishData,
+      user
+    } as Dish);
 
     // then create all the dish_ingredients
     for (const dishIngredient of dishIngredientsData) {
+      // recover the unit reference from its id to avoid Mikro-ORM to re-create one
+      const unit: Unit = this.em.getReference(Unit, dishIngredient.unit!.id)
+
+      // recover the ingredient reference instead of full ingredient
+      // otherwise Mikro-ORM will try to re-create an ingredient-category
+      const ingredient: Ingredient = this.em.getReference(Ingredient, dishIngredient.ingredient!.id);
+
       await this.dishIngredientService.createOne({
-        ...dishIngredient,
-        dish: newDish
+        dish: newDish,
+        ingredient,
+        quantity: dishIngredient.quantity,
+        unit,
+        user
       } as DishIngredient);
     }
   }
