@@ -2,10 +2,12 @@ import Delete from '../svgs/Delete';
 import Undo from '../svgs/Undo';
 import UnitSelect from './UnitSelect';
 import Add from '../svgs/Add';
+import IngredientSearchAndSelect from './IngredientSearchAndSelect';
 
 const DishIngredientsList = ({
     ingredientsList,
     dishIngredients,
+    updateIngredient,
     updateQuantity,
     updateUnit,
     addDishIngredient,
@@ -54,9 +56,15 @@ const DishIngredientsList = ({
                 flex justify-between p-1 px-4
               `}
             >
-              <span className="w-[60%]">
-                {dishIngredient.ingredient.name}
-              </span>
+
+              <div className="w-[60%]">
+                <IngredientSearchAndSelect
+                  ingredients={ingredientsList}
+                  currentIngredient={dishIngredient.ingredient}
+                  handleIngredientChange={updateIngredient}
+                  dishIngredients={dishIngredients}
+                />
+              </div>
 
               <input
                 className="border w-[10%] flex justify-center text-center outline-none custom-arrows"

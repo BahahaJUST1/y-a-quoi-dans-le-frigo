@@ -152,6 +152,22 @@ const EditDishPage = () => {
     }
   }
 
+  const handleUpdateDishIngredientIngredient = (previousIngredient, newIngredient) => {
+    if (displayInvalidIngredients) {
+      setDisplayInvalidIngredients(false);
+    }
+    const updatedDishIngredients = dishIngredients.map((di) => {
+      if (di.ingredient.id === previousIngredient) {
+        return {
+          ...di,
+          ingredient: newIngredient,
+        }
+      }
+      return di;
+    });
+    setDishIngredients(updatedDishIngredients);
+  }
+
   const handleUpdateDishIngredientQuantity = (ingredientId, newQuantity) => {
     if (displayInvalidIngredients) {
       setDisplayInvalidIngredients(false);
@@ -200,10 +216,10 @@ const EditDishPage = () => {
   }
 
   const handleUndoDishIngredient = (dishIngredient) => {
-    const initialDishIngredient = initialDishIngredients.find((di) => di.ingredient.id === dishIngredient.ingredient.id);
+    const initialDishIngredient = initialDishIngredients.find((di) => di.id === dishIngredient.id);
     if (initialDishIngredient) {
       const updatedDishIngredients = dishIngredients.map((di) => {
-        if (di.ingredient.id === initialDishIngredient.ingredient.id) {
+        if (di.id === initialDishIngredient.id) {
           return initialDishIngredient;
         }
         return di;
@@ -449,6 +465,7 @@ const EditDishPage = () => {
                 <DishIngredientsList
                   ingredientsList={ingredients}
                   dishIngredients={dishIngredients}
+                  updateIngredient={handleUpdateDishIngredientIngredient}
                   updateQuantity={handleUpdateDishIngredientQuantity}
                   updateUnit={handleUpdateDishIngredientUnit}
                   addDishIngredient={handleAddDishIngredient}
