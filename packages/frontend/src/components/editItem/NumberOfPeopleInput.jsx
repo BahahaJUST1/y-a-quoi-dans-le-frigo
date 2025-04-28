@@ -1,7 +1,7 @@
 const NumberOfPeopleInput = ({ numberOfPeople, handleNumberChange }) => {
 
   return (
-    <div className="flex items-center border border-gray-300 rounded-lg bg-white w-[7.5rem] ml-auto mr-1.5">
+    <div className="flex items-center border border-gray-300 rounded-lg bg-white w-[7.5rem] md:ml-auto mr-1.5">
       <button
         onClick={(e) => {
           e.preventDefault();

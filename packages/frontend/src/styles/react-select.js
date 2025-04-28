@@ -129,8 +129,8 @@ export const reactUnitSelectCustomStyle = {
   }),
   valueContainer: (baseStyles) => ({
     ...baseStyles,
-    height: '24px',
-    padding: '0 8px',
+    height: checkIfMobile() ? '' : '24px',
+    padding: checkIfMobile() ? '2px 8px' : '0 8px',
     display: 'flex',
     alignItems: 'center',
   }),
@@ -220,8 +220,8 @@ export const reactIngredientNameSelectCustomStyle = {
   }),
   valueContainer: (baseStyles) => ({
     ...baseStyles,
-    height: '24px',
-    padding: '0 8px',
+    height: checkIfMobile() ? '' : '24px',
+    padding: checkIfMobile() ? '2px 8px' : '0 8px',
     display: 'flex',
     alignItems: 'center',
   }),

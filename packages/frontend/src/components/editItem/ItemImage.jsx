@@ -31,7 +31,7 @@ const ItemImage = ({ handleImageChange, imageDisplayed }) => {
         <div className="relative">
           <label
             htmlFor="image"
-            className="text-md max-[768px]:text-sm bg-gray-200 border border-gray-300 px-3 py-1.5 rounded cursor-pointer inline-block"
+            className="text-md max-[768px]:text-xs bg-gray-200 border border-gray-300 px-3 py-1.5 rounded cursor-pointer inline-block"
           >
             Choisir un fichier
           </label>

@@ -360,9 +360,9 @@ const EditDishPage = () => {
           <div className="flex justify-center">
 
             {/* *** FORMULA INPUTS *** */}
-            <form className="w-full pb-4 bg-gray-100 rounded-md max-[768px]:p-4">
+            <form className="w-full pb-4 bg-gray-100 rounded-md">
 
-              <div className="flex flex-col p-6">
+              <div className="flex flex-col p-6 max-[768px]:p-4">
 
                 {/* ***** DISH NAME ***** */}
                 <div className="mb-6 flex items-center gap-0.5">
@@ -391,7 +391,7 @@ const EditDishPage = () => {
                 <div className="flex items-center mb-6">
                   <img
                     src={getImageSource()} alt={"plat"}
-                    className="w-20 h-20 rounded-md mr-3.5 border"
+                    className="w-20 h-20 max-[768px]:w-16 max-[768px]:h-16 rounded-md mr-3.5 max-[768px]:mr-2 border"
                   />
                   <ItemImage
                     handleImageChange={handleImageChange}
@@ -417,7 +417,7 @@ const EditDishPage = () => {
                 {/* ***** END OF DISH IMAGE ***** */}
 
                 {/* ***** DISH INPUTS NUMBER ***** */}
-                <div className="flex justify-between mb-6">
+                <div className="flex max-[768px]:flex-col max-[768px]:gap-3 md:justify-between mb-6">
 
                   {/* *** DISH PREPARATION TIME *** */}
                   <div className="flex flex-col gap-1">
@@ -446,9 +446,10 @@ const EditDishPage = () => {
 
                   {/* *** DISH NUMBER OF PEOPLE *** */}
                   <div className="flex flex-col gap-1">
-                    <div className="flex items-center gap-2">
-                      <span>Nombre de personnes</span>
+                    <div className="flex items-center md:gap-2">
+                      <span className="max-[768px]:hidden">Nombre de personnes</span>
                       <Person />
+                      <span className="md:hidden">Nombre de personnes</span>
                     </div>
                     <div className="flex items-center">
                       <NumberOfPeopleInput
@@ -510,7 +511,7 @@ const EditDishPage = () => {
 
               {/* *** REQUIRED INPUTS MESSAGE *** */}
               <div className="w-full mt-4 px-6 max-[768px]:px-0">
-                <p className="text-xs md:text-sm text-gray-400 font-normal italic text-right">
+                <p className="max-[768px]:mr-3 text-xs md:text-sm text-gray-400 font-normal italic text-right">
                   Les champs marqués d'une <span className="error-text">*</span> sont obligatoires
                 </p>
               </div>
