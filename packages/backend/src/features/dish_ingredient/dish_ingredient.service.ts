@@ -19,7 +19,10 @@ export class DishIngredientService {
   async findByDishId(dishId: number): Promise<DishIngredient[]> {
     try {
       return await this.em.find(DishIngredient,
-        { dish: dishId },
+        {
+          dish: dishId,
+          deletedAt: { $eq: null }
+        },
         { populate: ['ingredient', 'unit', 'ingredient.category'] }
       );
     }
@@ -48,5 +51,21 @@ export class DishIngredientService {
     const newDishIngredient = this.em.create(DishIngredient, dishIngredient);
     await this.em.flush();
     return newDishIngredient;
+  }
+
+  async updateOne(id: number, data: Partial<DishIngredient>): Promise<void> {
+    await this.em.nativeUpdate(
+      DishIngredient,
+      { id },
+      data
+    );
+  }
+
+  async deleteOne(id: number): Promise<void> {
+    await this.em.nativeUpdate(
+      DishIngredient,
+      { id },
+      { deletedAt: new Date() }
+    );
   }
 }

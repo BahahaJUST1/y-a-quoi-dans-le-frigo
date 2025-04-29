@@ -39,7 +39,7 @@ export class DishController {
     @Body() body: {
       dishData: Partial<Dish>,
       dishIngredientsData: Partial<DishIngredient>[]
-      userId: number
+      user: User
     }
   ) {
     return await this.dishService.updateOne(id, body);

@@ -8,7 +8,6 @@ import { getSimilarNames } from '../../utils/filters/similaritySearch';
 import { JwtService } from '@nestjs/jwt';
 import { Ingredient } from '../../database/models/ingredient.entity';
 import { Unit } from '../../database/models/unit.entity';
-import { UnitService } from '../unit/unit.service';
 import { User } from '../../database/models/user.entity';
 import { firstCase } from '../../utils/converters/first-case';
 
@@ -128,22 +127,67 @@ export class DishService {
     data: {
       dishData: Partial<Dish>,
       dishIngredientsData: Partial<DishIngredient>[]
-      userId: number
+      user: User
     }
   ) {
     // recover current dish in db
+    const currentDatabaseDish: Dish | null = await this.findOne(id);
+    if (!currentDatabaseDish) {
+      throw new Error(`No dish found in database with id ${id} !`);
+    }
 
-      // update the dish data (name, image, preparationTime, numberOfPeople, recipe)
+    // update the dish data (name, image, preparationTime, numberOfPeople, recipe)
+    await this.em.nativeUpdate(
+      Dish,
+      { id },
+      {
+        name: data.dishData.name!,
+        image: data.dishData.image,
+        preparationTime: data.dishData.preparationTime,
+        numberOfPeople: data.dishData.numberOfPeople!,
+        recipe: data.dishData.recipe
+      }
+    );
 
     // recover current dish-ingredients in db
+    const currentDatabaseDishIngredients: DishIngredient[] = await this.dishIngredientService.findByDishId(id);
+
+    // browse database dish-ingredients to find if they are still or not in updated values (di update/delete)
+    for (const currentDatabaseDishIngredient of currentDatabaseDishIngredients) {
 
       // check if ingredient is still required in the recipe
+      const potentialDishIngredient = data.dishIngredientsData.find((di) => di.ingredient!.id === currentDatabaseDishIngredient.ingredient.id);
 
-        // if still required -> update the dish-ingredient in db if values has changed (quantity, unit)
+      // if still required -> update the dish-ingredient in db if values has changed (quantity, unit)
+      if (potentialDishIngredient) {
+        await this.dishIngredientService.updateOne(currentDatabaseDishIngredient.id, {
+          ...potentialDishIngredient,
+          ingredient: this.em.getReference(Ingredient, potentialDishIngredient.ingredient!.id),
+          unit: this.em.getReference(Unit, potentialDishIngredient.unit!.id),
+          updatedAt: new Date()
+        });
+      }
+      // if not required -> set its deleted_at value to new Date()
+      else {
+        await this.dishIngredientService.deleteOne(currentDatabaseDishIngredient.id);
+      }
+    }
 
-        // if not required -> set its deleted_at value to new Date()
+    // browse new dish-ingredients data to find if they are di not present in database (di create)
+    for (const newDishIngredient of data.dishIngredientsData) {
 
-        // if not already in db -> create it
+      // check if ingredient was not in the current database recipe
+      const potentialDishIngredient = currentDatabaseDishIngredients.find((di) => di.ingredient.id === newDishIngredient.ingredient!.id);
+
+      // if not already in db -> create it
+      if (!potentialDishIngredient) {
+        await this.dishIngredientService.createOne({
+          ...newDishIngredient,
+          ingredient: this.em.getReference(Ingredient, newDishIngredient.ingredient!.id),
+          user: data.user
+        } as DishIngredient);
+      }
+    }
   }
 
   async deleteOne(id: number): Promise<Dish> {
