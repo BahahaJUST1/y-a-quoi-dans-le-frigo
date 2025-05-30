@@ -7,6 +7,9 @@ services:
       - ./packages/backend/.env
     volumes:
       - mysql_data:/var/lib/mysql
+
+      # Add this line for a db data init
+      # - ./packages/backend/src/database/init:/docker-entrypoint-initdb.d
     ports:
       - "3306:3306"
     networks:
