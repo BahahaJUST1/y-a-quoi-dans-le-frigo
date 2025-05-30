@@ -25,7 +25,7 @@ jobs:
       - name: Deploy to PC2
         run: |
           ssh just1@77.195.235.151 << 'EOF'
-            cd /home/just1/y-a-quoi-dans-le-frigo
+            cd /home/just1/Documents/dev/y-a-quoi-dans-le-frigo
             git pull origin master
             docker-compose down
             docker-compose up -d --build
