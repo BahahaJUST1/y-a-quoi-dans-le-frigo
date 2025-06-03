@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import $http from '../../axiosInstance';
 import { useNavigate } from 'react-router-dom';
-import { backgroundTextColor } from '../../utils/backgroundTextColor.ts';
 import CategorySelect from '../../components/toolboxHeader/CategorySelect';
 import FavouritesDisplayBtn from '../../components/toolboxHeader/FavouritesDisplayBtn';
 import SearchBar from '../../components/toolboxHeader/SearchBar';
@@ -12,6 +11,7 @@ import Edit from '../../components/svgs/Edit';
 import ThreeDots from '../../components/svgs/ThreeDots';
 import Favourite from '../../components/svgs/Favourite';
 import DeleteConfirmation from '../../components/global/DeleteConfirmation';
+import Header from '../../components/global/Header';
 
 const IngredientsPage = () => {
   const [likedGlobalIngredients, setLikedGlobalIngredients] = useState([]);
@@ -285,8 +285,11 @@ const IngredientsPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen overflow-hidden max-[768px]:mx-8">
-      <div className="max-w-6xl w-full p-6 py-4 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col h-[90vh] max-[768px]:h-[92vh] relative">
+    <div className="flex flex-col h-screen items-center justify-center">
+
+      <Header />
+
+      <div className="flex flex-col flex-1 overflow-hidden max-w-6xl md:py-2 md:pb-3">
 
         <DeleteConfirmation
           itemToDelete={ingredientToDelete}
@@ -295,11 +298,15 @@ const IngredientsPage = () => {
           deleteItem={handleDeleteSubmission}
         />
 
-        <h1 className="text-3xl font-bold mb-3 max-[768px]:mt-1 text-center">
+        <h1 className="text-3xl font-bold md:mb-1 mb-2 max-[768px]:mt-1 ml-1 md:py-2">
           Mes Ingrédients
         </h1>
 
-        <div className="z-20 bg-gray-100 max-[768px]:p-2 p-3 rounded-xl mb-5 mt-1 shadow-sm">
+        <div className="ml-1 mb-3 third-text-color">
+          Sélectionnez des ingrédients et découvrez les plats que vous pouvez cuisiner en fonction de ces ingrédients.
+        </div>
+
+        <div className="z-20 bg-gray-100 max-[768px]:p-2 p-3 rounded-xl mb-2">
 
           {/* DESKTOP VERSION */}
           <div className="hidden md:flex md:flex-row md:items-center md:gap-4 md:w-full">
@@ -354,7 +361,7 @@ const IngredientsPage = () => {
 
         <div
           ref={scrollContainerRef}
-          className="pb-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-[768px]:gap-2 overflow-y-auto flex-grow scrollbar-hide content-start">
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 md:gap-3 gap-2 overflow-y-auto flex-grow scrollbar-hide content-start">
           {
             ingredients.length === 0
               ? (
@@ -387,14 +394,10 @@ const IngredientsPage = () => {
                   return (
                     <div
                       key={ingredient.id}
-                      className={`flex items-center p-2 rounded-lg shadow-lg max-[768px]:shadow-md cursor-pointer transition-opacity duration-300 w-full h-20 ${isSelected ? 'opacity-100' : 'opacity-70'}`}
-                      style={
-                        isSelected
-                          ? ingredient.bgColor
-                            ? { color: backgroundTextColor(ingredient.bgColor), backgroundColor: ingredient.bgColor, borderColor: 'darkgray', borderWidth: '1px' }
-                            : { backgroundColor: '#fafafa', borderColor: 'darkgray', borderWidth: '1px' }
-                          : { borderColor: 'lightgray', borderWidth: '1px' }
-                      }
+                      className={`
+                        flex items-center p-2 rounded-lg shadow-md max-[768px]:shadow-md cursor-pointer transition-opacity duration-300 w-full h-20 
+                        ${isSelected ? 'opacity-100 selected-card' : 'opacity-70 default-card'}
+                      `}
                       onClick={() => toggleIngredientSelection(ingredient.id, ingredient.name)}
                     >
                       <img
@@ -404,11 +407,7 @@ const IngredientsPage = () => {
                         alt={`photo-${ingredient.name.split(' ').join('-').toLowerCase()}`}
                         className={`
                           w-16 h-16 object-cover mr-4 
-                          ${ingredient.image // if we have a placeholder image and ingredient is selected, switch it to white if bgColor is dark
-                            ? "rounded-md"
-                            : isSelected
-                              ? backgroundTextColor(ingredient.bgColor) === "#000000" ? "" : "invert"
-                              : ""}
+                          ${ingredient.image ? "rounded-md" : ""}
                         `}
                       />
                       <h2 className="text-xl max-[768px]:text-lg font-semibold flex items-center justify-between w-full">
@@ -474,13 +473,25 @@ const IngredientsPage = () => {
           </div>
         )}
 
-        <button
-          onClick={navigateToDishesAccordingToIngredients}
-          className="z-20 max-[768px]:bg-[#ffe394] bg-[#FFEBB3] text-black hover:bg-[#FFE394] mt-4 max-[768px]:mt-4 w-full py-3 max-[768px]:py-2 rounded-lg text-lg transition"
-          type="button"
-        >
-          Voir les plats
-        </button>
+        {/* ***************** CONFIRM BUTTON **************** */}
+        <div className="md:w-1/4 md:ml-auto mt-2 flex flex-col">
+
+          <div
+            className={`${selectedIngredients.length ? 'visible' : 'invisible'} mb-0.5 text-sm md:ml-auto w-full text-center`}>
+            {selectedIngredients.length} {selectedIngredients.length > 1 ? 'ingrédients sélectionnés' : 'ingrédient sélectionné'}
+          </div>
+
+          <button
+            onClick={navigateToDishesAccordingToIngredients}
+            className="z-20 secondary-bg-color secondary-bg-color-hover md:py-2.5 py-2 rounded-lg md:text-lg transition"
+            type="button"
+          >
+            <div>
+              {selectedIngredients.length ? "Voir les plats" : "Voir tous les plats"}
+            </div>
+          </button>
+        </div>
+        {/* ***************** END OF CONFIRM BUTTON **************** */}
       </div>
     </div>
   );
