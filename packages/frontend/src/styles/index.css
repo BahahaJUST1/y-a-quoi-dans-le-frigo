@@ -19,35 +19,34 @@
 }
 
 .primary-text-color {
-    color: #7EC0C4;
+    @apply text-primary;
 }
 .primary-bg-color {
-    background-color: #7EC0C4;
+    @apply bg-primary;
     color: white;
 }
 .primary-bg-color-hover:hover {
-    background-color: #70B9BE;
+    @apply bg-primary-hover
 }
 .secondary-text-color {
-    color: #042628;
+    @apply text-secondary;
 }
 .secondary-bg-color {
-    background-color: #042628;
+    @apply bg-secondary;
     color: white;
 }
 .secondary-bg-color-hover:hover {
-    background-color: #031314;
+    @apply bg-secondary-hover;
 }
 .third-text-color {
-    color: #545C5C;
+    @apply text-third;
 }
 .fourth-bg-color {
-    background-color: #F2FCFC;
+    @apply bg-fourth;
 }
 
 .selected-card {
-    border: 1px solid #7EC0C4;
-    background-color: #F2FCFC;
+    @apply border border-primary bg-fourth;
 }
 .default-card {
     border: 1px solid lightgray;
@@ -66,7 +65,7 @@ body {
     font-family: 'Barlow', sans-serif;
     font-weight: 500;
     overflow: hidden;
-    color: #042628;
+    @apply text-secondary;
 }
 
 .test-border {

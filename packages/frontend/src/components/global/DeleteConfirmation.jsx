@@ -55,7 +55,7 @@ const DeleteConfirmation = ({ itemToDelete, displayDeleteConfirmation, setDispla
             </button>
             <button
               onClick={deleteItem}
-              className="flex-1 py-2 px-4 rounded-md transition max-[768px]:bg-[#ffe394] bg-[#FFEBB3] text-black hover:bg-[#FFE394]"
+              className="flex-1 py-2 px-4 rounded-md transition primary-bg-color primary-bg-color-hover text-black hover:bg-[#FFE394]"
             >
               Oui
             </button>

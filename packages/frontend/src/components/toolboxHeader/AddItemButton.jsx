@@ -16,7 +16,7 @@ const AddItemButton = ({ itemToUpdate }) => {
 
   return (
     <button
-      className="bg-white primary-bg-color-hover border border-gray-300 font-bold rounded-lg w-[42px] h-[42px] flex items-center justify-center flex-shrink-0"
+      className="bg-white hover:bg-gray-50 border border-gray-300 font-bold rounded-lg w-[42px] h-[42px] flex items-center justify-center flex-shrink-0"
       onClick={navigateToItemEdition}
       type="button"
       title="Ajouter un nouvel ingrédient"

@@ -333,6 +333,7 @@ const IngredientsPage = () => {
           {/* MOBILE VERSION */}
           <div className="md:hidden">
             <div className="grid grid-cols-1 gap-2">
+
               <div className="flex items-end gap-2">
                 <CategorySelect
                   defaultCategoryName={"Toutes les catégories"}

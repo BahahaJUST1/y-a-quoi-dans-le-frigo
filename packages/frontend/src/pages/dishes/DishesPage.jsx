@@ -13,6 +13,7 @@ import OwnerBubbleIcon from '../../components/global/OwnerBubbleIcon';
 import Edit from '../../components/svgs/Edit';
 import Delete from '../../components/svgs/Delete';
 import DeleteConfirmation from '../../components/global/DeleteConfirmation';
+import Header from '../../components/global/Header';
 
 const DishesPage = () => {
   const [userRole, setUserRole] = useState(null);
@@ -146,7 +147,7 @@ const DishesPage = () => {
     const fullDish = dishes.find(i => i.id === dishId);
     const rect = element.getBoundingClientRect();
     setMenuPosition({
-      x: rect.right - 192, // 192px = width of menu (48 * 4)
+      x: rect.right - 37, // 192px = width of menu (48 * 4)
       y: fullDish.isGlobalItem && userRole === "user" ? rect.top -60 : rect.top - 100 // 100px = approximate height of menu
     });
     setShowMenuForDish(showMenuForDish === dishId ? null : dishId);
@@ -206,8 +207,11 @@ const DishesPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen overflow-hidden max-[768px]:mx-8">
-      <div className="relative max-w-6xl w-full p-6 py-4 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col h-[90vh] max-[768px]:h-[92vh]">
+    <div className="flex flex-col h-screen items-center justify-center">
+
+      <Header />
+
+      <div className="max-[768px]:p-4 flex flex-col flex-1 overflow-hidden max-w-6xl w-full md:py-2 md:pb-3">
 
         <GoBackArrow to={"/ingredients"} />
 
@@ -218,14 +222,26 @@ const DishesPage = () => {
           deleteItem={handleDeleteSubmission}
         />
 
-        <h1 className="text-3xl font-bold mb-3 max-[768px]:mt-1 text-center">
+        <h1 className="text-3xl font-bold md:mb-1 mb-2 max-[768px]:mt-0 ml-1 md:py-2">
           Mes Plats
         </h1>
 
-        <div className="z-20 bg-gray-100 max-[768px]:p-2 p-3 rounded-xl mb-5 mt-1 shadow-sm">
+        <div className="ml-1 mb-3 third-text-color">
+          <div className="text-justify">
+            {location.state?.selectedIngredients.length
+                ? "Voici la liste des plats que vous pouvez cuisiner en fonction des ingrédients que vous avez sélectionné."
+                : "Voici la liste de tous les plats que vous pouvez cuisiner."}
+          </div>
+          <span className={`${location.state?.selectedIngredients.length ? 'visible' : 'hidden'}`}>
+            {location.state?.selectedIngredients.length > 1 ? "Ingrédients sélectionnés : " : "Ingrédient sélectionné : "}
+          </span>
+          <span className="primary-text-color text-justify max-[768px]:text-center">{location.state?.selectedIngredients.map((ingredient) => ingredient.name).join(', ')}</span>
+        </div>
+
+        <div className="z-20 bg-gray-100 p-2 rounded-xl mb-2">
 
           {/* DESKTOP VERSION */}
-          <div className="hidden md:flex md:flex-row md:items-center md:gap-4 md:w-full">
+          <div className="hidden md:flex md:flex-row md:items-center md:gap-2 md:w-full">
 
             <PreparationTimeInput
               timeValue={timeValue}
@@ -273,14 +289,6 @@ const DishesPage = () => {
           </div>
         </div>
 
-        <div className={`
-          ${location.state?.selectedIngredients.length === 0 || !location.state?.selectedIngredients ? 'hidden' : 'visible'}
-          ml-1 mt-[-0.5rem] mb-1.5 text-gray-400 font-normal italic
-        `}>
-          <span>{location.state?.selectedIngredients.length > 1 ? "Ingrédients sélectionnés : " : "Ingrédient sélectionné : "}</span>
-          <span>{location.state?.selectedIngredients.map((ingredient) => ingredient.name).join(', ')}</span>
-        </div>
-
         {
           dishes.length === 0
             ? (
@@ -293,7 +301,7 @@ const DishesPage = () => {
             : (
               <div
                 ref={scrollContainerRef}
-                className="grid grid-cols-1 md:grid-cols-3 gap-4 pb-3 mb-2 max-[768px]:my-1 overflow-y-auto flex-grow scrollbar-hide content-start">
+                className="grid grid-cols-1 md:grid-cols-4 gap-4 pb-3 mb-2 max-[768px]:my-1 overflow-y-auto flex-grow scrollbar-hide content-start">
                 {
                   dishes.filter((dish) => {
                     return dish.name
@@ -317,33 +325,37 @@ const DishesPage = () => {
                       <div
                         key={dish.id}
                         onClick={() => openDishRecipe(dish.id)}
-                        className="p-3 border rounded-lg shadow-lg cursor-pointer relative"
+                        className="p-2 border rounded-lg shadow-md cursor-pointer relative"
                       >
                         <img
-                          src={`https://res.cloudinary.com/dd50khgyk/image/upload/${dish.image ? dish.image : "placeholders/g2dkz5ae3ce3u5gde5cz"}`}
+                          src={`https://res.cloudinary.com/dd50khgyk/image/upload/${dish.image ? dish.image : 'placeholders/g2dkz5ae3ce3u5gde5cz'}`}
                           alt={`photo-${dish.name.split(' ').join('-').toLowerCase()}`}
                           className="w-full md:h-auto h-32 object-cover rounded-lg"
                         />
-                        <div className="flex justify-between items-center mt-2 mx-1">
-                          <div className="flex flex-col">
-                            <h2 className="text-xl max-[768px]:text-lg font-semibold">{dish.name}</h2>
-                            <div className={`flex items-center mt-1 ${dish.preparationTime ? '' : 'hidden'} `}>
-                              <Time />
-                              <span className="ml-[-2px]">{dish.preparationTime} min</span>
-                            </div>
-                          </div>
-                          <span className="flex">
+
+                        <div className="absolute bg-white rounded-md top-0 pt-1.5 pl-1.5 right-0">
                           <Favourite
                             isItemLiked={dish.favourite}
                             handleLike={() => likeDish(dish.id)}
                           />
-                          <div className="relative ml-[-0.5rem] mb-1">
-                            <ThreeDots
-                              handleClick={handleMenuClick}
-                              itemId={dish.id}
-                            />
+                        </div>
+
+                        <div className="absolute bg-white rounded-md top-0 pt-0 pb-1.5 left-1">
+                          <ThreeDots
+                            handleClick={handleMenuClick}
+                            itemId={dish.id}
+                          />
+                        </div>
+
+                        <div className="flex justify-between items-center mt-2 mx-1">
+                          <div className="flex flex-col w-full">
+                            <h2 className="text-xl max-[768px]:text-lg font-semibold">{dish.name}</h2>
+                            <div
+                              className={`text-third flex items-center mt-1 ${dish.preparationTime ? '' : 'hidden'} `}>
+                              <Time />
+                              <span className="ml-[-2px]">{dish.preparationTime} min</span>
+                            </div>
                           </div>
-                          </span>
                         </div>
                       </div>
                     );
@@ -360,7 +372,7 @@ const DishesPage = () => {
             style={{
               top: menuPosition.y,
               left: menuPosition.x,
-              width: '192px'
+              width: '192px',
             }}
           >
             <div className="py-1 relative">
