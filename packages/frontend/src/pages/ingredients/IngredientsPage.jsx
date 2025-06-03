@@ -289,7 +289,7 @@ const IngredientsPage = () => {
 
       <Header />
 
-      <div className="max-[768px]:p-4 flex flex-col flex-1 overflow-hidden max-w-6xl md:py-2 md:pb-3">
+      <div className="max-[768px]:p-4 flex flex-col flex-1 overflow-hidden max-w-6xl w-full md:py-2 md:pb-3">
 
         <DeleteConfirmation
           itemToDelete={ingredientToDelete}
@@ -306,10 +306,10 @@ const IngredientsPage = () => {
           Sélectionnez des ingrédients et découvrez les plats que vous pouvez cuisiner en fonction de ces ingrédients.
         </div>
 
-        <div className="z-20 bg-gray-100 max-[768px]:p-2 p-3 rounded-xl mb-2">
+        <div className="z-20 bg-gray-100 p-2 rounded-xl mb-2">
 
           {/* DESKTOP VERSION */}
-          <div className="hidden md:flex md:flex-row md:items-center md:gap-4 md:w-full">
+          <div className="hidden md:flex md:flex-row md:items-center md:gap-2 md:w-full">
             <CategorySelect
               defaultCategoryName={"Toutes les catégories"}
               selectedCategory={displayIngredientsCategory}
@@ -395,7 +395,7 @@ const IngredientsPage = () => {
                     <div
                       key={ingredient.id}
                       className={`
-                        flex items-center p-2 rounded-lg shadow-md max-[768px]:shadow-md cursor-pointer transition-opacity duration-300 w-full h-20 
+                        flex items-center rounded-lg shadow-md max-[768px]:shadow-md cursor-pointer transition-opacity duration-300 w-full p-1.5 
                         ${isSelected ? 'opacity-100 selected-card' : 'opacity-70 default-card'}
                       `}
                       onClick={() => toggleIngredientSelection(ingredient.id, ingredient.name)}

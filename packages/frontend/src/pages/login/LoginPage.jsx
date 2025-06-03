@@ -120,7 +120,7 @@ const LoginPage = () => {
             >
               <p>
                 <span className="text-black">{isLogin ? 'Pas encore de compte ? ' : 'Déjà un compte ? '}</span>
-                <span className="font-medium primary-text-color group-hover:underline group-hover:decoration-[#7EC0C4] max-[768px]:underline max-[768px]:decoration-red-500">{isLogin ? 'Inscrivez-vous' : 'Connectez-vous'}</span>
+                <span className="font-medium primary-text-color group-hover:underline group-hover:decoration-[#7EC0C4] max-[768px]:underline max-[768px]:decoration-[#7EC0C4]">{isLogin ? 'Inscrivez-vous' : 'Connectez-vous'}</span>
               </p>
             </button>
           </div>
