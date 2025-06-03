@@ -147,7 +147,7 @@ const DishesPage = () => {
     const fullDish = dishes.find(i => i.id === dishId);
     const rect = element.getBoundingClientRect();
     setMenuPosition({
-      x: rect.right - 37, // 192px = width of menu (48 * 4)
+      x: rect.right - 30, // 192px = width of menu (48 * 4)
       y: fullDish.isGlobalItem && userRole === "user" ? rect.top -60 : rect.top - 100 // 100px = approximate height of menu
     });
     setShowMenuForDish(showMenuForDish === dishId ? null : dishId);
@@ -229,8 +229,8 @@ const DishesPage = () => {
         <div className="ml-1 mb-3 third-text-color">
           <div className="text-justify">
             {location.state?.selectedIngredients.length
-                ? "Voici la liste des plats que vous pouvez cuisiner en fonction des ingrédients que vous avez sélectionné."
-                : "Voici la liste de tous les plats que vous pouvez cuisiner."}
+              ? "Voici la liste des plats que vous pouvez cuisiner en fonction des ingrédients que vous avez sélectionné."
+              : "Voici la liste de tous les plats que vous pouvez cuisiner."}
           </div>
           <span className={`${location.state?.selectedIngredients.length ? 'visible' : 'hidden'}`}>
             {location.state?.selectedIngredients.length > 1 ? "Ingrédients sélectionnés : " : "Ingrédient sélectionné : "}
@@ -325,16 +325,21 @@ const DishesPage = () => {
                       <div
                         key={dish.id}
                         onClick={() => openDishRecipe(dish.id)}
-                        className="p-2 border rounded-lg shadow-md cursor-pointer relative"
+                        className="p-2 border rounded-lg shadow-md cursor-pointer relative flex flex-col"
                       >
-                        <img
-                          src={`https://res.cloudinary.com/dd50khgyk/image/upload/${dish.image ? dish.image : 'placeholders/g2dkz5ae3ce3u5gde5cz'}`}
-                          alt={`photo-${dish.name.split(' ').join('-').toLowerCase()}`}
-                          className="w-full md:h-auto h-32 object-cover rounded-lg"
-                        />
+                        <div className="relative">
+                          <img
+                            src={`https://res.cloudinary.com/dd50khgyk/image/upload/${dish.image ? dish.image : 'placeholders/g2dkz5ae3ce3u5gde5cz'}`}
+                            alt={`photo-${dish.name.split(' ').join('-').toLowerCase()}`}
+                            className="w-full md:h-auto h-32 object-cover rounded-lg"
+                          />
+                          <div
+                            className="absolute inset-0 bg-gradient-to-b from-black/25 to-transparent rounded-lg"></div>
+                        </div>
 
-                        <div className="absolute bg-white rounded-md top-0 pt-1.5 pl-1.5 right-0">
+                        <div className="absolute rounded-md top-0 pt-1.5 pr-1.5 right-0">
                           <Favourite
+                            color={'white'}
                             isItemLiked={dish.favourite}
                             handleLike={() => likeDish(dish.id)}
                           />
@@ -347,14 +352,12 @@ const DishesPage = () => {
                           />
                         </div>
 
-                        <div className="flex justify-between items-center mt-2 mx-1">
-                          <div className="flex flex-col w-full">
-                            <h2 className="text-xl max-[768px]:text-lg font-semibold">{dish.name}</h2>
-                            <div
-                              className={`text-third flex items-center mt-1 ${dish.preparationTime ? '' : 'hidden'} `}>
-                              <Time />
-                              <span className="ml-[-2px]">{dish.preparationTime} min</span>
-                            </div>
+                        <div className="flex flex-col justify-between flex-1 mt-2 mx-1">
+                          <h2 className="text-xl max-[768px]:text-lg font-semibold text-left">{dish.name}</h2>
+                          <div
+                            className={`text-third flex items-center self-start ${dish.preparationTime ? '' : 'hidden'} `}>
+                            <Time />
+                            <span className="ml-[-2px]">{dish.preparationTime} min</span>
                           </div>
                         </div>
                       </div>

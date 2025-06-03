@@ -1,4 +1,4 @@
-const Favourite = ({ isItemLiked, isItemSelected, handleLike }) => {
+const Favourite = ({ isItemLiked, isItemSelected, handleLike, color }) => {
   return (
     <svg
       width="35"
@@ -6,12 +6,8 @@ const Favourite = ({ isItemLiked, isItemSelected, handleLike }) => {
       viewBox="0 0 32 32"
       xmlns="http://www.w3.org/2000/svg"
       fill={isItemLiked ? "#EF4444" : "none"}
-      stroke={
-        isItemSelected
-          ? isItemLiked ? "#EF4444" : "red"
-          : "red"
-      }
-      strokeWidth={isItemSelected ? '1' : '0.5'}
+      stroke={isItemLiked ? "#EF4444" : color ? "white" : "red"}
+      strokeWidth={color ? '1.5' : isItemSelected ? '1' : '0.5'}
       className="cursor-pointer transition-transform duration-200 hover:scale-110 mt-2"
       onClick={(event) => {
         event.stopPropagation();
