@@ -289,7 +289,7 @@ const IngredientsPage = () => {
 
       <Header />
 
-      <div className="flex flex-col flex-1 overflow-hidden max-w-6xl md:py-2 md:pb-3">
+      <div className="max-[768px]:p-4 flex flex-col flex-1 overflow-hidden max-w-6xl md:py-2 md:pb-3">
 
         <DeleteConfirmation
           itemToDelete={ingredientToDelete}
@@ -298,11 +298,11 @@ const IngredientsPage = () => {
           deleteItem={handleDeleteSubmission}
         />
 
-        <h1 className="text-3xl font-bold md:mb-1 mb-2 max-[768px]:mt-1 ml-1 md:py-2">
+        <h1 className="text-3xl font-bold md:mb-1 mb-2 max-[768px]:mt-0 ml-1 md:py-2">
           Mes Ingrédients
         </h1>
 
-        <div className="ml-1 mb-3 third-text-color">
+        <div className="ml-1 mb-3 third-text-color text-justify">
           Sélectionnez des ingrédients et découvrez les plats que vous pouvez cuisiner en fonction de ces ingrédients.
         </div>
 

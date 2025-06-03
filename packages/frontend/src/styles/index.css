@@ -41,10 +41,13 @@
 .third-text-color {
     color: #545C5C;
 }
+.fourth-bg-color {
+    background-color: #F2FCFC;
+}
 
 .selected-card {
     border: 1px solid #7EC0C4;
-    background-color: #f2fcfc;
+    background-color: #F2FCFC;
 }
 .default-card {
     border: 1px solid lightgray;

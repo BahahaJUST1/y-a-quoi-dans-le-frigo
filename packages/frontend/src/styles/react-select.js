@@ -21,13 +21,13 @@ export const reactCategorySelectCustomStyle = {
     ...baseStyles,
     borderBottom: '0.5px solid #f0f0f0',
     backgroundColor: isSelected
-      ? '#FFEBB3' // color when option is currently selected
+      ? '#7EC0C4' // color when option is currently selected
       : isFocused
-        ? '#FFF5D6' // hover color
+        ? '#F2FCFC' // hover color
         : null,
     color: 'black',
     '&:active': {
-      backgroundColor: '#FFE394' // color on option click
+      backgroundColor: '#7EC0C4' // color on option click
     }
   }),
   menuList: (baseStyles) => ({
