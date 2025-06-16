@@ -71,6 +71,15 @@ body {
 .test-border {
     border: 2px solid red;
 }
+.test-border-2 {
+    border: 2px solid fuchsia;
+}
+.test-border-3 {
+    border: 2px solid blue;
+}
+.test-border-4 {
+    border: 2px solid chartreuse;
+}
 
 .autofill-fix {
     -webkit-box-shadow: 0 0 0 30px white inset !important;

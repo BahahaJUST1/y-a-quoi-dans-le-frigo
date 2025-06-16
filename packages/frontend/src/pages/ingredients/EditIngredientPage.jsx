@@ -7,11 +7,11 @@ import { backgroundTextColor } from '../../utils/backgroundTextColor.ts';
 import WarningSimilarItems from '../../components/global/WarningSimilarItems';
 import ItemName from '../../components/editItem/ItemName';
 import ItemImage from '../../components/editItem/ItemImage';
-import ItemBgColor from '../../components/editItem/ItemBgColor';
 import UndoButton from '../../components/editItem/UndoButton';
 import Favourite from '../../components/svgs/Favourite';
 import ThreeDots from '../../components/svgs/ThreeDots';
 import LoadingSpinner from '../../components/global/LoadingSpinner';
+import Header from '../../components/global/Header';
 
 const EditIngredientPage = () => {
   const location = useLocation();
@@ -195,8 +195,11 @@ const EditIngredientPage = () => {
   }
 
   return (
-    <div className="flex items-center justify-center h-screen overflow-hidden max-[768px]:mx-8">
-      <div className="max-w-3xl w-full p-6 py-4 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col h-[90vh] max-[768px]:h-[92vh] relative">
+    <div className="flex flex-col h-screen items-center justify-center">
+
+      <Header />
+
+      <div className="max-[768px]:p-4 flex flex-col flex-1 overflow-hidden max-w-xl w-full md:py-2 md:pb-3">
 
         <LoadingSpinner
           isLoading={isSubmitting}
@@ -217,27 +220,19 @@ const EditIngredientPage = () => {
         </h1>
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto custom-scrollbar">
+        <div className="w-full flex-1 overflow-y-auto custom-scrollbar">
           <div className="flex justify-center">
 
             {/* FORMULA INPUTS */}
             <form className="w-full py-4 bg-gray-100 rounded-md max-[768px]:p-4">
 
               {/* PREVISUALISATION */}
-              <div className="text-sm md:text-md lg:text-lg text-black ml-6 mb-6 max-[768px]:ml-0 max-[768px]:mb-4">
-                <h2 className="mb-1 text-md max-[768px]:text-sm">
+              <div className="w-full md:px-6 m-auto text-sm md:text-md text-black mb-6 max-[768px]:ml-0 max-[768px]:mb-4">
+                <h2 className="mb-1 text-md md:text-lg">
                   Prévisualisation
                 </h2>
                 <div className="rounded-md mb-2 md:mb-3">
-                  <div
-                    className="flex items-center p-2 rounded-lg shadow-lg w-full md:w-1/2 h-16 md:h-20"
-                    style={{
-                      color: backgroundTextColor(formData.bgColor),
-                      backgroundColor: formData.bgColor,
-                      borderColor: 'darkgray',
-                      borderWidth: '1px',
-                    }}
-                  >
+                  <div className="selected-card flex items-center p-1.5 rounded-lg shadow-lg w-full md:w-2/3 h-16 md:h-20">
                     <img
                       src={getImageSource()}
                       alt="ingrédient"
@@ -263,10 +258,12 @@ const EditIngredientPage = () => {
                 </div>
               </div>
 
-              {/* Desktop layout: left-right split */}
-              <div className="md:flex md:gap-4 md:space-y-0 space-y-2 md:px-4">
-                {/* Left column: Name, Category, Image */}
-                <div className="md:w-2/3 md:pl-2">
+              {/* ************* INPUTS ZONE ************* */}
+              <div className="md:flex md:px-4 md:gap-4 md:space-y-0 space-y-2">
+
+                <div className="w-full md:pl-2 m-auto">
+
+                  {/* ***** ITEM NAME INPUT ZONE ***** */}
                   <div className="mb-4 flex items-center gap-0.5">
                     <ItemName
                       name={formData.name}
@@ -287,7 +284,9 @@ const EditIngredientPage = () => {
                       />
                     </div>
                   </div>
+                  {/* ***** END OF ITEM NAME INPUT ZONE ***** */}
 
+                  {/* ***** ITEM CATEGORY INPUT ZONE ***** */}
                   <div className="mb-4 flex items-center gap-0.5">
                     <div className="flex-1">
                       <div className="flex justify-between items-center mb-1">
@@ -320,7 +319,9 @@ const EditIngredientPage = () => {
                       />
                     </div>
                   </div>
+                  {/* ***** END OF ITEM CATEGORY INPUT ZONE ***** */}
 
+                  {/* ***** ITEM IMAGE INPUT ZONE ***** */}
                   <div className="flex items-center">
                     <ItemImage
                       handleImageChange={handleImageChange}
@@ -343,17 +344,13 @@ const EditIngredientPage = () => {
                       />
                     </div>
                   </div>
-                </div>
+                  {/* ***** END OF ITEM IMAGE INPUT ZONE ***** */}
 
-                {/* Right column: Color picker */}
-                <div className="md:w-2/5">
-                  <ItemBgColor
-                    bgColor={formData.bgColor}
-                    handleInputChange={handleInputChange}
-                  />
                 </div>
               </div>
-              <div className="w-full mt-4 px-6 max-[768px]:px-0">
+              {/* ************* END OF INPUTS ZONE ************* */}
+
+              <div className="w-full mt-4 px-3 max-[768px]:px-0">
                 <p className="text-xs md:text-sm text-gray-400 font-normal italic text-right">
                   Les champs marqués d'une <span className="error-text">*</span> sont obligatoires
                 </p>
@@ -375,7 +372,7 @@ const EditIngredientPage = () => {
             </button>
             <button
               onClick={handleSubmit}
-              className="flex-1 py-1 md:py-2 px-4 rounded-md transition max-[768px]:bg-[#ffe394] bg-[#FFEBB3] text-black hover:bg-[#FFE394]"
+              className="flex-1 py-1 md:py-2 px-4 rounded-md transition secondary-bg-color secondary-bg-color-hover"
               disabled={isSubmitting}
             >
               {ingredient ? "Modifier" : "Créer"}
