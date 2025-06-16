@@ -141,7 +141,7 @@ export class DishService {
       Dish,
       { id },
       {
-        name: data.dishData.name!,
+        name: firstCase(data.dishData.name!),
         image: data.dishData.image,
         preparationTime: data.dishData.preparationTime,
         numberOfPeople: data.dishData.numberOfPeople!,

@@ -35,7 +35,7 @@ const WarningSimilarItems = ({ newItemName, displayWarning, setDisplayWarning, c
 
       {/* Modal */}
       <div className="fixed inset-0 flex items-center justify-center z-50">
-        <div className="relative p-4 bg-white rounded-lg border-2 border-gray-400 md:max-w-md md:w-full w-2/3 mx-4">
+        <div className="relative p-4 bg-white rounded-lg border-2 border-primary md:max-w-md md:w-full w-2/3 mx-4">
           <button
             onClick={() => setDisplayWarning(false)}
             className="absolute top-1.5 right-1.5 text-gray-500 hover:text-gray-700"
@@ -62,7 +62,7 @@ const WarningSimilarItems = ({ newItemName, displayWarning, setDisplayWarning, c
             </button>
             <button
               onClick={createItem}
-              className="flex-1 py-2 px-4 rounded-md transition max-[768px]:bg-[#ffe394] bg-[#FFEBB3] text-black hover:bg-[#FFE394]"
+              className="flex-1 py-2 px-4 rounded-md transition bg-primary text-black hover:bg-primary-hover"
             >
               Oui
             </button>

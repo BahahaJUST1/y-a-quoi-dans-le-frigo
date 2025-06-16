@@ -28,7 +28,7 @@ const DishIngredientsList = ({
       </div>
 
       {/* COLUMN TITLES */}
-      <div className="flex justify-between p-1 px-4 bg-[#FFEBB3] font-semibold">
+      <div className="flex justify-between p-1 px-4 bg-gray-400 font-semibold">
         <span className="w-[60%] max-[768px]:hidden">
           Nom
         </span>
@@ -56,7 +56,7 @@ const DishIngredientsList = ({
             <div
               key={`dish-ingredient-${index}`}
               className={`
-                ${index % 2 === 0 ? 'bg-amber-50' : 'bg-amber-100'}
+                ${index % 2 === 0 ? 'bg-gray-300' : 'bg-gray-200'}
                 flex flex-col md:flex-row justify-between p-1 px-4
               `}
             >
