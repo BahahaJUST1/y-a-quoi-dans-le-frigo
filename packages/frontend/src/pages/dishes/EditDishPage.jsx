@@ -19,6 +19,8 @@ const EditDishPage = () => {
   const location = useLocation();
   const dishToEdit = location.state?.dish;
 
+  const previousPageLocation = location.state?.prevLocation;
+
   const [dishData, setDishData] = useState({
     name: dishToEdit?.name || '',
     preparationTime: dishToEdit?.preparationTime || null,
@@ -323,7 +325,7 @@ const EditDishPage = () => {
           dishIngredientsData: dishIngredients
         });
       }
-      navigate('/dishes');
+      navigate(previousPageLocation ?? '/dishes');
     }
     catch (error) {
       setIsSubmitting(false);
@@ -354,7 +356,7 @@ const EditDishPage = () => {
           similarItems={similarDishes}
         />
 
-        <GoBackArrow to={'/dishes'} />
+        <GoBackArrow to={previousPageLocation ?? '/dishes'} />
 
         <h1 className="text-3xl font-bold md:mb-1 mb-2 max-[768px]:mt-0 ml-1 md:py-2">
           {dishToEdit ? 'Modifier le plat' : 'Nouveau plat'}
@@ -531,7 +533,7 @@ const EditDishPage = () => {
           <div className="flex gap-4 mt-2">
             <button
               type="button"
-              onClick={() => navigate('/dishes')}
+              onClick={() => navigate(previousPageLocation ?? '/dishes')}
               className="flex-1 py-1 md:py-2 px-4 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition"
               disabled={isSubmitting}
             >
