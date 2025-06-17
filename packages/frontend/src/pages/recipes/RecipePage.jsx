@@ -7,6 +7,7 @@ import CustomCheckbox from '../../components/global/CustomCheckbox';
 import Time from '../../components/svgs/Time';
 import Person from '../../components/svgs/Person';
 import Header from '../../components/global/Header';
+import { getUserLoggedId } from '../../utils/middlewares.ts';
 
 const RecipePage = () => {
   const { id } = useParams();
@@ -22,8 +23,18 @@ const RecipePage = () => {
   useEffect(() => {
     const fetchDish = async () => {
       try {
+        // recover the dish according to url id
         const response = await $http.get(`/dish/${id}`);
-        setDish(response.data);
+        const dish = response.data;
+
+        // redirect to dishes list if someone try to access someone else dish from url
+        // (only for non-global items)
+        const userId = await getUserLoggedId();
+        if (dish.user !== userId && !dish.isGlobalItem) {
+          navigate("/dishes");
+        }
+
+        setDish(dish);
       } catch (err) {
         console.error(err);
       } finally {
@@ -45,6 +56,12 @@ const RecipePage = () => {
     fetchDish();
     fetchDishIngredients();
   }, [id]);
+
+  useEffect(() => {
+    if (!loadingDish && !dish) {
+      navigate('/dishes');
+    }
+  }, [loadingDish, dish, navigate]);
 
   if (loadingDish || loadingDishIngredients) {
     return;

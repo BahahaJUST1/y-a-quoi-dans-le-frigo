@@ -14,6 +14,7 @@ import Edit from '../../components/svgs/Edit';
 import Delete from '../../components/svgs/Delete';
 import DeleteConfirmation from '../../components/global/DeleteConfirmation';
 import Header from '../../components/global/Header';
+import { getUserLoggedRole } from '../../utils/middlewares.ts';
 
 const DishesPage = () => {
   const [userRole, setUserRole] = useState(null);
@@ -63,8 +64,8 @@ const DishesPage = () => {
   useEffect(() => {
     const fetchUserRole = async () => {
       try {
-        const response = await $http.post('/user', {});
-        setUserRole(response.data);
+        const currentUserRole = await getUserLoggedRole();
+        setUserRole(currentUserRole);
       } catch (err) {
         console.error(err);
       } finally {

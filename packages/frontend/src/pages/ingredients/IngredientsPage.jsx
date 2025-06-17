@@ -12,6 +12,7 @@ import ThreeDots from '../../components/svgs/ThreeDots';
 import Favourite from '../../components/svgs/Favourite';
 import DeleteConfirmation from '../../components/global/DeleteConfirmation';
 import Header from '../../components/global/Header';
+import { getUserLoggedRole } from '../../utils/middlewares.ts';
 
 const IngredientsPage = () => {
   const [likedGlobalIngredients, setLikedGlobalIngredients] = useState([]);
@@ -74,8 +75,8 @@ const IngredientsPage = () => {
   useEffect(() => {
     const fetchUserRole = async () => {
       try {
-        const response = await $http.post('/user', {});
-        setUserRole(response.data);
+        const currentUserRole = await getUserLoggedRole();
+        setUserRole(currentUserRole);
       } catch (err) {
         console.error(err);
       } finally {
