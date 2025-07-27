@@ -18,6 +18,40 @@
     font-style: normal;
 }
 
+.primary-text-color {
+    @apply text-primary;
+}
+.primary-bg-color {
+    @apply bg-primary;
+    color: white;
+}
+.primary-bg-color-hover:hover {
+    @apply bg-primary-hover
+}
+.secondary-text-color {
+    @apply text-secondary;
+}
+.secondary-bg-color {
+    @apply bg-secondary;
+    color: white;
+}
+.secondary-bg-color-hover:hover {
+    @apply bg-secondary-hover;
+}
+.third-text-color {
+    @apply text-third;
+}
+.fourth-bg-color {
+    @apply bg-fourth;
+}
+
+.selected-card {
+    @apply border border-primary bg-fourth;
+}
+.default-card {
+    border: 1px solid lightgray;
+}
+
 .title-font {
     font-family: "BananaStick", sans-serif;
     text-transform: uppercase;
@@ -28,59 +62,28 @@
 }
 
 body {
-    background-color: #ffebb3;
-    position: relative;
     font-family: 'Barlow', sans-serif;
     font-weight: 500;
     overflow: hidden;
-    margin: 0;
-    height: 100vh;
+    @apply text-secondary;
 }
 
-#root, .app-container {
-    height: 100vh;
-    overflow: hidden;
+.test-border {
+    border: 2px solid red;
 }
-
-@media (max-width: 768px) {
-    body {
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-    }
+.test-border-2 {
+    border: 2px solid fuchsia;
 }
-
-@keyframes diagonal-scroll {
-    0% {
-        background-position: 0 0, 7.5rem 4rem;
-    }
-    100% {
-        background-position: 325px 125px, calc(325px + 7.5rem) calc(125px + 4rem);
-    }
+.test-border-3 {
+    border: 2px solid blue;
 }
-
-body::before {
-    content: "";
-    position: fixed;
-    top: -50%;
-    left: -50%;
-    right: -50%;
-    bottom: -50%;
-    background-image:
-        url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='325' height='125' viewBox='0 0 225 225'%3E%3Ctext x='50%' y='50%' font-size='45' fill='white' text-anchor='middle' dominant-baseline='middle' font-family='Arial, sans-serif'%3E Y'A QUOI DANS LE FRIGO %3C/text%3E%3C/svg%3E"),
-        url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='325' height='125' viewBox='0 0 225 225'%3E%3Ctext x='50%' y='50%' font-size='45' fill='white' text-anchor='middle' dominant-baseline='middle' font-family='Arial, sans-serif'%3E Y'A QUOI DANS LE FRIGO %3C/text%3E%3C/svg%3E");
-    background-repeat: repeat;
-    transform: rotate(45deg) scale(1.1);
-    transform-origin: center center;
-    z-index: -1;
-    pointer-events: none;
-    animation: diagonal-scroll 10s linear infinite;
+.test-border-4 {
+    border: 2px solid chartreuse;
 }
 
 .autofill-fix {
-    -webkit-box-shadow: 0 0 0 30px #FFFEE5 inset !important;
-    -webkit-text-fill-color: black !important;
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+    -webkit-text-fill-color: #042628 !important;
 }
 
 .scrollbar-hide {

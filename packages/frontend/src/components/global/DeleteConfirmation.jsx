@@ -29,7 +29,7 @@ const DeleteConfirmation = ({ itemToDelete, displayDeleteConfirmation, setDispla
 
       {/* Modal */}
       <div className="fixed inset-0 flex items-center justify-center z-50">
-        <div className="relative p-4 bg-white rounded-lg border-2 border-red-500 md:max-w-md md:w-full w-2/3 mx-4">
+        <div className="relative p-4 bg-white rounded-lg border-2 border-primary-hover md:max-w-md md:w-full w-2/3 mx-4">
           <button
             onClick={() => setDisplayDeleteConfirmation(false)}
             className="absolute top-1.5 right-1.5 text-gray-500 hover:text-gray-700"
@@ -55,7 +55,7 @@ const DeleteConfirmation = ({ itemToDelete, displayDeleteConfirmation, setDispla
             </button>
             <button
               onClick={deleteItem}
-              className="flex-1 py-2 px-4 rounded-md transition max-[768px]:bg-[#ffe394] bg-[#FFEBB3] text-black hover:bg-[#FFE394]"
+              className="flex-1 py-2 px-4 rounded-md transition primary-bg-color primary-bg-color-hover text-black hover:bg-[#FFE394]"
             >
               Oui
             </button>

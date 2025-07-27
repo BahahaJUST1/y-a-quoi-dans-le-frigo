@@ -16,6 +16,7 @@ const App = () => {
         <Route path="/dish/:id" element={<RecipePage />} />
         <Route path="/ingredients" element={<IngredientsPage />} />
         <Route path="/ingredients/edit" element={<EditIngredientPage />} />
+        <Route path={"*"} element={<LoginPage />} />
       </Routes>
     </Router>
   );

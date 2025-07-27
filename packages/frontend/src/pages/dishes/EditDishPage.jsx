@@ -13,10 +13,13 @@ import NumberOfPeopleInput from '../../components/editItem/NumberOfPeopleInput';
 import DishRecipe from '../../components/editItem/DishRecipe';
 import DishIngredientsList from '../../components/editItem/DishIngredientsList';
 import LoadingSpinner from '../../components/global/LoadingSpinner';
+import Header from '../../components/global/Header';
 
 const EditDishPage = () => {
   const location = useLocation();
   const dishToEdit = location.state?.dish;
+
+  const previousPageLocation = location.state?.prevLocation;
 
   const [dishData, setDishData] = useState({
     name: dishToEdit?.name || '',
@@ -322,7 +325,7 @@ const EditDishPage = () => {
           dishIngredientsData: dishIngredients
         });
       }
-      navigate('/dishes');
+      navigate(previousPageLocation ?? '/dishes');
     }
     catch (error) {
       setIsSubmitting(false);
@@ -335,8 +338,11 @@ const EditDishPage = () => {
   }
 
   return (
-    <div className="flex items-center justify-center h-screen overflow-hidden max-[768px]:mx-8">
-      <div className="max-w-3xl w-full p-6 py-4 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col h-[90vh] max-[768px]:h-[92vh] relative">
+    <div className="flex flex-col h-screen items-center justify-center">
+
+      <Header />
+
+      <div className="max-[768px]:p-4 flex flex-col flex-1 overflow-hidden max-w-3xl w-full md:py-2 md:pb-3">
 
         <LoadingSpinner
           isLoading={isSubmitting}
@@ -350,9 +356,9 @@ const EditDishPage = () => {
           similarItems={similarDishes}
         />
 
-        <GoBackArrow to={'/dishes'} />
+        <GoBackArrow to={previousPageLocation ?? '/dishes'} />
 
-        <h1 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4 max-[768px]:mt-1 text-center">
+        <h1 className="text-3xl font-bold md:mb-1 mb-2 max-[768px]:mt-0 ml-1 md:py-2">
           {dishToEdit ? 'Modifier le plat' : 'Nouveau plat'}
         </h1>
 
@@ -512,7 +518,7 @@ const EditDishPage = () => {
 
               {/* *** REQUIRED INPUTS MESSAGE *** */}
               <div className="w-full mt-4 px-6 max-[768px]:px-0">
-                <p className="max-[768px]:mr-3 text-xs md:text-sm text-gray-400 font-normal italic text-right">
+                <p className="max-[768px]:mr-4 text-xs md:text-sm text-gray-400 font-normal italic text-right">
                   Les champs marqués d'une <span className="error-text">*</span> sont obligatoires
                 </p>
               </div>
@@ -527,7 +533,7 @@ const EditDishPage = () => {
           <div className="flex gap-4 mt-2">
             <button
               type="button"
-              onClick={() => navigate('/dishes')}
+              onClick={() => navigate(previousPageLocation ?? '/dishes')}
               className="flex-1 py-1 md:py-2 px-4 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition"
               disabled={isSubmitting}
             >
@@ -535,7 +541,7 @@ const EditDishPage = () => {
             </button>
             <button
               onClick={handleSubmit}
-              className="flex-1 py-1 md:py-2 px-4 rounded-md transition max-[768px]:bg-[#ffe394] bg-[#FFEBB3] text-black hover:bg-[#FFE394]"
+              className="flex-1 py-1 md:py-2 px-4 rounded-md transition secondary-bg-color secondary-bg-color-hover"
               disabled={isSubmitting}
             >
               {dishToEdit ? "Modifier" : "Créer"}

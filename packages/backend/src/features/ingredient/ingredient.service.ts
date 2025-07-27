@@ -54,6 +54,8 @@ export class IngredientService {
     if (!dbIngredient) {
       throw new Error("Ingredient not found for update !");
     }
+    // put ingredient's first char uppercase
+    data.name = firstCase(data.name!);
     // update the ingredient in database with the new data
     Object.assign(dbIngredient, data);
     await this.em.flush();

@@ -14,7 +14,7 @@ const CustomCheckbox = ({ id, label }) => {
         className={`
           mt-1 h-4 w-4 rounded-sm cursor-pointer
           border border-gray-300
-          ${isChecked ? 'bg-[#FFE394]' : 'bg-white'}
+          ${isChecked ? 'bg-primary' : 'bg-white'}
           relative
         `}
       >

@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import $http from '../../axiosInstance';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import GoBackArrow from '../../components/global/GoBackArrow';
 import { getNoRecipeText } from '../../utils/noRecipeText.ts';
 import CustomCheckbox from '../../components/global/CustomCheckbox';
 import Time from '../../components/svgs/Time';
 import Person from '../../components/svgs/Person';
+import Header from '../../components/global/Header';
+import { getUserLoggedId } from '../../utils/middlewares.ts';
 
 const RecipePage = () => {
   const { id } = useParams();
@@ -16,11 +18,23 @@ const RecipePage = () => {
   const [loadingDish, setLoadingDish] = useState(true);
   const [loadingDishIngredients, setLoadingDishIngredients] = useState(true);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchDish = async () => {
       try {
+        // recover the dish according to url id
         const response = await $http.get(`/dish/${id}`);
-        setDish(response.data);
+        const dish = response.data;
+
+        // redirect to dishes list if someone try to access someone else dish from url
+        // (only for non-global items)
+        const userId = await getUserLoggedId();
+        if (dish.user !== userId && !dish.isGlobalItem) {
+          navigate("/dishes");
+        }
+
+        setDish(dish);
       } catch (err) {
         console.error(err);
       } finally {
@@ -43,21 +57,39 @@ const RecipePage = () => {
     fetchDishIngredients();
   }, [id]);
 
+  useEffect(() => {
+    if (!loadingDish && !dish) {
+      navigate('/dishes');
+    }
+  }, [loadingDish, dish, navigate]);
+
   if (loadingDish || loadingDishIngredients) {
     return;
   }
 
+  const handleEditClick = () => {
+    navigate("/dishes/edit", {
+      state: {
+        dish,
+        prevLocation: `/dish/${dish.id}`
+      }
+    });
+  };
+
   return (
-    <div className="flex items-center justify-center h-screen overflow-hidden max-[768px]:mx-8">
-      <div className="relative max-w-6xl w-full p-6 py-4 max-[768px]:p-4 bg-white shadow-lg rounded-2xl flex flex-col h-[90vh] max-[768px]:h-[92vh]">
+    <div className="flex flex-col h-screen items-center justify-center">
+
+      <Header />
+
+      <div className="max-[768px]:p-4 flex flex-col flex-1 overflow-hidden max-w-6xl w-full md:py-2 md:pb-3">
 
         <GoBackArrow to={"/dishes"} state={{ selectedIngredients: [] }} />
 
         <h1 className="w-[90%] mx-auto text-3xl font-bold mb-6 text-center sticky top-0 bg-white z-10">
           {dish.name}
         </h1>
-        
-        <div className="overflow-y-auto flex-grow scrollbar-hide">
+
+        <div className="overflow-y-auto flex-grow scrollbar-hide bg-gray-100 md:p-6 p-4">
           <img
             src={`https://res.cloudinary.com/dd50khgyk/image/upload/${dish.image ? dish.image : "placeholders/g2dkz5ae3ce3u5gde5cz"}`}
             alt={dish.name}
@@ -65,14 +97,14 @@ const RecipePage = () => {
           />
 
           <h2 className="text-1xl font-bold mb-6">
-            <div className={`${dish.preparationTime ? '' : 'hidden' } flex items-center mt-1`}>
+            <div className={`${dish.preparationTime ? '' : 'hidden'} flex items-center mt-1`}>
               <Time />
               <span>Temps de préparation : {dish.preparationTime}min</span>
             </div>
           </h2>
 
           <h2 className="text-3xl font-bold mb-6">Ingrédients</h2>
-          <div className="text-1xl font-bold mb-6" >
+          <div className="text-1xl font-bold mb-6">
             <div className="flex items-center">
               <Person />
               Recette pour {dish.numberOfPeople} {dish.numberOfPeople === 1 ? "personne" : "personnes"}
@@ -80,7 +112,7 @@ const RecipePage = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 max-[768px]:gap-2 mb-6">
             {dishIngredients.map((item) => (
-              <div key={item.id} className="flex items-center gap-4 p-2 border rounded-lg shadow-sm">
+              <div key={item.id} className="selected-card bg-white flex items-center gap-4 p-1.5 border rounded-lg shadow-sm">
                 <img
                   src={item.ingredient.image
                     ? `https://res.cloudinary.com/dd50khgyk/image/upload/${item.ingredient.image}`
@@ -93,10 +125,10 @@ const RecipePage = () => {
                   <p>
                     {item.quantity} {' '}
                     {
-                      [1,9].includes(item.unit.id)
+                      [1, 9].includes(item.unit.id)
                         ? item.quantity === 1
-                            ? item.unit.name
-                            : item.unit.name + 's'
+                          ? item.unit.name
+                          : item.unit.name + 's'
                         : item.unit.name
                     }
                   </p>
@@ -105,23 +137,38 @@ const RecipePage = () => {
             ))}
           </div>
 
-          <div className="bg-[#FFFEE5] border mb-1 p-6 pb-4 max-[768px]:p-4 max-[768px]:pb-2 rounded-lg">
+          <div className="bg-white border mb-1 p-6 pb-4 max-[768px]:p-4 max-[768px]:pb-2 rounded-lg">
             <h2 className="text-3xl font-bold mb-6">Recette</h2>
             {
               dish.recipe
                 ? dish.recipe
-                    .split('\n')
-                    .filter(line => line.trim())
-                    .map((line, index) => (
-                      <CustomCheckbox 
-                        key={index}
-                        id={`step-${index}`}
-                        label={line}
-                      />
-                    ))
+                .split('\n')
+                .filter(line => line.trim())
+                .map((line, index) => (
+                  <CustomCheckbox
+                    key={index}
+                    id={`step-${index}`}
+                    label={line}
+                  />
+                ))
                 : <p className="whitespace-pre-line pb-3">{getNoRecipeText()}</p>
             }
           </div>
+
+          {/* ***************** CONFIRM BUTTON **************** */}
+          <div className="md:w-1/4 md:ml-auto mt-4 flex flex-col">
+
+            <button
+              onClick={handleEditClick}
+              className="z-20 secondary-bg-color secondary-bg-color-hover md:py-2.5 py-2 rounded-lg md:text-lg transition"
+              type="button"
+            >
+              <div>
+                Modifier la recette
+              </div>
+            </button>
+          </div>
+          {/* ***************** END OF CONFIRM BUTTON **************** */}
         </div>
       </div>
     </div>

@@ -15,9 +15,15 @@ export class UserController {
     return await this.userService.findAll();
   }
 
-  @Post()
+  @Post('/current/role')
   @UseInterceptors(UserIdInterceptor)
   async getUserRole(@Body() body: any): Promise<UserRoleEnum> {
     return await this.userService.getUserRole(body);
+  }
+
+  @Post('/current/id')
+  @UseInterceptors(UserIdInterceptor)
+  async getUserId(@Body() body: any): Promise<number> {
+    return body.user;
   }
 }
