@@ -208,7 +208,7 @@ const DishesPage = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen items-center justify-center">
+    <div className="flex flex-col h-svh items-center justify-center">
 
       <Header />
 
