@@ -13,9 +13,10 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://localhost:3001',
-      'https://y-a-quoi-dans-le-frigo.fr',
-      'https://y-a-quoi-dans-le-frigo.com',
-      'https://y-a-quoi-dans-le-frigo.online'
+      // 'https://y-a-quoi-dans-le-frigo.fr',
+      // 'https://y-a-quoi-dans-le-frigo.com',
+      // 'https://y-a-quoi-dans-le-frigo.online',
+      'http://192.168.1.92'
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],

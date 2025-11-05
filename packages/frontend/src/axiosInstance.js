@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const $http = axios.create({
   baseURL: process.env.REACT_APP_ENV === "master"
-    ? 'https://y-a-quoi-dans-le-frigo.fr/api'
+    ? 'http://192.168.1.92:3000/api' // 'https://y-a-quoi-dans-le-frigo.fr/api'
     : 'http://localhost:3000/api'
 });
 
