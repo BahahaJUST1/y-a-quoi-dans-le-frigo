@@ -21,6 +21,10 @@ const PreparationTimeInput = ({ timeValue, handleTimeChange }) => {
   const handleDown = (increment) => {
     handleTimeChange(increment);
     startTimeInterval(increment);
+
+    if (!checkIfMobile()) {
+      handleUp();
+    }
   };
 
   const handleUp = () => {
@@ -31,16 +35,21 @@ const PreparationTimeInput = ({ timeValue, handleTimeChange }) => {
     <div className="flex items-center border border-gray-300 rounded-lg bg-white w-[9rem]">
       <button
         type="button"
+
+        // decrease time click by click (for desktop)
         onMouseDown={(e) => {
           e.preventDefault();
           if (!checkIfMobile()) {
             handleDown(-5);
           }
         }}
-        onMouseUp={handleUp}
-        onMouseLeave={handleUp}
-        onTouchStart={() => {
-          handleDown(-5);
+
+        // decrease time by holding screen (for mobile)
+        onTouchStart={(e) => {
+          e.preventDefault();
+          if (checkIfMobile()) {            
+            handleDown(-5);
+          }
         }}
         onTouchEnd={handleUp}
         className="px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-l-lg"
@@ -58,16 +67,21 @@ const PreparationTimeInput = ({ timeValue, handleTimeChange }) => {
       />
       <button
         type="button"
+
+        // increase time click by click (for desktop)
         onMouseDown={(e) => {
           e.preventDefault();
           if (!checkIfMobile()) {
             handleDown(5);
           }
         }}
-        onMouseUp={handleUp}
-        onMouseLeave={handleUp}
-        onTouchStart={() => {
-          handleDown(5);
+
+        // increase time by holding screen (for mobile)
+        onTouchStart={(e) => {
+          e.preventDefault();
+          if (checkIfMobile()) {
+            handleDown(5);
+          }
         }}
         onTouchEnd={handleUp}
         className="px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-r-lg"
