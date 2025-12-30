@@ -164,6 +164,7 @@ export class DishService {
           ...potentialDishIngredient,
           ingredient: this.em.getReference(Ingredient, potentialDishIngredient.ingredient!.id),
           unit: this.em.getReference(Unit, potentialDishIngredient.unit!.id),
+          createdAt: currentDatabaseDishIngredient.createdAt,
           updatedAt: new Date()
         });
       }
